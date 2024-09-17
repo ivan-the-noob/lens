@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+*{
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f0e3; 
+    background-image: url('../../assets/img/authen-bg.jpg');
+    background-size: cover;
+    background-position: center;
+}
+
+.scene {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    perspective: 1000px;
+    position: relative;
+}
+
+.container, .container2 {
+    width: 70%;
+    display: flex;
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: transform 0.8s ease-in-out;
+    backface-visibility: hidden;
+
+}
+
+
+
+.box1, .box2 {
+    width: 90%;
+    padding: 20px;
+    border: 1px solid #000;
+    border-radius: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+}
+
+
+.box11, .box33{
+    padding-top: 15%;
+    background-color: #fffaf0;
+}
+
+.box22, .box33, .box44{
+    margin-left: -10px;
+    background-color: #fffaf0;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center;
+    padding: 20px;
+
+}
+
+
+.box22 img{
+    width: 50px;
+    height: 50px;
+}
+
+.box22 label, .box33 label{
+     color: #8b5e3c;
+     margin-bottom: 2px;
+     margin-top: 10px;
+     align-self: start;
+}
+
+.box33 label{
+    padding-left: 5%;
+}
+
+.box33 button{
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+.box22 a{
+    color: #8b5e3c;
+    font-weight: 500;
+    font-size: 12px;
+    display: flex;
+    margin-left: auto;
+    justify-content: end;
+    margin-bottom: 5px;
+}
+
+.box22 button{
+    display: flex;
+    justify-content: center;
+    margin: auto;
+}
+
+
+
+.container .box22 input, .box33 input{
+    border-radius: 20px;
+    
+}
+
+.box44{
+    margin-left: -10px;
+}
+h3{
+    font-weight: bold;
+    color: #6b4226;
+ 
+}
+
+.create-account{
+    font-size: 24px;
+}
+
+.line{
+    border-top: 2px solid #6b4226;
+
+}
+.lined{
+    border-top: 2px solid #6b4226;
+    width: 100%;
+}
+.form-group{
+    display: flex;
+    justify-content: space-around;
+}
+
+.register-p{
+    padding: 10px;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #8b5e3c;
+    font-size: 16px;
+}
+
+.alert-error {
+    background-color: #f44336; 
+    color: white;
+    border-radius: 4px;
+    font-size: 16px;
+    padding: 15px;
+    margin-bottom: 5px;
+}
+
+
+.hidden-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+.radio-group{
+    display: flex;
+   
+}
+
+.radio-group label{
+    padding: 0 !important;
+    margin: 5px;
+}
+
+.registerbtn, .loginbtn{
+    background-color: #a67b5b;
+    border: none;
+    color: #fffaf0;
+    padding: 10px 20px;
+    border-radius: 15px;
+}
+
+.registerbtn:hover, .loginbtn:hover{
+    background-color: #e0c097;
+}
+
+.container {
+    transform: rotateY(0deg);
+}
+
+.container2 {
+    transform: rotateY(180deg);
+}
+
+.flip .container {
+    transform: rotateY(-180deg);
+}
+
+.flip .container2 {
+    transform: rotateY(0deg);
+}
+
+@media (max-width: 767px) {
+    .container, .container2 {
+        width: 90%; /* Make the container take more width on mobile */
+        flex-direction: column; /* Stack box1 on top of box2 for mobile */
+    }
+
+    .box1, .box2 {
+        width: 100%; /* Make each box take the full width */
+        margin: 0;
+    }
+
+    .box1 {
+        margin-bottom: 20px; /* Add some spacing between box1 and box2 */
+    }
+}
