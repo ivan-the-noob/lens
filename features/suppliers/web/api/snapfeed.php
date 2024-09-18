@@ -37,6 +37,43 @@ if ($role != 'guest' && !empty($email)) {
     <link rel="stylesheet" href="../../css/snapfeed.css">
 
 </head>
+
+<style>
+      .input-container {
+            display: flex;
+            align-items: center;
+            justify-content: end;
+            margin-top: auto;
+        }
+        .input-group {
+            flex: 1;
+        }
+        .input-field {
+            border-radius: 25px 0 0 25px; /* Rounded corners on the left */
+        }
+        .input-group-append .btn {
+            border-radius: 0 25px 25px 0; /* Rounded corners on the right */
+        }
+        .like-container {
+            margin-left: 10px;
+            display: flex;
+            align-items: center;
+        }
+        .like-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #555;
+            cursor: pointer;
+        }
+        .like-count {
+            margin-left: 5px;
+            font-size: 1rem;
+            color: #555;
+        }
+
+        
+</style>
 <body>
     <div id="preloader">
         <div class="line"></div>
@@ -157,18 +194,16 @@ function previewCardImage(event) {
         </div>
     
     </div>
-   
+</div>
      
     <div class="wave">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250" style="margin-bottom: -5px;">
-          <path fill="#a67b5b" fill-opacity="1"
+          <path fill="#fff" fill-opacity="1"
             d="M0,128L60,138.7C120,149,240,171,360,170.7C480,171,600,149,720,133.3C840,117,960,107,1080,112C1200,117,1320,139,1380,149.3L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z">
           </path>
         </svg>
       </div>
-
-
-    <footer class="footer">
+<footer class="footer mb-0">
         <div class="container">
             <div class="row">
                 <!-- About Section -->
@@ -207,10 +242,14 @@ function previewCardImage(event) {
         </div>
     </footer>
 
+
+    
+
     
     <script src="../../function/script/pre-loadall.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
 
 </body>
+
 </html>

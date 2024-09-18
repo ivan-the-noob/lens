@@ -9,7 +9,8 @@
 
 }
 body{
-    background-color: #000;
+    background-color: #a67b5b;
+   
 }
 
 /*Preloader*/
@@ -212,13 +213,13 @@ body.loaded #preloader {
 
 /* navbar end */
 .text-box {
-    border: 2px solid #a67b5b;
+    border: 2px solid #fff;
     text-align: center;
     padding: 20px;
     font-size: 4em;
     font-weight: bold;
     width: 95%;
-    color: #a67b5b;
+    color: #fff;
     margin: 20px auto;
     font-family: 'Comic Sans MS', cursive, sans-serif;
     box-shadow: 0 0 20px #a67b5b; 
@@ -401,8 +402,8 @@ textarea{
 
 /*Footer Section*/
 footer{
-    color: #fff;
-    background-color: #a67b5b;
+    color: #a67b5b;
+    background-color: #fff;
     font-weight: 400;
 }
 footer a{

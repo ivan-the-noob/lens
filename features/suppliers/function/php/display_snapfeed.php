@@ -11,31 +11,27 @@ $name = $_SESSION['name'];
 
 require '../../../../db/db.php';
 
-// Fetch all records from the snapfeed table where email matches the session email
+
 $sql = "SELECT id, img_title, card_img, card_text FROM snapfeed WHERE email = ? ORDER BY id DESC";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("s", $email); // Bind session email to the query
+$stmt->bind_param("s", $email); 
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Check if the query was successful
 if ($result === FALSE) {
     echo "Error executing query: " . $conn->error;
     exit();
 }
 
-// Check if records exist and display images
 if ($result->num_rows > 0) {
     echo '<div class="row">';
 
-    // Loop through the records
     while ($row = $result->fetch_assoc()) {
         $id = $row['id'];
         $imgTitle = $row['img_title'];
         $imgSrc = $row['card_img'];
         $cardText = $row['card_text'];
     
-        // Image thumbnail for the gallery
         echo '
         <div class="col-md-3 mb-3 gallery-item position-relative" id="gallery-item-' . $id . '">
             <img src="' . $imgSrc . '" class="img-fluid img-wh" alt="Image from Snapfeed" 
@@ -50,7 +46,6 @@ if ($result->num_rows > 0) {
             </button>
         </div>';
     
-        // Modal structure for the main image
         echo '
         <div class="modal fade" id="modal-' . $id . '" tabindex="-1" aria-labelledby="modalLabel-' . $id . '" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-xl">
@@ -61,11 +56,29 @@ if ($result->num_rows > 0) {
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <img id="modal-main-img-' . $id . '" src="' . $imgSrc . '" class="img-fluid mb-3" alt="Image from Snapfeed">
+                                <img id="modal-main-img-' . $id . '" src="' . $imgSrc . '" class="img-fluid" alt="Image from Snapfeed">
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 d-flex flex-column">
                                 <p id="modal-main-title-' . $id . '" class="img-title">' . htmlspecialchars($imgTitle) . '</p>
                                 <p id="modal-main-text-' . $id . '" class="card-text">' . htmlspecialchars($cardText) . '</p>
+                                <div class="container mt-auto">
+                                    <div class="input-container">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control input-field" placeholder="Type something">
+                                            <div class="input-group-append">
+                                                <button class="btn btn-outline-secondary" type="button">
+                                                    <i class="fas fa-paper-plane"></i> <!-- Send icon -->
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="like-container">
+                                            <button class="like-btn" type="button">
+                                            <i class="fa-regular fa-heart"></i>
+                                            </button>
+                                            <span class="like-count" id="hearts-counts">0</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="row mt-3">
@@ -73,7 +86,6 @@ if ($result->num_rows > 0) {
                                 <h5>' . htmlspecialchars($name) . '\'s Gallery</h5>
                                 <div class="row">';
     
-        // Fetch all images except the one displayed in the thumbnail
         $img_sql = "SELECT id, img_title, card_img, card_text FROM snapfeed WHERE email = ? ORDER BY id DESC";
         $img_stmt = $conn->prepare($img_sql);
         $img_stmt->bind_param("s", $email);
@@ -83,10 +95,10 @@ if ($result->num_rows > 0) {
         if ($img_result->num_rows > 0) {
             while ($img_row = $img_result->fetch_assoc()) {
                 if ($img_row['card_img'] == $imgSrc) {
-                    continue; // Skip the main image already displayed
+                    continue; 
                 }
     
-                // Modal trigger for gallery images
+
                 echo '
                 <div class="col-md-4 mb-3 gallery-item" id="gallery-item-' . $img_row['id'] . '">
                     <img src="' . htmlspecialchars($img_row['card_img']) . '" class="img-fluid modal-img" alt="Additional Image from Snapfeed" 
@@ -108,7 +120,6 @@ if ($result->num_rows > 0) {
             </div>
         </div>';
     
-        // Delete confirmation modal
         echo '
         <div class="modal fade" id="delete-modal-' . $id . '" tabindex="-1" aria-labelledby="deleteModalLabel-' . $id . '" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
@@ -162,15 +173,11 @@ function updateModalContent(imageElement) {
     var galleryItem = imageElement.parentElement;
 
     if (galleryItem) {
-        // Hide the currently clicked gallery item
         galleryItem.style.display = 'none';
         
-        // Show the previously hidden gallery item
         if (previouslyHiddenGalleryItem) {
             previouslyHiddenGalleryItem.style.display = 'block';
         }
-        
-        // Update the previously hidden item to the current one
         previouslyHiddenGalleryItem = galleryItem;
     }
 }
@@ -181,12 +188,10 @@ function confirmDelete(imageId) {
     xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
     xhr.onload = function () {
         if (xhr.status === 200) {
-            // Reload the page after successful deletion
             window.location.reload();
         } else {
             console.error('An error occurred while deleting the image.');
         }
-        // Close the modal after attempting to delete
         var deleteModal = bootstrap.Modal.getInstance(document.getElementById('delete-modal-' + imageId));
         if (deleteModal) {
             deleteModal.hide();

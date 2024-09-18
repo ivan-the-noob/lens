@@ -38,27 +38,29 @@ body {
 .box1, .box2 {
     width: 90%;
     padding: 20px;
-    border: 1px solid #000;
     border-radius: 20px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: 3px solid #fff;
 
 }
 
 
 .box11, .box33{
-    padding-top: 15%;
-    background-color: #fffaf0;
+    padding-top: 12%;
+    background-color: #a67b5b;
 }
 
 .box22, .box33, .box44{
     margin-left: -10px;
-    background-color: #fffaf0;
+    background-color: #a67b5b;
     display: flex; 
     flex-direction: column; 
     justify-content: center; 
     align-items: center;
     padding: 20px;
+    border: 3px solid #fff;
+    color: #fff;
 
 }
 
@@ -69,7 +71,7 @@ body {
 }
 
 .box22 label, .box33 label{
-     color: #8b5e3c;
+     color: #fff;
      margin-bottom: 2px;
      margin-top: 10px;
      align-self: start;
@@ -86,7 +88,7 @@ body {
 }
 
 .box22 a{
-    color: #8b5e3c;
+    color: #fff;
     font-weight: 500;
     font-size: 12px;
     display: flex;
@@ -105,6 +107,7 @@ body {
 
 .container .box22 input, .box33 input{
     border-radius: 20px;
+    border: 2px solid #fff;
     
 }
 
@@ -113,7 +116,7 @@ body {
 }
 h3{
     font-weight: bold;
-    color: #6b4226;
+    color: #fff;
  
 }
 
@@ -122,11 +125,11 @@ h3{
 }
 
 .line{
-    border-top: 2px solid #6b4226;
+    border-top: 2px solid #fff;
 
 }
 .lined{
-    border-top: 2px solid #6b4226;
+    border-top: 2px solid #fff;
     width: 100%;
 }
 .form-group{
@@ -140,7 +143,7 @@ h3{
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #8b5e3c;
+    color: #fff;
     font-size: 16px;
 }
 
@@ -176,15 +179,17 @@ h3{
 }
 
 .registerbtn, .loginbtn{
-    background-color: #a67b5b;
+    background-color: #fff;
     border: none;
-    color: #fffaf0;
+    color: #a67b5b;
     padding: 10px 20px;
     border-radius: 15px;
+    font-weight: 500;
 }
 
 .registerbtn:hover, .loginbtn:hover{
     background-color: #e0c097;
+    color: #fff;
 }
 
 .container {

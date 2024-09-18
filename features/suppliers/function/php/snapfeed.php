@@ -45,4 +45,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Sorry, there was an error uploading your file.";
     }
 }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $imageId = $_POST['image_id'];
+    $email = $_SESSION['email'];
+
+    // Check if user already reacted
+    $checkSql = "SELECT * FROM hearts WHERE image_id = ? AND email = ?";
+    $stmt = $conn->prepare($checkSql);
+    $stmt->bind_param("is", $imageId, $email);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        // Remove heart react
+        $deleteSql = "DELETE FROM hearts WHERE image_id = ? AND email = ?";
+        $stmt = $conn->prepare($deleteSql);
+        $stmt->bind_param("is", $imageId, $email);
+        $stmt->execute();
+    } else {
+        // Add heart react
+        $insertSql = "INSERT INTO hearts (image_id, email) VALUES (?, ?)";
+        $stmt = $conn->prepare($insertSql);
+        $stmt->bind_param("is", $imageId, $email);
+        $stmt->execute();
+    }
+
+    // Get updated heart count
+    $countSql = "SELECT COUNT(*) AS heart_count FROM hearts WHERE image_id = ?";
+    $stmt = $conn->prepare($countSql);
+    $stmt->bind_param("i", $imageId);
+    $stmt->execute();
+    $countResult = $stmt->get_result();
+    $row = $countResult->fetch_assoc();
+
+    echo json_encode(['newCount' => $row['heart_count']]);
+}
 ?>
