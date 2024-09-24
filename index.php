@@ -72,7 +72,7 @@ if ($role != 'guest' && !empty($email)) {
                         <li class="nav-item">
                             <a class="nav-link" href="features/suppliers/web/api/snapfeed.php">Snapfeed</a>
                         </li>
-                    <?php elseif ($role == 'client'): ?>
+                    <?php elseif ($role == 'customer'): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="features/clients/web/api/snapfeed.php">Snapfeed</a>
                         </li>

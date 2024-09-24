@@ -1,3 +1,30 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['email'])) {
+        header("Location: authentication/web/api/login.php");
+        exit();
+    }
+    $email = $_SESSION['email'];
+    $role = $_SESSION['role']; 
+
+    $profileImg = ''; 
+
+if ($role != 'guest' && !empty($email)) {
+    require '../../../../db/db.php';
+
+    $stmt = $conn->prepare("SELECT profile_img FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($profileImg);
+    $stmt->fetch();
+    $stmt->close();
+    $conn->close();
+
+    $profileImg = '../../../../assets/img/profile/' . $profileImg;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,58 +44,74 @@
         <div class="right"></div>
     </div>
 
-    <nav class="navbar navbar-expand-lg ">
-        <div class="container">
-            <a class="navbar-brand d-none d-md-block logo" href="#">
-                LENSFOLIOHUB
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    style="stroke: black; fill: none;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
+    <nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand d-none d-md-block logo" href="#">
+            LENSFOLIOHUB
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                style="stroke: black; fill: none;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.html">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#snapfeed">Snapfeed</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#supplier">Supplier</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#profile">Profile</a>
-                    </li>   
-                </ul>
-                <div class="d-flex ml-auto">
-                    <a href="features/users/web/api/login.php" class="btn-theme" type="button">Login</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Links (left) -->
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#snapfeed">Snapfeed</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#supplier">Supplier</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#profile">Profile</a>
+                </li>
+            </ul>
+
+            <!-- Profile dropdown (right) -->
+            <div class="d-flex ms-auto">
+                <?php if ($role != 'guest') { ?>
+                    <div class="dropdown">
+                        <button class="btn btn-theme dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
+                        </ul>
+                    </div>
+                <?php } else { ?>
+                    <!-- User is not logged in, display a login link -->
+                    <a href="authentication/web/api/login.php" class="btn btn-theme" type="button">Login</a>
+                        <?php } ?>
+                    </div>
                 </div>
             </div>
-        </div>
-    </nav>
+        </nav>
+
 
     <section class="supplier-profile">
         <div class="container mt-5">
             <ul class="nav justify-content-center">
                 <li class="nav-item">
-                    <a href="about-me.html"><button class="nav-link about-me">About Me</button></a>
+                    <a href="about-me.php"><button class="nav-link about-me">About Me</button></a>
                 </li>
                 <li class="nav-item">
-                    <a href="projects.html"><button class="nav-link highlight">Projects</button></a>
+                    <a href="projects.php"><button class="nav-link highlight">Projects</button></a>
                 </li>
                 <li class="nav-item">
-                    <a href="calendar.html"><button class="nav-link calendar">Calendar</button></a>
+                    <a href="calendar.php"><button class="nav-link calendar">Calendar</button></a>
                 </li>
                 <li class="nav-item">
-                    <a href="contacts.html"><button class="nav-link contacts">Contacts</button></a>
+                    <a href="contacts.php"><button class="nav-link contacts">Contacts</button></a>
                 </li>
             </ul>
         </div>
@@ -96,8 +139,8 @@
         <div class="container mt-5">
             <!-- Buttons to toggle between Style 1 (Grid) and Style 2 (Carousel) -->
             <div class="text-center mb-3">
-                <button id="style1" class="btn btn-primary">Style 1 (Grid)</button>
-                <button id="style2" class="btn btn-secondary">Style 2 (Carousel)</button>
+                <button id="style1" class="btn style-btn">Style 1 (Grid)</button>
+                <button id="style2" class="btn style-btn">Style 2 (Carousel)</button>
             </div>
         
             <!-- Style 1: Grid Layout -->
@@ -162,7 +205,7 @@
      
     <div class="wave">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250" style="margin-bottom: -5px;">
-          <path fill="#a67b5b" fill-opacity="1"
+          <path fill="#FAF7F2" fill-opacity="1"
             d="M0,128L60,138.7C120,149,240,171,360,170.7C480,171,600,149,720,133.3C840,117,960,107,1080,112C1200,117,1320,139,1380,149.3L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z">
           </path>
         </svg>

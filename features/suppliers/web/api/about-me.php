@@ -44,55 +44,59 @@ if ($role != 'guest' && !empty($email)) {
         <div class="right"></div>
     </div>
 
-    <nav class="navbar navbar-expand-lg ">
-        <div class="container">
-            <a class="navbar-brand d-none d-md-block logo" href="#">
-                LENSFOLIOHUB
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    style="stroke: black; fill: none;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
+    <nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand d-none d-md-block logo" href="#">
+            LENSFOLIOHUB
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                style="stroke: black; fill: none;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
-                    <li class="nav-item">
-                        <a class="nav-link" href="index.php">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link " href="#">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#snapfeed">Snapfeed</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#supplier">Supplier</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#profile">Profile</a>
-                    </li>   
-                </ul>
-                <div class="d-flex ml-auto">
-                    <?php if ($role != 'guest') { ?>
-                        <div class="dropdown">
-                            <button class="btn btn-theme dropdown-toggle" type=" button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Links (left) -->
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#snapfeed">Snapfeed</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#supplier">Supplier</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#profile">Profile</a>
+                </li>
+            </ul>
+
+            <!-- Profile dropdown (right) -->
+            <div class="d-flex ms-auto">
+                <?php if ($role != 'guest') { ?>
+                    <div class="dropdown">
+                        <button class="btn btn-theme dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                             <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
-                            </ul>
-                            </div>
-                        <?php } else { ?>
-                        <!-- User is not logged in, display a login link -->
-                        <a href="authentication/web/api/login.php" class="btn-theme" type="button">Login</a>
-                    <?php } ?>
-                </div>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
+                        </ul>
+                    </div>
+                <?php } else { ?>
+                    <!-- User is not logged in, display a login link -->
+                    <a href="authentication/web/api/login.php" class="btn btn-theme" type="button">Login</a>
+                <?php } ?>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
+
 
     <section class="supplier-profile">
         <div class="container mt-5">
@@ -101,13 +105,13 @@ if ($role != 'guest' && !empty($email)) {
                     <a href="#"><button class="nav-link about-me highlight">About Me</button></a>
                 </li>
                 <li class="nav-item">
-                    <a href="projects.html"><button class="nav-link">Projects</button></a>
+                    <a href="projects.php"><button class="nav-link">Projects</button></a>
                 </li>
                 <li class="nav-item">
-                    <a href="calendar.html"><button class="nav-link calendar">Calendar</button></a>
+                    <a href="calendar.php"><button class="nav-link calendar">Calendar</button></a>
                 </li>
                 <li class="nav-item">
-                    <a href="contacts.html"><button class="nav-link contacts">Contacts</button></a>
+                    <a href="contacts.php"><button class="nav-link contacts">Contacts</button></a>
                 </li>
             </ul>
         </div>
@@ -210,7 +214,7 @@ if ($role != 'guest' && !empty($email)) {
      
     <div class="wave">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250" style="margin-bottom: -5px;">
-          <path fill="#a67b5b" fill-opacity="1"
+          <path fill="#FAF7F2" fill-opacity="1"
             d="M0,128L60,138.7C120,149,240,171,360,170.7C480,171,600,149,720,133.3C840,117,960,107,1080,112C1200,117,1320,139,1380,149.3L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z">
           </path>
         </svg>
@@ -263,7 +267,9 @@ if ($role != 'guest' && !empty($email)) {
 
 
 
-    <script src="https://maps.googleapis.com/maps/api/js?key="here-ivan"&libraries=places"></script>
+    <script
+  src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmgygVeipMUsrtGeZPZ9UzXRmcVdheIqw&libraries=places&callback=initMap" async defer>
+</script>
     <script>
     function initMap() {
     // Cavite, Philippines bounds

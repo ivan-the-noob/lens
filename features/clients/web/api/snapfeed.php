@@ -102,58 +102,8 @@ if ($role != 'guest' && !empty($email)) {
     <div class="text-box">
         POWER TO THE CREATORS
     </div>
-    <div class="container">
-        <!-- Card Section -->
-        <div class="row">
-            <div class="col-md-8 mb-3 justify-content-center align-items-center mx-auto">
-            <form action="../../function/php/snapfeed.php" method="POST" enctype="multipart/form-data">
-    <div class="card">
-        <div class="row no-gutters">
-            <!-- Left Section: Image -->
-            <div class="col-md-6">
-                <!-- This is where the chosen image will be previewed -->
-                <img id="preview-img" src="../../../../assets/img/snapfeed/gallery-1.jpg" class="card-img show-input" alt="Selected Image">
-            </div>
-            <!-- Right Section: Profile Picture, Name, and Description -->
-            <div class="col-md-6 d-flex">
-                <div class="card-body">
-                    <div class="d-flex align-items-center gap-2 section-name">
-                        <!-- Image for profile picture -->
-                        <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img rounded-circle">
-                        
-                        <!-- Use the session variable for the card title -->
-                        <h5 class="card-title mb-0">
-                            <?php 
-                                echo isset($_SESSION['name']) ? $_SESSION['name'] : 'Unknown User'; 
-                            ?>
-                        </h5>
-                    </div>
+    
 
-                    <input type="file" id="card_img" name="card_img" accept="image/*" required onchange="previewCardImage(event)" class="file-input mt-2">
-                    <input type="text" id="img_title" name="img_title" class="form-control mt-2" required placeholder="Image Title">
-                    <textarea id="card_text" name="card_text" rows="4" class="mt-3" required placeholder="Input Photo Caption"></textarea>
-                    <input type="submit" value="Submit" class="submit-project mt-2">
-                </div>
-            </div>
-        </div>
-    </div>
-</form>
-
-<!-- JavaScript for Image Preview -->
-<script>
-function previewCardImage(event) {
-    var reader = new FileReader();
-    reader.onload = function(){
-        var output = document.getElementById('preview-img');
-        output.src = reader.result;  // Set the selected image as the source of the <img> tag
-    };
-    reader.readAsDataURL(event.target.files[0]);
-}
-</script>
-
-            </div>
-        </div> 
-</div>
     
         <!-- Image Section -->
         <section class="gallery-img mt-5">
@@ -166,6 +116,30 @@ function previewCardImage(event) {
     
     </div>
 </div>
+
+<!-- Single Modal Structure -->
+<div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <img id="modal-main-img" src="" class="img-fluid" alt="Image from Snapfeed">
+                    </div>
+                    <div class="col-md-6 d-flex flex-column">
+                        <p id="modal-main-title" class="img-title"></p>
+                        <p id="modal-main-text" class="card-text"></p>
+                        <h5>Gallery of <span id="gallery-uploader"></span></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
      
     <div class="wave">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250" style="margin-bottom: -5px; background-color: #F3E7DB;">

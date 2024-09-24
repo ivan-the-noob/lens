@@ -24,6 +24,7 @@ if ($role != 'guest' && !empty($email)) {
 }
 
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -66,10 +67,10 @@ if ($role != 'guest' && !empty($email)) {
                     <a class="nav-link" href="index.html">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">About</a>
+                    <a class="nav-link" href="#">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="snapfeed.php">Snapfeed</a>
+                    <a class="nav-link" href="#snapfeed">Snapfeed</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#supplier">Supplier</a>
@@ -99,6 +100,7 @@ if ($role != 'guest' && !empty($email)) {
     </div>
 </nav>
 
+
     <section class="supplier-profile">
         <div class="container mt-5">
             <ul class="nav justify-content-center">
@@ -109,113 +111,39 @@ if ($role != 'guest' && !empty($email)) {
                     <a href="projects.php"><button class="nav-link">Projects</button></a>
                 </li>
                 <li class="nav-item">
-                    <a href="calendar.php"><button class="nav-link calendar highlight">Calendar</button></a>
+                    <a href="calendar.php"><button class="nav-link calendar">Calendar</button></a>
                 </li>
                 <li class="nav-item">
-                    <a href="contacts.php"><button class="nav-link contacts">Contacts</button></a>
+                    <a href="contacts.php"><button class="nav-link contacts highlight">Message</button></a>
                 </li>
             </ul>
         </div>
 
-        <div class="container">
-  <div class="row mt-5">
-    <!-- Calendar Section -->
-    <div class="col-md-6">
-      <div id="calendar"></div>
-    </div>
-
-    <!-- Booking Form and Map Section -->
-    <div class="col-md-6 ">
-    <div class="container booking-container">
-  <h2 class="text-center mb-4">BOOKING REQUEST</h2>
-
-  <!-- Booking Row Example -->
-  <div class="row mb-3 justify-content-center">
-    <div class="col-5">
-      <button type="button" class="btn book-req-view" data-bs-toggle="modal" data-bs-target="#bookingModal1">
-        View
-      </button>
-    </div>
-    <div class="col-5 d-flex confirm-button">
-      <button class="btn btn-success">ACCEPT</button>
-      <button class="btn btn-danger">DECLINE</button>
-    </div>
-  </div>
-
-  <!-- Modal for Booking Details -->
-  <div class="modal fade" id="bookingModal1" tabindex="-1" aria-labelledby="bookingModalLabel1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="bookingModalLabel1">Booking Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="messenger-container">
+    <!-- Conversation area -->
+    <div class="message received">
+        <img src="https://via.placeholder.com/40" alt="Supplier" class="profile-pic">
+        <div class="message-text">
+            Hey, how are you doing?
         </div>
-        <div class="modal-body">
-          <!-- Display Date -->
-          <div class="mb-3">
-            <strong>Date:</strong> <span id="bookingDate">2024-09-25</span>
-          </div>
-
-          <!-- Display Full Name -->
-          <div class="mb-3">
-            <strong>Full Name:</strong> <span id="fullname">John Doe</span>
-          </div>
-
-          <!-- Display Google Maps with Latitude and Longitude -->
-          <div class="mb-3">
-            <strong>Location:</strong> <span id="location">1600 Amphitheatre Parkway, Mountain View, CA</span>
-            <div id="map"></div> <!-- Map container -->
-          </div>
-
-          <!-- Display Event Type -->
-          <div class="mb-3">
-            <strong>Event:</strong> <span id="eventType">Photography</span>
-          </div>
-
-          <!-- Display Time -->
-          <div class="mb-3">
-            <strong>Time:</strong> <span id="bookingTime">10:00 AM</span>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
     </div>
-  </div>
-
-</div>
-
-        <!-- Google Maps API Script -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmgygVeipMUsrtGeZPZ9UzXRmcVdheIqw"></script>
-        <script>
-          // Example Latitude and Longitude for Google Maps
-          const lat = 37.4221;  // Latitude of location (Google HQ)
-          const lng = -122.0841; // Longitude of location (Google HQ)
-
-          // Function to initialize the map in the modal
-          function initMap() {
-            const location = { lat: lat, lng: lng };
-            const map = new google.maps.Map(document.getElementById("map"), {
-              zoom: 15,
-              center: location,
-            });
-
-            // Add marker to the location
-            new google.maps.Marker({
-              position: location,
-              map: map,
-              title: "Event Location",
-            });
-          }
-
-          // Load the map when the modal is shown
-          document.getElementById('bookingModal1').addEventListener('shown.bs.modal', initMap);
-        </script>
-      </div>
+    <div class="message sent">
+        <div class="message-text">
+            I'm good, thanks! How about you?
+        </div>
     </div>
-  </div>
+    <div class="message received">
+        <img src="https://via.placeholder.com/40" alt="Supplier" class="profile-pic">
+        <div class="message-text">
+            I'm great too, thanks for asking.
+        </div>
+    </div>
+
+    <!-- Input field -->
+    <div class="input-container">
+        <input type="text" placeholder="Type a message...">
+        <button type="button">Send</button>
+    </div>
 </div>
 
       
