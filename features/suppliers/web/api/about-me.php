@@ -193,7 +193,7 @@ if ($role != 'guest' && !empty($email)) {
 
                 <div class="mb-3">
                     <label for="location">Pin Your Location</label>
-                    <input id="location" class="form-control" type="text" placeholder="Search location">
+                    <input id="location" name="location_text" class="form-control" type="text" placeholder="Search location">
                     <div id="map" style="width: 100%; height: 300px;"></div>
                     <input type="hidden" name="latitude" id="latitude" value="<?php echo htmlspecialchars($latitude); ?>">
                     <input type="hidden" name="longitude" id="longitude" value="<?php echo htmlspecialchars($longitude); ?>">

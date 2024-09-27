@@ -16,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $age = $_POST['age'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
+    $location_text = $_POST['location_text']; // Add this line to capture location text
 
     // Handle file upload
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == UPLOAD_ERR_OK) {
@@ -55,12 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($count > 0) {
         // Update existing record
-        $stmt = $conn->prepare("UPDATE about_me SET profile_image = ?, profession = ?, about_me = ?, age = ?, latitude = ?, longitude = ? WHERE email = ?");
-        $stmt->bind_param('ssssdds', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $email);
+        $stmt = $conn->prepare("UPDATE about_me SET profile_image = ?, profession = ?, about_me = ?, age = ?, latitude = ?, longitude = ?, location_text = ? WHERE email = ?");
+        $stmt->bind_param('ssssdsss', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $email);
     } else {
         // Insert new record
-        $stmt = $conn->prepare("INSERT INTO about_me (profile_image, profession, about_me, age, latitude, longitude, email) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('ssssdds', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $email);
+        $stmt = $conn->prepare("INSERT INTO about_me (profile_image, profession, about_me, age, latitude, longitude, location_text, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('ssssdsss', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $email);
     }
 
     // Execute the query

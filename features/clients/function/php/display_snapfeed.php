@@ -11,7 +11,14 @@ $name = $_SESSION['name'];
 
 require '../../../../db/db.php';
 
-$sql = "SELECT id, img_title, card_img, card_text, email FROM snapfeed ORDER BY id DESC";
+// Updated SQL query to join with users table
+$sql = "
+SELECT snapfeed.id, snapfeed.img_title, snapfeed.card_img, snapfeed.card_text, snapfeed.email, 
+       users.name, users.profile_img 
+FROM snapfeed 
+LEFT JOIN users ON snapfeed.email = users.email 
+ORDER BY snapfeed.id DESC";
+
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -29,7 +36,9 @@ if ($result->num_rows > 0) {
         $imgTitle = $row['img_title'];
         $imgSrc = $row['card_img'];
         $cardText = $row['card_text'];
-        $uploaderEmail = $row['email']; 
+        $uploaderEmail = $row['email'];
+        $name = $row['name'] ?? 'Unknown'; // Fallback if no name is available
+        $profileImg = $row['profile_img'] ? '../../../../assets/img/profile/' . $row['profile_img'] : '../../../../default-profile.jpg'; // Prepend path and set default profile image
 
         echo '
         <div class="col-md-3 mb-3 gallery-item position-relative" id="gallery-item-' . $id . '">
@@ -39,6 +48,8 @@ if ($result->num_rows > 0) {
                  data-img-title="' . htmlspecialchars($imgTitle) . '" 
                  data-img-text="' . htmlspecialchars($cardText) . '"
                  data-email="' . htmlspecialchars($uploaderEmail) . '"
+                 data-name="' . htmlspecialchars($name) . '"
+                 data-profile-img="' . htmlspecialchars($profileImg) . '"
                  data-modal-id="' . $id . '" 
                  onclick="updateModalContent(this)">
         </div>';
@@ -57,57 +68,71 @@ if ($result->num_rows > 0) {
                                 <img id="modal-main-img-' . $id . '" src="' . $imgSrc . '" class="img-fluid" alt="Image from Snapfeed">
                             </div>
                             <div class="col-md-6 d-flex flex-column">
+                               <div class="d-flex align-items-center mb-3">
+                                    <img src="' . htmlspecialchars($profileImg) . '" alt="Uploader Profile Image" class="rounded-circle me-3" width="50" height="50">
+                                  <form action="about-me.php" method="POST" class="mb-0">
+                                    <input type="hidden" name="uploader_email" value="' . htmlspecialchars($uploaderEmail) . '">
+                                    <button type="submit" id="modal-main-name-' . htmlspecialchars($id) . '" class="mb-0" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">' . htmlspecialchars($name) . '</button>
+                                 </form>
+
+                                </div>
+
                                 <p id="modal-main-title-' . $id . '" class="img-title">' . htmlspecialchars($imgTitle) . '</p>
                                 <p id="modal-main-text-' . $id . '" class="card-text">' . htmlspecialchars($cardText) . '</p>
-                               
-                               <div class="container mt-auto comments">
+                                
+                                <div class="container mt-auto comments">
                                     <div class="input-container d-flex align-items-center">
-                                                <input type="text" class="form-control input-field" placeholder="Type something">
-                                                <button class="btn send" type="button">
-                                                        <i class="fas fa-paper-plane"></i> <!-- Send icon -->
-                                                </button>
+                                        <input type="text" class="form-control input-field" placeholder="Type something">
+                                        <button class="btn send" type="button">
+                                            <i class="fas fa-paper-plane"></i>
+                                        </button>
                                         <div class="like-container d-flex align-items-center">
                                             <button class="like-btn" type="button">
-                                                <i class="fa-regular fa-heart"></i> <!-- Empty heart icon -->
+                                                <i class="fa-regular fa-heart"></i>
                                             </button>
                                             <span class="like-count ms-2" id="hearts-counts">0</span>
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-                       <div class="row mt-3">
-                            <div class="col-md-12">
-                                <h5>Gallery of <span id="gallery-uploader-' . htmlspecialchars($uploaderEmail) . '">' . htmlspecialchars($uploaderEmail) . '</span></h5>
-                                <div class="row" id="uploader-images-' . $id . '">';
 
-                                // Fetch all images from the same uploader
-                                $img_sql = "SELECT id, img_title, card_img, card_text FROM snapfeed WHERE email = ? ORDER BY id DESC";
-                                $img_stmt = $conn->prepare($img_sql);
-                                $img_stmt->bind_param("s", $uploaderEmail);
-                                $img_stmt->execute();
-                                $img_result = $img_stmt->get_result();
+                      <div class="row mt-3">
+                        <div class="col-md-12">
+                            <h5>Gallery of <span id="gallery-uploader-' . htmlspecialchars($name) . '">' . htmlspecialchars($name) . '</span></h5>
+                            <div class="row" id="uploader-images-' . $id . '">';
 
-                                if ($img_result->num_rows > 0) {
-                                    while ($img_row = $img_result->fetch_assoc()) {
-                                        if ($img_row['card_img'] == $imgSrc) {
-                                            continue; 
-                                        }
 
-                                        echo '
+                            $img_sql = "SELECT id, img_title, card_img, card_text FROM snapfeed WHERE email = ? AND id != ? ORDER BY id DESC";
+                            $img_stmt = $conn->prepare($img_sql);
+                            $img_stmt->bind_param("si", $uploaderEmail, $id);
+                            $img_stmt->execute();
+                            $img_result = $img_stmt->get_result();
+
+                            if ($img_result->num_rows > 0) {
+                                while ($img_row = $img_result->fetch_assoc()) {
+                                    echo '
                                     <div class="col-md-4 mb-3 gallery-item" id="gallery-item-' . $img_row['id'] . '">
-                                            <img id="additional-image-' . $img_row['id'] . '" src="' . htmlspecialchars($img_row['card_img']) . '" class="img-fluid modal-img" alt="Additional Image from Snapfeed" 
-                                                data-img-src="' . htmlspecialchars($img_row['card_img']) . '" 
-                                                data-img-title="' . htmlspecialchars($img_row['img_title']) . '" 
-                                                data-img-text="' . htmlspecialchars($img_row['card_text']) . '"
-                                                data-modal-id="' . $id . '" 
-                                                onclick="updateModalContent(this)">
-                                        </div>';
-                                    }
+                                        <img id="additional-image-' . $img_row['id'] . '" src="' . htmlspecialchars($img_row['card_img']) . '" class="img-fluid modal-img" alt="Additional Image from Snapfeed" 
+                                            data-img-src="' . htmlspecialchars($img_row['card_img']) . '" 
+                                            data-img-title="' . htmlspecialchars($img_row['img_title']) . '" 
+                                            data-img-text="' . htmlspecialchars($img_row['card_text']) . '"
+                                            data-modal-id="' . $id . '" 
+                                            data-email="' . htmlspecialchars($uploaderEmail) . '"
+                                            data-name="' . htmlspecialchars($name) . '"
+                                            data-profile-img="' . htmlspecialchars($profileImg) . '"
+                                            onclick="updateModalContent(this)">
+                                    </div>';
                                 }
+                            } else {
+                                echo '<p>No additional images from this uploader.</p>';
+                            }
 
-                                echo '
+
+                                $name = $row['name'] ?? $defaultName; // Use the default name if not available
+                                $profileImg = $row['profile_img'] ? '../../../../assets/img/profile/' . $row['profile_img'] : $defaultProfileImg; // Use the default profile image if not available
+
+                                                echo '
                                                 </div>
                                             </div>
                                         </div>                         
@@ -117,6 +142,8 @@ if ($result->num_rows > 0) {
                         </div>';
     }
 }
+
+
 ?>
 
 <script>
@@ -130,54 +157,50 @@ function updateModalContent(imageElement) {
     var newImgSrc = imageElement.getAttribute('data-img-src');
     var newImgTitle = imageElement.getAttribute('data-img-title');
     var newImgText = imageElement.getAttribute('data-img-text');
-    var uploaderEmail = imageElement.getAttribute('data-email');
+    var uploaderName = imageElement.getAttribute('data-name') || 'Unknown User'; // Default name
+    var uploaderProfileImg = imageElement.getAttribute('data-profile-img') || '../../../../default-profile.jpg'; // Default profile image
 
     // Get references to the modal elements that will be updated
     var modalImg = document.getElementById('modal-main-img-' + modalId);
     var modalTitle = document.getElementById('modal-main-title-' + modalId);
     var modalText = document.getElementById('modal-main-text-' + modalId);
-    var modalEmail = document.getElementById('gallery-uploader-' + modalId);
+    var modalUploaderName = document.getElementById('modal-main-name-' + modalId);
+    var modalUploaderProfileImg = document.querySelector('#modal-' + modalId + ' .rounded-circle');
 
     // Update modal content with the new image details
     if (modalImg) {
-        modalImg.src = newImgSrc; // Swap the main modal image
-    } else {
-        console.error("Modal image not found for ID: " + modalId);
+        modalImg.src = newImgSrc;
     }
 
     if (modalTitle) {
-        modalTitle.textContent = newImgTitle; // Update the title
-    } else {
-        console.error("Modal title not found for ID: " + modalId);
+        modalTitle.textContent = newImgTitle;
     }
 
     if (modalText) {
-        modalText.textContent = newImgText; // Update the text
-    } else {
-        console.error("Modal text not found for ID: " + modalId);
+        modalText.textContent = newImgText;
     }
 
-    if (modalEmail) {
-        modalEmail.textContent = uploaderEmail; // Update the uploader's email
-    } else {
-        console.error("Uploader email element not found for ID: " + modalId);
+    if (modalUploaderName) {
+        modalUploaderName.textContent = uploaderName;
     }
 
-    // Hide the current gallery item and show the previously hidden one
-    var galleryItem = imageElement.parentElement;
-    if (galleryItem) {
-        galleryItem.style.display = 'none'; // Hide the clicked image's gallery item
-
-        if (previouslyHiddenGalleryItem) {
-            previouslyHiddenGalleryItem.style.display = 'block'; // Show the previously hidden item
-        }
-        previouslyHiddenGalleryItem = galleryItem; // Store the currently hidden item
+    if (modalUploaderProfileImg) {
+        modalUploaderProfileImg.src = uploaderProfileImg;
     }
-
-    // Optionally, if you want to clear the uploader gallery, uncomment the next lines
-    // var uploaderGallery = document.getElementById('uploader-images-' + modalId);
-    // uploaderGallery.innerHTML = ''; // Clear previous content
 }
+
+
+// Ensure this function is called when the modal opens or an image is clicked
+document.addEventListener('DOMContentLoaded', function() {
+    const galleryItems = document.querySelectorAll('.gallery-item img');
+
+    galleryItems.forEach(function(item) {
+        item.addEventListener('click', function() {
+            updateModalContent(this);
+        });
+    });
+});
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const likeButtons = document.querySelectorAll('.like-btn');
