@@ -109,16 +109,46 @@ $age = '';
 $name = 'Unknown User'; // Default name
 $uploaderEmail = ''; // Initialize uploaderEmail variable
 $location_text = ''; // Initialize location_text variable
+$worksCount = 0; // Initialize the works count variable
 
-// Fetch user data if email is provided
-if (isset($_POST['uploader_email'])) {
-    $uploaderEmail = $_POST['uploader_email'];
+// Step 1: Check if email is provided via POST
+if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
+    $uploaderEmail = htmlspecialchars($_POST['uploader_email']);
+    
+    echo '<script>
+        // Store the uploaderEmail in localStorage so it persists across pages
+        localStorage.setItem("uploader_email", "' . $uploaderEmail . '");
+    </script>';
+} else {
+    // Step 2: If uploader_email is not provided via POST, try to get it from localStorage using JavaScript
+    echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var storedEmail = localStorage.getItem("uploader_email");
+            if (storedEmail) {
+                // Resubmit the form with the email from localStorage
+                var form = document.createElement("form");
+                form.method = "POST";
+                form.action = window.location.href;
 
-    // Check if email is empty
-    if (empty($uploaderEmail)) {
-        die("Uploader email is empty.");
-    }
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "uploader_email";
+                input.value = storedEmail;
 
+                form.appendChild(input);
+                document.body.appendChild(form);
+
+                form.submit();
+            } else {
+                alert("No uploader email found.");
+            }
+        });
+    </script>';
+    exit; // Stop PHP processing as we will handle the page load via JavaScript
+}
+
+// Step 3: Fetch user data from the database if uploaderEmail is set
+if (!empty($uploaderEmail)) {
     // Prepare SQL to fetch user details, including location_text
     $sql = "SELECT u.name, u.profile_img, a.about_me, a.profession, a.latitude, a.longitude, a.age, a.location_text
             FROM about_me a 
@@ -148,8 +178,26 @@ if (isset($_POST['uploader_email'])) {
         echo "No data found for this user.";
     }
 
+    // Step 4: Count works from snapfeed table
+    $countSql = "SELECT COUNT(*) AS worksCount FROM snapfeed WHERE email = ?";
+    $countStmt = $conn->prepare($countSql);
+    if ($countStmt === false) {
+        die("SQL Error: " . $conn->error);
+    }
+
+    $countStmt->bind_param("s", $uploaderEmail);
+    $countStmt->execute();
+    $countResult = $countStmt->get_result();
+    if ($countResult->num_rows > 0) {
+        $countRow = $countResult->fetch_assoc();
+        $worksCount = $countRow['worksCount'];
+    } else {
+        echo "No works found for this user.";
+    }
+
     // Clean up
     $stmt->close();
+    $countStmt->close();
 } else {
     echo "No email provided.";
 }
@@ -290,7 +338,7 @@ $conn->close();
             <div class="card h-100 text-center">
               <div class="card-body">
                 <h5 class="card-title">Works</h5>
-                <a href="#" class="btn btn-link">More</a>
+                <p class="card-text"><?php echo $worksCount; ?></p>
               </div>
             </div>
           </div>

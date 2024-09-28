@@ -1,5 +1,4 @@
 <?php
-
 if (!isset($_SESSION['email'])) {
     header("Location: authentication/web/api/login.php");
     exit();
@@ -69,13 +68,14 @@ if ($result->num_rows > 0) {
                             </div>
                             <div class="col-md-6 d-flex flex-column">
                                <div class="d-flex align-items-center mb-3">
-                                    <img src="' . htmlspecialchars($profileImg) . '" alt="Uploader Profile Image" class="rounded-circle me-3" width="50" height="50">
-                                  <form action="about-me.php" method="POST" class="mb-0">
-                                    <input type="hidden" name="uploader_email" value="' . htmlspecialchars($uploaderEmail) . '">
-                                    <button type="submit" id="modal-main-name-' . htmlspecialchars($id) . '" class="mb-0" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">' . htmlspecialchars($name) . '</button>
-                                 </form>
-
-                                </div>
+    <img src="' . htmlspecialchars($profileImg) . '" alt="Uploader Profile Image" class="rounded-circle me-3" width="50" height="50">
+    <form action="about-me.php" method="POST" class="mb-0" onsubmit="saveUploaderEmail(\'' . htmlspecialchars($uploaderEmail) . '\')">
+        <input type="hidden" name="uploader_email" value="' . htmlspecialchars($uploaderEmail) . '">
+        <button type="submit" id="modal-main-name-' . htmlspecialchars($id) . '" class="mb-0" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+            ' . htmlspecialchars($name) . '
+        </button>
+    </form>
+</div>
 
                                 <p id="modal-main-title-' . $id . '" class="img-title">' . htmlspecialchars($imgTitle) . '</p>
                                 <p id="modal-main-text-' . $id . '" class="card-text">' . htmlspecialchars($cardText) . '</p>
@@ -224,5 +224,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
+
+function saveUploaderEmail(email) {
+        // Save the uploader email to localStorage
+        localStorage.setItem('uploader_email', email);
+    }
+
+
     
 </script>

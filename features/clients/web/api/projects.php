@@ -1,28 +1,48 @@
 <?php
-    session_start();
-    if (!isset($_SESSION['email'])) {
-        header("Location: authentication/web/api/login.php");
-        exit();
-    }
-    $email = $_SESSION['email'];
-    $role = $_SESSION['role']; 
+session_start();
 
-    $profileImg = ''; 
-
-if ($role != 'guest' && !empty($email)) {
-    require '../../../../db/db.php';
-
-    $stmt = $conn->prepare("SELECT profile_img FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->bind_result($profileImg);
-    $stmt->fetch();
-    $stmt->close();
-    $conn->close();
-
-    $profileImg = '../../../../assets/img/profile/' . $profileImg;
+// Check if the user is authenticated
+if (!isset($_SESSION['email'])) {
+    header("Location: authentication/web/api/login.php"); // Redirect to login if not authenticated
+    exit();
 }
 
+// Get email and role from session
+$email = $_SESSION['email'];
+$role = $_SESSION['role']; 
+
+// Default values
+$uploaderEmail = ''; 
+$profileImg = ''; 
+$name = 'Unknown User'; // Default name
+
+// Only fetch the uploader's profile image and name if the user is not a guest and email is available
+if ($role != 'guest' && !empty($email)) {
+    require '../../../../db/db.php';  // Include database connection
+
+    // Check if the `uploader_email` is provided via POST or GET (depending on your project structure)
+    if (isset($_POST['uploader_email'])) {
+        $uploaderEmail = $_POST['uploader_email'];
+    } elseif (isset($_GET['uploader_email'])) {
+        $uploaderEmail = $_GET['uploader_email'];
+    }
+
+    // Ensure the email is not empty
+    if (!empty($uploaderEmail)) {
+        // Prepare and execute SQL query to fetch uploader's profile image and name
+        $stmt = $conn->prepare("SELECT u.name, u.profile_img FROM users u WHERE u.email = ?");
+        $stmt->bind_param("s", $uploaderEmail);
+        $stmt->execute();
+        $stmt->bind_result($name, $profileImg);
+        $stmt->fetch();
+        $stmt->close();
+        $conn->close();
+
+        // Set the profile image path
+        $profileImg = !empty($profileImg) ? '../../../../assets/img/profile/' . $profileImg : 'path/to/default-image.jpg';
+    } else {
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +87,7 @@ if ($role != 'guest' && !empty($email)) {
                     <a class="nav-link" href="#">About</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#snapfeed">Snapfeed</a>
+                    <a class="nav-link" href="snapfeed.php">Snapfeed</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#supplier">Supplier</a>
@@ -116,87 +136,175 @@ if ($role != 'guest' && !empty($email)) {
             </ul>
         </div>
 
-        <div class="about-me-section" style="display: none;">
-            <div class="container mt-5 about-section">
-                    <div class="col-md-8 d-flex flex-column justify-content-center">
-                        <form enctype="multipart/form-data">
-                            <div class="mb-3">
 
-                                    <img src="../../../../assets/img/profile/profile.jpg" class="img-fluid rounded-circle mb-2" alt="Profile Picture">
+        <?php
+require '../../../../db/db.php';
 
-                                <!-- Input field for image upload -->
-                                <input class="form-control" type="file" id="imageUpload" accept="image/*" >
-                            </div>
-                            <div class="mb-3">
-                                <textarea class="form-control" placeholder="Hi, I'm a photographer">Hey</textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </form>
-                    </div>
+// Initialize variables
+$uploaderEmail = ''; 
+$snapfeedImages = [];
+$viewType = 'grid'; // Default view type
+
+// Step 1: Check if email is provided via POST or localStorage
+if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
+    $uploaderEmail = htmlspecialchars($_POST['uploader_email']);
+} else {
+    echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var storedEmail = localStorage.getItem("uploader_email");
+            if (storedEmail) {
+                // Resubmit the form with the email from localStorage
+                var form = document.createElement("form");
+                form.method = "POST";
+                form.action = window.location.href;
+
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "uploader_email";
+                input.value = storedEmail;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+
+                form.submit();
+            } else {
+                alert("No uploader email found.");
+            }
+        });
+    </script>';
+    exit;
+}
+
+if (!empty($uploaderEmail)) {
+    $sql_about_me = "SELECT view_type FROM about_me WHERE email = ?";
+    $stmt_about_me = $conn->prepare($sql_about_me);
+    if ($stmt_about_me === false) {
+        die("SQL Error: " . $conn->error);
+    }
+    $stmt_about_me->bind_param("s", $uploaderEmail);
+    $stmt_about_me->execute();
+    $result_about_me = $stmt_about_me->get_result();
+
+    if ($result_about_me->num_rows > 0) {
+        $about_me_data = $result_about_me->fetch_assoc();
+        $viewType = $about_me_data['view_type']; 
+    } else {
+        echo "No view type found for this user.";
+    }
+
+    $stmt_about_me->close();
+
+    // Fetch images from snapfeed
+    $sql_snapfeed = "SELECT card_img FROM snapfeed WHERE email = ?";
+    $stmt_snapfeed = $conn->prepare($sql_snapfeed);
+    if ($stmt_snapfeed === false) {
+        die("SQL Error: " . $conn->error);
+    }
+
+    $stmt_snapfeed->bind_param("s", $uploaderEmail);
+    $stmt_snapfeed->execute();
+    $result_snapfeed = $stmt_snapfeed->get_result();
+
+    // Fetch all image paths
+    while ($row = $result_snapfeed->fetch_assoc()) {
+        $snapfeedImages[] = $row['card_img'];
+    }
+
+    $stmt_snapfeed->close();
+} else {
+    echo "No email provided.";
+}
+
+$conn->close();
+?>
+
+<div class="container mt-5">
+    <?php if ($viewType === 'grid') : ?>
+        <div id="grid-layout" class="projects" style="display: block;">
+            <div class="row">
+                <?php
+                if (!empty($snapfeedImages)) {
+                    foreach ($snapfeedImages as $image) {
+                        echo '<div class="col-md-3 mb-3">';
+                        echo '<img src="' . htmlspecialchars($image) . '" class="img-fluid img-wh" alt="Image">';
+                        echo '</div>';
+                    }
+                } else {
+                    echo '<p>No images found for this user.</p>';
+                }
+                ?>
             </div>
         </div>
+    <?php elseif ($viewType === 'carousel') : ?>
+        <div id="carousel-layout" class="carousel-container" style="display: block;">
+            <div class="carousel-slider">
+                <?php
+                if (!empty($snapfeedImages)) {
+                    foreach ($snapfeedImages as $index => $image) {
+                        echo '<img id="img' . $index . '" src="' . htmlspecialchars($image) . '" alt="Image" class="carousel-img">';
+                    }
+                } else {
+                    echo '<p>No images found for this user.</p>';
+                }
+                ?>
+            </div>
+            <div class="buttons">
+                <button class="prev" onclick="plusSlides(-1)">&#10094;</button>
+                <button class="next" onclick="plusSlides(1)">&#10095;</button>
+            </div>
+        </div>
+    <?php endif; ?>
+</div>
 
-        <div class="container mt-5">
-            <!-- Buttons to toggle between Style 1 (Grid) and Style 2 (Carousel) -->
-            <div class="text-center mb-3">
-                <button id="style1" class="btn style-btn">Style 1 (Grid)</button>
-                <button id="style2" class="btn style-btn">Style 2 (Carousel)</button>
-            </div>
-        
-            <!-- Style 1: Grid Layout -->
-            <div id="grid-layout" class="projects">
-                <div class="row">
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-1.jpg" class="img-fluid img-wh" alt="Image 1">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-2.jpg" class="img-fluid img-wh" alt="Image 2">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-3.jpg" class="img-fluid img-wh" alt="Image 3">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-4.jpg" class="img-fluid img-wh" alt="Image 4">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-5.jpg" class="img-fluid img-wh" alt="Image 5">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-6.jpg" class="img-fluid img-wh" alt="Image 6">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-7.jpg" class="img-fluid img-wh" alt="Image 7">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-8.jpg" class="img-fluid img-wh" alt="Image 8">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-9.jpg" class="img-fluid img-wh" alt="Image 9">
-                    </div>
-                    <div class="col-md-3 mb-3">
-                        <img src="../../../../assets/img/snapfeed/gallery-10.jpg" class="img-fluid img-wh" alt="Image 10">
-                    </div>
-                </div>
-            </div>
-        
-            <div id="carousel-layout" class="carousel-container">
-                <div class="carousel-slider">
-                    <img id="img1" src="../../../../assets/img/snapfeed/gallery-1.jpg" alt="Image 1" class="carousel-img">
-                    <img id="img2" src="../../../../assets/img/snapfeed/gallery-2.jpg" alt="Image 2" class="carousel-img">
-                    <img id="img3" src="../../../../assets/img/snapfeed/gallery-3.jpg" alt="Image 3" class="carousel-img">
-                    <img id="img4" src="../../../../assets/img/snapfeed/gallery-4.jpg" alt="Image 4" class="carousel-img">
-                    <img id="img5" src="../../../../assets/img/snapfeed/gallery-5.jpg" alt="Image 5" class="carousel-img">
-                    <img id="img6" src="../../../../assets/img/snapfeed/gallery-6.jpg" alt="Image 6" class="carousel-img">
-                    <img id="img1" src="../../../../assets/img/snapfeed/gallery-7.jpg" alt="Image 1" class="carousel-img">
-                    <img id="img2" src="../../../../assets/img/snapfeed/gallery-8.jpg" alt="Image 2" class="carousel-img">
-                    <img id="img3" src="../../../../assets/img/snapfeed/gallery-9.jpg" alt="Image 3" class="carousel-img">
-                    <img id="img4" src="../../../../assets/img/snapfeed/gallery-10.jpg" alt="Image 4" class="carousel-img">
-                </div>
-                <div class="buttons">
-                    <button class="prev" onclick="plusSlides(-1)">&#10094;</button>
-                    <button class="next" onclick="plusSlides(1)">&#10095;</button>
-                </div>
-            </div>
+<script>
+let slideIndex = 1;
+
+function plusSlides(n) {
+    showSlides(slideIndex += n);
+}
+
+function showSlides(n) {
+    let slides = document.getElementsByClassName("carousel-img");
+    let totalSlides = slides.length;
+
+    if (n > totalSlides - 2) { slideIndex = totalSlides - 2; }
+    if (n < 1) { slideIndex = 1; }
+
+    for (let i = 0; i < totalSlides; i++) {
+        slides[i].style.display = "none";
+        slides[i].classList.remove("middle", "side");
+    }
+
+    for (let i = slideIndex - 1; i < slideIndex + 2; i++) {
+        if (slides[i]) {
+            slides[i].style.display = "block";
+        }
+    }
+
+
+    let middleIndex = slideIndex;
+
+    // Set the middle image
+    if (slides[middleIndex]) {
+        slides[middleIndex].classList.add("middle");
+    }
+
+    // Set the side images
+    if (slides[middleIndex - 1]) {
+        slides[middleIndex - 1].classList.add("side");
+    }
+    if (slides[middleIndex + 1]) {
+        slides[middleIndex + 1].classList.add("side");
+    }
+}
+
+
+// Initialize the carousel to show the first set of images
+showSlides(slideIndex);
+</script>
+
+
+
     </section>
 
     <script>
