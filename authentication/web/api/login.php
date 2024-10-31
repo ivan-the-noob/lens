@@ -5,8 +5,9 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Responsive Flip Animation</title>
-	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+	<title>LENSFOLIOHUB</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
 	<link rel="stylesheet" href="../../css/login.css">
 </head>
 <body>
@@ -16,7 +17,6 @@
 		
 		<div class="container box">
 			<div class="box1 box11 text-center">
-		
 				<h3>LENSFOLIOHUB</h3>
 				<div class="line"></div>
 				<p class="register-p">Enter your details and start your journey with us</p>
@@ -31,22 +31,27 @@
 					unset($_SESSION['signup_success']);
 				}
 			?>
-				<div class="User-Icon">
-					<img src="../../../assets/img/R.png" alt="User-Icon">
+				<div class="wrapper">
+					<form action="../../function/php/login.php" method="POST">
+						<h2>Login</h2>
+						<div class="input-field">
+							<input type="text" name="email" required>
+							<label>Enter your email</label>
+						</div>
+						<div class="input-field">
+							<input type="password" name="password" required>
+							<label>Enter your password</label>
+						</div>
+						<a href="#" class="forgot">Forgot Password?</a>
+						
+						<button type="submit" class="mt-2">Log In</button>
+						<div class="d-flex register">
+							<p class="mb-0 d-flex text-align-center justify-content-center align-items-center mx-auto gap-1 mt-2" >Don't have an account?<a href="#" class="a-reg">Register</a></p>
+						</div>
+					</form>
 				</div>
 
-				<form action="../../function/php/login.php" method="POST">
-					<label for="email">Email</label>
-					<input type="text" name="email" class="form-control mb-2" required>
-					
-					<label for="password">Password</label>
-					<input type="password" name="password" class="form-control mb-2" required>
-					<a href="#">Forgot Password?</a>
-					
-					<button type="submit" class="loginbtn">Log In</button>
-					
-					
-				</form>
+
 
 			</div>
 		</div>
@@ -71,16 +76,26 @@
 						</div>
 					</div>
 				</div>
-				<label for="name">Name</label>
-				<input type="text" name="name" class="form-control mb-2" required>
-				
-				<label for="email">Email</label>
-				<input type="email" name="email" class="form-control mb-2" required>
-				<label for="password">Password</label>
-				<input type="password" name="password" id="password" class="form-control mb-2" required>
+				<div class="input-field">
+					<input type="text" name="name" required>
+					<label for="name">Enter your name</label>
+				</div>
 
-				<label for="confirm-password">Confirm Password</label>
-				<input type="password" name="confirm-password" id="confirm-password" class="form-control mb-2" required>
+				<div class="input-field">
+					<input type="email" name="email" required>
+					<label for="email">Enter your email</label>
+				</div>
+
+				<div class="input-field">
+					<input type="password" name="password" id="password" required>
+					<label for="password">Enter your password</label>
+				</div>
+
+				<div class="input-field">
+					<input type="password" name="confirm-password" id="confirm-password" required>
+					<label for="confirm-password">Confirm your password</label>
+				</div>
+
 
 				<div class="alert-error" role="alert" id="password-error" style="display: none;">
 						Passwords do not match!
@@ -118,8 +133,8 @@
 </script>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 	<script src="../../function/script/login.js"></script>
 </body>
 </html>

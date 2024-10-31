@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $age = $_POST['age'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
-    $location_text = $_POST['location_text']; // Add this line to capture location text
+    $location_text = $_POST['location_text']; 
 
     // Handle file upload
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == UPLOAD_ERR_OK) {

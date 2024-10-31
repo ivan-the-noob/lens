@@ -106,12 +106,11 @@ $profession = '';
 $latitude = '';
 $longitude = '';
 $age = '';
-$name = 'Unknown User'; // Default name
-$uploaderEmail = ''; // Initialize uploaderEmail variable
-$location_text = ''; // Initialize location_text variable
-$worksCount = 0; // Initialize the works count variable
+$name = 'Unknown User';
+$uploaderEmail = '';
+$location_text = ''; 
+$worksCount = 0; 
 
-// Step 1: Check if email is provided via POST
 if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
     $uploaderEmail = htmlspecialchars($_POST['uploader_email']);
     
@@ -120,7 +119,7 @@ if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
         localStorage.setItem("uploader_email", "' . $uploaderEmail . '");
     </script>';
 } else {
-    // Step 2: If uploader_email is not provided via POST, try to get it from localStorage using JavaScript
+  
     echo '<script>
         document.addEventListener("DOMContentLoaded", function() {
             var storedEmail = localStorage.getItem("uploader_email");
@@ -144,12 +143,12 @@ if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
             }
         });
     </script>';
-    exit; // Stop PHP processing as we will handle the page load via JavaScript
+    exit; 
 }
 
-// Step 3: Fetch user data from the database if uploaderEmail is set
+
 if (!empty($uploaderEmail)) {
-    // Prepare SQL to fetch user details, including location_text
+
     $sql = "SELECT u.name, u.profile_img, a.about_me, a.profession, a.latitude, a.longitude, a.age, a.location_text
             FROM about_me a 
             JOIN users u ON a.email = u.email 
@@ -163,7 +162,7 @@ if (!empty($uploaderEmail)) {
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // If user data is found, populate the variables
+
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         $name = $user['name'];
@@ -173,12 +172,12 @@ if (!empty($uploaderEmail)) {
         $latitude = $user['latitude'];
         $longitude = $user['longitude'];
         $age = $user['age'];
-        $location_text = $user['location_text']; // Assign plain text location
+        $location_text = $user['location_text']; 
     } else {
         echo "No data found for this user.";
     }
 
-    // Step 4: Count works from snapfeed table
+
     $countSql = "SELECT COUNT(*) AS worksCount FROM snapfeed WHERE email = ?";
     $countStmt = $conn->prepare($countSql);
     if ($countStmt === false) {
@@ -269,42 +268,38 @@ $conn->close();
     var prevBtn = document.getElementById("prev-btn");
 
     function updateButtons() {
-      // Show/hide buttons based on current slide
       prevBtn.style.display = (currentSlide === 1) ? 'none' : 'block';
       nextBtn.style.display = (currentSlide === totalSlides) ? 'none' : 'block';
     }
 
     nextBtn.addEventListener("click", function() {
-      // Hide current slide
       document.getElementById('slide-' + currentSlide).classList.remove('active');
       
-      // Update current slide index
       currentSlide++;
       
-      // Show next slide
       document.getElementById('slide-' + currentSlide).classList.add('active');
-      updateButtons(); // Update button visibility
+      updateButtons(); 
     });
 
     prevBtn.addEventListener("click", function() {
-      // Hide current slide
+
       document.getElementById('slide-' + currentSlide).classList.remove('active');
       
-      // Update current slide index
+
       currentSlide--;
       
-      // Show previous slide
+
       document.getElementById('slide-' + currentSlide).classList.add('active');
-      updateButtons(); // Update button visibility
+      updateButtons(); 
     });
 
-    // Initialize button visibility
+
     updateButtons();
   });
 </script>
 
 <style>
-  /* Styling for the slider */
+
   .slider-content {
     display: none;
   }
@@ -316,16 +311,16 @@ $conn->close();
 
 
 
-      <!-- Small Cards (Right) -->
+
       <div class="col-lg-7 col-md-12">
         <div class="row h-100">
-          <!-- Small Card 1 -->
+
           <div class="col-md-6 mb-4">
             <div class="card h-100 text-center">
               <div class="card-body">
                 <h5 class="card-title">Profession</h5>
                 <p>  <?php 
-                    // Handle professions if available
+
                     $professionsArray = explode(',', $profession); 
                     echo !empty($professionsArray) ? implode(', ', array_map('htmlspecialchars', $professionsArray)) : 'None'; 
                     ?></p>
@@ -374,7 +369,6 @@ $conn->close();
                 </div>
             </div>
 
-            <!-- Display the user's name after the profile image -->
             <div class="mb-3">
                 <div class="d-flex justify-content-center">
                     <h3 class=""><?php echo htmlspecialchars($name); ?></h3> 
@@ -385,7 +379,6 @@ $conn->close();
             <div class="mb-3">
                 <p><strong>Profession:</strong></p>
                 <p>  <?php 
-                    // Handle professions if available
                     $professionsArray = explode(',', $profession); 
                     echo !empty($professionsArray) ? implode(', ', array_map('htmlspecialchars', $professionsArray)) : 'None'; 
                     ?></p>
@@ -479,11 +472,9 @@ $conn->close();
 </script>
     <script>
       function initMap() {
-    // Fixed coordinates based on user data
     var fixedLat = <?php echo htmlspecialchars($latitude); ?>;
     var fixedLng = <?php echo htmlspecialchars($longitude); ?>;
 
-    // Cavite, Philippines bounds
     var caviteBounds = {
         north: 14.48,
         south: 13.91,
@@ -491,32 +482,28 @@ $conn->close();
         east: 121.10
     };
 
-    // Initialize the map with restrictions and disabled controls
     var map = new google.maps.Map(document.getElementById('map'), {
         center: { lat: fixedLat, lng: fixedLng },
         zoom: 17,
         restriction: {
             latLngBounds: caviteBounds,
-            strictBounds: false // Ensures that users can move within Cavite bounds
+            strictBounds: false 
         },
-        // Disable map controls like dragging, zooming, etc.
-        disableDefaultUI: true, // Disables all default controls like zoom, map type selector
-        zoomControl: false,     // Disables zoom control
-        draggable: false,       // Disables map dragging
-        scrollwheel: false,     // Disables zooming using scroll
-        disableDoubleClickZoom: true, // Disables double click to zoom
-        gestureHandling: 'none' // Prevents all user gestures (dragging, zooming)
+
+        disableDefaultUI: true, 
+        zoomControl: false,    
+        draggable: false,      
+        scrollwheel: false,   
+        disableDoubleClickZoom: true, 
+        gestureHandling: 'none'
     });
 
-    // Initialize the marker without the draggable option
     var marker = new google.maps.Marker({
         position: { lat: fixedLat, lng: fixedLng },
         map: map
-        // No draggable option, marker is fixed
     });
 }
 
-// Initialize the map when the window loads
 window.onload = initMap;
 
 

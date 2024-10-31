@@ -387,6 +387,7 @@ body.loaded #preloader {
 
 /*Calendar Section*/
 
+
 form {
     background-color: #f8f9fa;
     padding: 20px;
@@ -484,7 +485,6 @@ footer p{
   }
 
   .book-req-view{
-    background-color: #7A3015 !important;
     color: #fff !important;
     width: 100% !important;
     display: flex;

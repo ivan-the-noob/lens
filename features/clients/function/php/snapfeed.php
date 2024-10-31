@@ -1,37 +1,29 @@
 <?php
-session_start();  // Start the session to access session variables
+session_start();  
 
-// Database connection
+
 require '../../../../db/db.php';
 
-// Check if form was submitted
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Handle the file upload for card image
-    $target_dir = "../../../../assets/img/snapfeed/";  // Folder where images will be stored
+    $target_dir = "../../../../assets/img/snapfeed/";  
     $card_img = $target_dir . basename($_FILES["card_img"]["name"]);
 
-    // Move the uploaded file to the target directory
     if (move_uploaded_file($_FILES["card_img"]["tmp_name"], $card_img)) {
-        // File upload was successful
-
-        // Use the session variable for the card title (assuming 'name' is already set)
         if (isset($_SESSION['name'])) {
-            $card_title = $_SESSION['name'];  // Retrieve the name from the session
+            $card_title = $_SESSION['name']; 
         } else {
-            $card_title = "Unknown";  // Fallback in case the session name is not set
+            $card_title = "Unknown";  
         }
 
         $card_text = $_POST['card_text'];
         $img_title = $_POST['img_title'];
 
-        // Check if email is set in session
         if (isset($_SESSION['email'])) {
             $email = $_SESSION['email'];
         } else {
-            $email = "unknown@example.com";  // Fallback in case the session email is not set
+            $email = "unknown@example.com"; 
         }
 
-        // Insert data into the MySQL database
         $sql = "INSERT INTO snapfeed (img_title, card_img, card_text, email) 
                 VALUES ('$img_title', '$card_img', '$card_text', '$email')";
 
@@ -50,7 +42,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $imageId = $_POST['image_id'];
     $email = $_SESSION['email'];
 
-    // Check if user already reacted
     $checkSql = "SELECT * FROM hearts WHERE image_id = ? AND email = ?";
     $stmt = $conn->prepare($checkSql);
     $stmt->bind_param("is", $imageId, $email);
@@ -58,20 +49,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-        // Remove heart react
         $deleteSql = "DELETE FROM hearts WHERE image_id = ? AND email = ?";
         $stmt = $conn->prepare($deleteSql);
         $stmt->bind_param("is", $imageId, $email);
         $stmt->execute();
     } else {
-        // Add heart react
         $insertSql = "INSERT INTO hearts (image_id, email) VALUES (?, ?)";
         $stmt = $conn->prepare($insertSql);
         $stmt->bind_param("is", $imageId, $email);
         $stmt->execute();
     }
 
-    // Get updated heart count
     $countSql = "SELECT COUNT(*) AS heart_count FROM hearts WHERE image_id = ?";
     $stmt = $conn->prepare($countSql);
     $stmt->bind_param("i", $imageId);

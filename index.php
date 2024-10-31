@@ -84,7 +84,7 @@ if ($role != 'guest' && !empty($email)) {
 
 
                     <li class="nav-item">
-                        <a class="nav-link" href="#profile">Supplier</a>
+                        <a class="nav-link" href="features/suppliers/web/api/about-me.php">Supplier</a>
                     </li> 
                     
                     <li class="nav-item">

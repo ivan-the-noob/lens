@@ -5,15 +5,26 @@
     font-weight: 400;
     font-style: normal;
 }
-
 body {
     font-family: Arial, sans-serif;
     background-color: #f8f0e3; 
     background-image: url('../../assets/img/authen-bg.jpg');
     background-size: cover;
     background-position: center;
+    position: relative; 
+    overflow: hidden;
 }
 
+body::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
+    z-index: 0; 
+}
 .scene {
     height: 100vh;
     display: flex;
@@ -32,34 +43,78 @@ body {
     backface-visibility: hidden;
 
 }
-
-
-
-.box1, .box2 {
+ .box1, .box2 {
     width: 90%;
-    padding: 20px;
-    border-radius: 20px;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border: 3px solid #fff;
+    border-radius: 8px;
+    padding: 30px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #fff;
+    
+}
 
+.box1 p{
+    width: 90%;
+    display: flex;
+    margin: auto;
+    margin-bottom: 10px;
+}
+
+.wrapper{
+    width: 80%;
+}
+.a-reg{
+    font-size: 14px;
+    color: #fff;
+    text-decoration: none;
+}
+
+.a-reg:hover{
+    font-weight:500;
+}
+
+
+.forgot{
+    margin-left: auto;
+    font-size: 14px;
+    text-decoration: none;
+    color: #fff;
+}
+.wrapper button, .registerbtn, .loginbtn{
+  padding: 8px 0;
+  border: none;
+  border-radius: 5px;
+  width: 90%;
+  display: flex;
+  margin: auto;
+  justify-content: center;
+  background-color: #FFFFFF;
+}
+
+.loginbtn{
+    margin: 0 !important;
+}
+
+
+.wrapper button:hover, .registerbtn:hover, .loginbtn:hover{
+    background-color: #fdf4f4e8;
+    color: #000;
 }
 
 
 .box11, .box33{
     padding-top: 12%;
-    background-color: #a67b5b;
 }
 
 .box22, .box33, .box44{
     margin-left: -10px;
-    background-color: #a67b5b;
     display: flex; 
     flex-direction: column; 
     justify-content: center; 
     align-items: center;
     padding: 20px;
-    border: 3px solid #fff;
     color: #fff;
 
 }
@@ -81,35 +136,13 @@ body {
     padding-left: 5%;
 }
 
-.box33 button{
-    display: flex;
-    justify-content: center;
-    margin: auto;
-}
-
-.box22 a{
-    color: #fff;
-    font-weight: 500;
-    font-size: 12px;
-    display: flex;
-    margin-left: auto;
-    justify-content: end;
-    margin-bottom: 5px;
-}
-
-.box22 button{
-    display: flex;
-    justify-content: center;
-    margin: auto;
-}
 
 
 
-.container .box22 input, .box33 input{
-    border-radius: 20px;
-    border: 2px solid #fff;
-    
-}
+
+
+
+
 
 .box44{
     margin-left: -10px;
@@ -124,10 +157,51 @@ h3{
     font-size: 24px;
 }
 
-.line{
-    border-top: 2px solid #fff;
 
-}
+form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #fff;
+  }
+  
+  .input-field {
+    position: relative;
+    border-bottom: 2px solid #ccc;
+    margin: 15px 0;
+  }
+  
+  .input-field label {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 16px;
+    pointer-events: none;
+    transition: 0.15s ease;
+  }
+  
+  .input-field input {
+    width: 100%;
+    height: 40px;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-size: 16px;
+    color: #fff;
+  }
+  
+  .input-field input:focus ~ label,
+  .input-field input:valid ~ label {
+    font-size: 0.8rem;
+    top: 10px;
+    transform: translateY(-120%);
+  }
 .lined{
     border-top: 2px solid #fff;
     width: 100%;
@@ -135,16 +209,6 @@ h3{
 .form-group{
     display: flex;
     justify-content: space-around;
-}
-
-.register-p{
-    padding: 10px;
-    text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-    font-size: 16px;
 }
 
 .alert-error {
@@ -178,19 +242,8 @@ h3{
     margin: 5px;
 }
 
-.registerbtn, .loginbtn{
-    background-color: #fff;
-    border: none;
-    color: #a67b5b;
-    padding: 10px 20px;
-    border-radius: 15px;
-    font-weight: 500;
-}
 
-.registerbtn:hover, .loginbtn:hover{
-    background-color: #e0c097;
-    color: #fff;
-}
+
 
 .container {
     transform: rotateY(0deg);

@@ -130,89 +130,121 @@ if ($role != 'guest' && !empty($email)) {
   <h2 class="text-center mb-4">BOOKING REQUEST</h2>
 
   <!-- Booking Row Example -->
-  <div class="row mb-3 justify-content-center">
-    <div class="col-5">
-      <button type="button" class="btn book-req-view" data-bs-toggle="modal" data-bs-target="#bookingModal1">
-        View
-      </button>
+  <?php
+
+  require '../../../../db/db.php';
+
+
+$query = "SELECT * FROM appointment";
+$result = $conn->query($query);
+?>
+
+<div class="row mb-3 justify-content-center">
+    <div class="col-7 d-flex flex-column confirm-button">
+        <?php if ($result->num_rows > 0): ?>
+            <?php while ($appointment = $result->fetch_assoc()): ?>
+                <div class="mb-3 d-flex justify-content-between"> <!-- Group buttons in a flex container -->
+                   
+                    <div>
+                    <button type="button" class="btn btn-primary" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#bookingModal<?php echo $appointment['id']; ?>">
+                        View
+                    </button>
+                        <button class="btn btn-success">ACCEPT</button>
+                        <button class="btn btn-danger">DECLINE</button>
+                    </div>
+                </div>
+
+                <!-- Modal for Booking Details -->
+                <div class="modal fade" id="bookingModal<?php echo $appointment['id']; ?>" tabindex="-1" aria-labelledby="bookingModalLabel<?php echo $appointment['id']; ?>" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="bookingModalLabel<?php echo $appointment['id']; ?>">Booking Details</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <!-- Display Date -->
+                                <div class="mb-3">
+                                    <strong>Date:</strong> <span id="bookingDate"><?php 
+                                        $date = new DateTime($appointment['selected_date']);
+                                        echo $date->format('M j, Y'); 
+                                    ?></span>
+                                </div>
+
+                                <!-- Display Full Name -->
+                                <div class="mb-3">
+                                    <strong>Full Name:</strong> <span id="fullname"><?php echo $appointment['name']; ?></span>
+                                </div>
+
+                                <!-- Display Google Maps with Latitude and Longitude -->
+                                <div class="mb-3">
+                                    <div id="map<?php echo $appointment['id']; ?>" style="width: 100%; height: 400px;" 
+                                        data-latitude="<?php echo $appointment['latitude']; ?>" 
+                                        data-longitude="<?php echo $appointment['longitude']; ?>">
+                                    </div> <!-- Map container -->
+                                </div>
+
+                                <!-- Google Maps API Script -->
+                                <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmgygVeipMUsrtGeZPZ9UzXRmcVdheIqw"></script>
+                                <script>
+                                    function initMap(appointmentId) {
+                                        var mapElement = document.getElementById('map' + appointmentId);
+                                        var latitude = parseFloat(mapElement.getAttribute('data-latitude'));
+                                        var longitude = parseFloat(mapElement.getAttribute('data-longitude'));
+
+                                        var map = new google.maps.Map(mapElement, {
+                                            center: { lat: latitude, lng: longitude },
+                                            zoom: 15
+                                        });
+
+                                        var marker = new google.maps.Marker({
+                                            position: { lat: latitude, lng: longitude },
+                                            map: map,
+                                            title: 'Appointment Location'
+                                        });
+                                    }
+
+                                    // Initialize the map when the modal opens
+                                    document.addEventListener('DOMContentLoaded', function () {
+                                        document.getElementById('bookingModal<?php echo $appointment['id']; ?>').addEventListener('shown.bs.modal', function () {
+                                            initMap(<?php echo $appointment['id']; ?>);
+                                        });
+                                    });
+                                </script>
+
+                                <!-- Display Event Type -->
+                                <div class="mb-3">
+                                    <strong>Event:</strong> <span id="eventType"><?php echo $appointment['event']; ?></span>
+                                </div>
+
+                                <!-- Display Time -->
+                                <div class="mb-3">
+                                    <strong>Time:</strong> <span id="bookingTime"><?php echo $appointment['time']; ?></span>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-primary">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <p>No appointments available.</p>
+        <?php endif; ?>
     </div>
-    <div class="col-5 d-flex confirm-button">
-      <button class="btn btn-success">ACCEPT</button>
-      <button class="btn btn-danger">DECLINE</button>
-    </div>
-  </div>
-
-  <!-- Modal for Booking Details -->
-  <div class="modal fade" id="bookingModal1" tabindex="-1" aria-labelledby="bookingModalLabel1" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="bookingModalLabel1">Booking Details</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <!-- Display Date -->
-          <div class="mb-3">
-            <strong>Date:</strong> <span id="bookingDate">2024-09-25</span>
-          </div>
-
-          <!-- Display Full Name -->
-          <div class="mb-3">
-            <strong>Full Name:</strong> <span id="fullname">John Doe</span>
-          </div>
-
-          <!-- Display Google Maps with Latitude and Longitude -->
-          <div class="mb-3">
-            <strong>Location:</strong> <span id="location">1600 Amphitheatre Parkway, Mountain View, CA</span>
-            <div id="map"></div> <!-- Map container -->
-          </div>
-
-          <!-- Display Event Type -->
-          <div class="mb-3">
-            <strong>Event:</strong> <span id="eventType">Photography</span>
-          </div>
-
-          <!-- Display Time -->
-          <div class="mb-3">
-            <strong>Time:</strong> <span id="bookingTime">10:00 AM</span>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div>
 
-        <!-- Google Maps API Script -->
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmgygVeipMUsrtGeZPZ9UzXRmcVdheIqw"></script>
-        <script>
-          // Example Latitude and Longitude for Google Maps
-          const lat = 37.4221;  // Latitude of location (Google HQ)
-          const lng = -122.0841; // Longitude of location (Google HQ)
 
-          // Function to initialize the map in the modal
-          function initMap() {
-            const location = { lat: lat, lng: lng };
-            const map = new google.maps.Map(document.getElementById("map"), {
-              zoom: 15,
-              center: location,
-            });
+<?php
+// Close the database connection
+$conn->close();
+?>
 
-            // Add marker to the location
-            new google.maps.Marker({
-              position: location,
-              map: map,
-              title: "Event Location",
-            });
-          }
-
-          // Load the map when the modal is shown
-          document.getElementById('bookingModal1').addEventListener('shown.bs.modal', initMap);
-        </script>
+      
       </div>
     </div>
   </div>
@@ -278,15 +310,104 @@ if ($role != 'guest' && !empty($email)) {
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-       
-        selectable: true,
-        selectHelper: true
-      });
-      calendar.render();
-    });
+    var calendarEl = document.getElementById('calendar');
+    var selectedDates = []; // Array to store active dates
+
+    // Fetch existing available dates from the server
+    fetch('../../function/php/get_dates.php') // Create this PHP file to return available dates
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const availableDates = data.dates; // Get dates array from the response
+                initializeCalendar(availableDates);
+            } else {
+                console.error('Error fetching dates:', data.message);
+            }
+        })
+        .catch(error => console.error('Fetch error:', error));
+
+    function initializeCalendar(availableDates) {
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            selectable: true,
+            dateClick: function(info) {
+                var dateStr = info.dateStr;
+
+                // Toggle the active state of the clicked date
+                if (selectedDates.includes(dateStr)) {
+                    // If the date is already active, remove it
+                    selectedDates = selectedDates.filter(date => date !== dateStr);
+                    info.dayEl.classList.remove('active-date'); // Remove active class
+                } else {
+                    // If the date is not active, add it
+                    selectedDates.push(dateStr);
+                    info.dayEl.classList.add('active-date'); // Add active class
+                }
+
+                // Send the updated date to the server
+                updateAvailableDate(dateStr);
+            },
+            // Render the available dates with the 'active-date' class
+            eventDidMount: function(info) {
+                if (availableDates.includes(info.event.startStr)) {
+                    // Add the active class to the date element
+                    info.el.classList.add('active-date');
+                }
+            }
+        });
+
+        // Add existing available dates as events for highlighting
+        availableDates.forEach(date => {
+            calendar.addEvent({
+                title: 'Available',
+                start: date,
+                allDay: true,
+                classNames: ['active-date'] // Ensure the class is used for styling
+            });
+        });
+
+        calendar.render();
+
+        // Store the calendar instance for later use
+        window.calendarInstance = calendar; // Save reference to the calendar instance
+    }
+
+    function updateAvailableDate(date) {
+        // Send the clicked date to the server to update
+        fetch('../../function/php/update_date.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ date: date })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Date updated:', data);
+            // Refresh available dates after each update
+            refreshAvailableDates();
+        })
+        .catch((error) => {
+            console.error('Error updating date:', error);
+        });
+    }
+
+    function refreshAvailableDates() {
+        fetch('../../function/php/get_dates.php') // Call the PHP file to get updated dates
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    const updatedAvailableDates = data.dates; // Get updated dates array
+                    // Clear the calendar and reinitialize it
+                    window.calendarInstance.removeAllEvents(); // Remove existing events
+                    initializeCalendar(updatedAvailableDates); // Reinitialize with updated dates
+                } else {
+                    console.error('Error fetching updated dates:', data.message);
+                }
+            })
+            .catch(error => console.error('Fetch error:', error));
+    }
+});
   </script>
 
 </body>

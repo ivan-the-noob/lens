@@ -10,7 +10,7 @@ $name = $_SESSION['name'];
 
 require '../../../../db/db.php';
 
-// Updated SQL query to join with users table
+
 $sql = "
 SELECT snapfeed.id, snapfeed.img_title, snapfeed.card_img, snapfeed.card_text, snapfeed.email, 
        users.name, users.profile_img 
@@ -36,7 +36,7 @@ if ($result->num_rows > 0) {
         $imgSrc = $row['card_img'];
         $cardText = $row['card_text'];
         $uploaderEmail = $row['email'];
-        $name = $row['name'] ?? 'Unknown'; // Fallback if no name is available
+        $name = $row['name'] ?? 'Unknown'; 
         $profileImg = $row['profile_img'] ? '../../../../assets/img/profile/' . $row['profile_img'] : '../../../../default-profile.jpg'; // Prepend path and set default profile image
 
         echo '
@@ -129,7 +129,7 @@ if ($result->num_rows > 0) {
                             }
 
 
-                                $name = $row['name'] ?? $defaultName; // Use the default name if not available
+                                $name = $row['name'] ?? $defaultName; 
                                 $profileImg = $row['profile_img'] ? '../../../../assets/img/profile/' . $row['profile_img'] : $defaultProfileImg; // Use the default profile image if not available
 
                                                 echo '
@@ -150,24 +150,20 @@ if ($result->num_rows > 0) {
 var previouslyHiddenGalleryItem = null;
 
 function updateModalContent(imageElement) {
-    // Get the ID of the modal from the clicked image
     var modalId = imageElement.getAttribute('data-modal-id');
 
-    // Get new image details from the clicked image
     var newImgSrc = imageElement.getAttribute('data-img-src');
     var newImgTitle = imageElement.getAttribute('data-img-title');
     var newImgText = imageElement.getAttribute('data-img-text');
-    var uploaderName = imageElement.getAttribute('data-name') || 'Unknown User'; // Default name
-    var uploaderProfileImg = imageElement.getAttribute('data-profile-img') || '../../../../default-profile.jpg'; // Default profile image
+    var uploaderName = imageElement.getAttribute('data-name') || 'Unknown User'; 
+    var uploaderProfileImg = imageElement.getAttribute('data-profile-img') || '../../../../default-profile.jpg'; 
 
-    // Get references to the modal elements that will be updated
     var modalImg = document.getElementById('modal-main-img-' + modalId);
     var modalTitle = document.getElementById('modal-main-title-' + modalId);
     var modalText = document.getElementById('modal-main-text-' + modalId);
     var modalUploaderName = document.getElementById('modal-main-name-' + modalId);
     var modalUploaderProfileImg = document.querySelector('#modal-' + modalId + ' .rounded-circle');
 
-    // Update modal content with the new image details
     if (modalImg) {
         modalImg.src = newImgSrc;
     }
@@ -190,7 +186,6 @@ function updateModalContent(imageElement) {
 }
 
 
-// Ensure this function is called when the modal opens or an image is clicked
 document.addEventListener('DOMContentLoaded', function() {
     const galleryItems = document.querySelectorAll('.gallery-item img');
 
@@ -209,24 +204,22 @@ document.addEventListener('DOMContentLoaded', function() {
         likeButton.addEventListener('click', function() {
             this.classList.toggle('active');
 
-            // Change the icon based on active state
             const heartIcon = this.querySelector('i');
             const likeCountSpan = this.querySelector('.like-count');
             if (this.classList.contains('active')) {
-                heartIcon.classList.remove('fa-regular', 'fa-heart'); // Remove empty heart
-                heartIcon.classList.add('fa-solid', 'fa-heart'); // Add filled heart
-                likeCountSpan.textContent = parseInt(likeCountSpan.textContent, 10) + 1; // Increase count
+                heartIcon.classList.remove('fa-regular', 'fa-heart'); 
+                heartIcon.classList.add('fa-solid', 'fa-heart'); 
+                likeCountSpan.textContent = parseInt(likeCountSpan.textContent, 10) + 1;
             } else {
-                heartIcon.classList.remove('fa-solid', 'fa-heart'); // Remove filled heart
-                heartIcon.classList.add('fa-regular', 'fa-heart'); // Add empty heart
-                likeCountSpan.textContent = parseInt(likeCountSpan.textContent, 10) - 1; // Decrease count
+                heartIcon.classList.remove('fa-solid', 'fa-heart'); 
+                heartIcon.classList.add('fa-regular', 'fa-heart'); 
+                likeCountSpan.textContent = parseInt(likeCountSpan.textContent, 10) - 1;
             }
         });
     });
 });
 
 function saveUploaderEmail(email) {
-        // Save the uploader email to localStorage
         localStorage.setItem('uploader_email', email);
     }
 
