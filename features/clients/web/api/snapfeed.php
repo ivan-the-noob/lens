@@ -23,6 +23,9 @@ if ($role != 'guest' && !empty($email)) {
     $profileImg = '../../../../assets/img/profile/' . $profileImg;
 }
 
+
+
+
 ?>
 
 <!DOCTYPE html>
@@ -113,6 +116,31 @@ if ($role != 'guest' && !empty($email)) {
                 ?>
             </div>
         </section>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('[id^="show-comments-"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.id.replace('show-comments-', '');
+            document.getElementById('modal-main-title-' + id).style.display = 'none';
+            document.getElementById('modal-main-text-' + id).style.display = 'none';
+            this.style.display = 'none';
+            document.getElementById('comments-section-' + id).style.display = 'block';
+        });
+    });
+
+    document.querySelectorAll('[id^="show-text-"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.id.replace('show-text-', '');
+            document.getElementById('modal-main-title-' + id).style.display = 'block';
+            document.getElementById('modal-main-text-' + id).style.display = 'block';
+            document.getElementById('show-comments-' + id).style.display = 'inline';
+            document.getElementById('comments-section-' + id).style.display = 'none';
+        });
+    });
+});
+
+        </script>
     
     </div>
 </div>

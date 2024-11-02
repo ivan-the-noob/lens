@@ -31,6 +31,7 @@ if ($result->num_rows > 0) {
     echo '<div class="row">';
 
     while ($row = $result->fetch_assoc()) {
+        
         $id = $row['id'];
         $imgTitle = $row['img_title'];
         $imgSrc = $row['card_img'];
@@ -40,7 +41,7 @@ if ($result->num_rows > 0) {
         $profileImg = $row['profile_img'] ? '../../../../assets/img/profile/' . $row['profile_img'] : '../../../../default-profile.jpg'; // Prepend path and set default profile image
 
         echo '
-        <div class="col-md-3 mb-3 gallery-item position-relative" id="gallery-item-' . $id . '">
+        <div class="col-md-4 mb-3 gallery-item position-relative" id="gallery-item-' . $id . '">
             <img src="' . $imgSrc . '" class="img-fluid img-wh" alt="Image from Snapfeed" 
                  data-bs-toggle="modal" data-bs-target="#modal-' . $id . '"
                  data-img-src="' . htmlspecialchars($imgSrc) . '" 
@@ -68,79 +69,83 @@ if ($result->num_rows > 0) {
                             </div>
                             <div class="col-md-6 d-flex flex-column">
                                <div class="d-flex align-items-center mb-3">
-    <img src="' . htmlspecialchars($profileImg) . '" alt="Uploader Profile Image" class="rounded-circle me-3" width="50" height="50">
-    <form action="about-me.php" method="POST" class="mb-0" onsubmit="saveUploaderEmail(\'' . htmlspecialchars($uploaderEmail) . '\')">
-        <input type="hidden" name="uploader_email" value="' . htmlspecialchars($uploaderEmail) . '">
-        <button type="submit" id="modal-main-name-' . htmlspecialchars($id) . '" class="mb-0" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
-            ' . htmlspecialchars($name) . '
-        </button>
-    </form>
-</div>
+                                    <img src="' . htmlspecialchars($profileImg) . '" alt="Uploader Profile Image" class="rounded-circle me-3" width="50" height="50">
+                                    <form action="about-me.php" method="POST" class="mb-0" onsubmit="saveUploaderEmail(\'' . htmlspecialchars($uploaderEmail) . '\')">
+                                        <input type="hidden" name="uploader_email" value="' . htmlspecialchars($uploaderEmail) . '">
+                                        <button type="submit" id="modal-main-name-' . htmlspecialchars($id) . '" class="mb-0" style="background: none; border: none; padding: 0; color: inherit; cursor: pointer;">
+                                            ' . htmlspecialchars($name) . '
+                                        </button>
+                                    </form>
+                                </div>
 
                                 <p id="modal-main-title-' . $id . '" class="img-title">' . htmlspecialchars($imgTitle) . '</p>
                                 <p id="modal-main-text-' . $id . '" class="card-text">' . htmlspecialchars($cardText) . '</p>
-                                
-                                <div class="container mt-auto comments">
+
+                                <!-- Arrow button to go to comments -->
+                                <button id="show-comments-' . $id . '" class="btn btn-link p-0 text-decoration-none">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+
+                                <div class="container mt-auto comments" id="comments-section-' . $id . '" style="display: none;">
+                                    <!-- Arrow button to go back to text -->
+                                    <button id="show-text-' . $id . '" class="btn btn-link p-0 text-decoration-none mb-2">
+                                        <i class="fas fa-chevron-left"></i>
+                                    </button>
+
                                     <div class="input-container d-flex align-items-center">
-                                        <input type="text" class="form-control input-field" placeholder="Type something">
-                                        <button class="btn send" type="button">
-                                            <i class="fas fa-paper-plane"></i>
-                                        </button>
-                                        <div class="like-container d-flex align-items-center">
-                                            <button class="like-btn" type="button">
-                                                <i class="fa-regular fa-heart"></i>
+                                        <form action="../../function/php/post_comments.php" method="post">
+                                            <input type="hidden" name="id" value="' . $id . '"> <!-- Ensure this is correct -->
+                                            <input type="text" class="form-control input-field" name="comments" placeholder="Type something" required>
+                                            <button class="btn send" type="submit">
+                                                <i class="fas fa-paper-plane"></i>
                                             </button>
-                                            <span class="like-count ms-2" id="hearts-counts">0</span>
-                                        </div>
+                                        </form>
+                                         
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                      <div class="row mt-3">
-                        <div class="col-md-12">
-                            <h5>Gallery of <span id="gallery-uploader-' . htmlspecialchars($name) . '">' . htmlspecialchars($name) . '</span></h5>
-                            <div class="row" id="uploader-images-' . $id . '">';
+                        <div class="row mt-3">
+                            <div class="col-md-12">
+                                <h5>Gallery of <span id="gallery-uploader-' . htmlspecialchars($name) . '">' . htmlspecialchars($name) . '</span></h5>
+                                <div class="row" id="uploader-images-' . $id . '">';
 
+                                $img_sql = "SELECT id, img_title, card_img, card_text FROM snapfeed WHERE email = ? AND id != ? ORDER BY id DESC";
+                                $img_stmt = $conn->prepare($img_sql);
+                                $img_stmt->bind_param("si", $uploaderEmail, $id);
+                                $img_stmt->execute();
+                                $img_result = $img_stmt->get_result();
 
-                            $img_sql = "SELECT id, img_title, card_img, card_text FROM snapfeed WHERE email = ? AND id != ? ORDER BY id DESC";
-                            $img_stmt = $conn->prepare($img_sql);
-                            $img_stmt->bind_param("si", $uploaderEmail, $id);
-                            $img_stmt->execute();
-                            $img_result = $img_stmt->get_result();
-
-                            if ($img_result->num_rows > 0) {
-                                while ($img_row = $img_result->fetch_assoc()) {
-                                    echo '
-                                    <div class="col-md-4 mb-3 gallery-item" id="gallery-item-' . $img_row['id'] . '">
-                                        <img id="additional-image-' . $img_row['id'] . '" src="' . htmlspecialchars($img_row['card_img']) . '" class="img-fluid modal-img" alt="Additional Image from Snapfeed" 
-                                            data-img-src="' . htmlspecialchars($img_row['card_img']) . '" 
-                                            data-img-title="' . htmlspecialchars($img_row['img_title']) . '" 
-                                            data-img-text="' . htmlspecialchars($img_row['card_text']) . '"
-                                            data-modal-id="' . $id . '" 
-                                            data-email="' . htmlspecialchars($uploaderEmail) . '"
-                                            data-name="' . htmlspecialchars($name) . '"
-                                            data-profile-img="' . htmlspecialchars($profileImg) . '"
-                                            onclick="updateModalContent(this)">
-                                    </div>';
+                                if ($img_result->num_rows > 0) {
+                                    while ($img_row = $img_result->fetch_assoc()) {
+                                        echo '
+                                        <div class="col-md-4 mb-3 gallery-item" id="gallery-item-' . $img_row['id'] . '">
+                                            <img id="additional-image-' . $img_row['id'] . '" src="' . htmlspecialchars($img_row['card_img']) . '" class="img-fluid modal-img" alt="Additional Image from Snapfeed" 
+                                                data-img-src="' . htmlspecialchars($img_row['card_img']) . '" 
+                                                data-img-title="' . htmlspecialchars($img_row['img_title']) . '" 
+                                                data-img-text="' . htmlspecialchars($img_row['card_text']) . '"
+                                                data-modal-id="' . $id . '" 
+                                                data-email="' . htmlspecialchars($uploaderEmail) . '"
+                                                data-name="' . htmlspecialchars($name) . '"
+                                                data-profile-img="' . htmlspecialchars($profileImg) . '"
+                                                onclick="updateModalContent(this)">
+                                        </div>';
+                                    }
+                                } else {
+                                    echo '<p>No additional images from this uploader.</p>';
                                 }
-                            } else {
-                                echo '<p>No additional images from this uploader.</p>';
-                            }
 
-
-                                $name = $row['name'] ?? $defaultName; 
-                                $profileImg = $row['profile_img'] ? '../../../../assets/img/profile/' . $row['profile_img'] : $defaultProfileImg; // Use the default profile image if not available
-
-                                                echo '
-                                                </div>
-                                            </div>
-                                        </div>                         
-                                    </div>
+                                echo '
                                 </div>
                             </div>
-                        </div>';
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>';
     }
+    echo '</div>'; // Closing row div
 }
 
 
@@ -197,27 +202,12 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
-document.addEventListener('DOMContentLoaded', function() {
-    const likeButtons = document.querySelectorAll('.like-btn');
-    
-    likeButtons.forEach(function(likeButton) {
-        likeButton.addEventListener('click', function() {
-            this.classList.toggle('active');
 
-            const heartIcon = this.querySelector('i');
-            const likeCountSpan = this.querySelector('.like-count');
-            if (this.classList.contains('active')) {
-                heartIcon.classList.remove('fa-regular', 'fa-heart'); 
-                heartIcon.classList.add('fa-solid', 'fa-heart'); 
-                likeCountSpan.textContent = parseInt(likeCountSpan.textContent, 10) + 1;
-            } else {
-                heartIcon.classList.remove('fa-solid', 'fa-heart'); 
-                heartIcon.classList.add('fa-regular', 'fa-heart'); 
-                likeCountSpan.textContent = parseInt(likeCountSpan.textContent, 10) - 1;
-            }
-        });
-    });
-});
+
+
+
+
+
 
 function saveUploaderEmail(email) {
         localStorage.setItem('uploader_email', email);
