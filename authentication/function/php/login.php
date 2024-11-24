@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("s", $email); // Bind email to the prepared statement
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     // Check if the user exists
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
@@ -25,8 +25,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION['role'] = $user['role'];
             $_SESSION['name'] = $user['name'];
 
-            // Redirect to index.php after successful login
-            header("Location: ../../../index.php");
+            // Redirect based on role
+            if ($user['role'] === 'admin') {
+                header("Location: ../../../features/admin/web/api/admin.php"); // Admin dashboard
+            } elseif ($user['role'] === 'client') {
+                header("Location: ../../../client/home.php"); // Client homepage
+            } elseif ($user['role'] === 'supplier') {
+                header("Location: ../../../supplier/portal.php"); // Supplier portal
+            } else {
+                // Handle unexpected roles (optional)
+                $_SESSION['login_error'] = "Invalid role!";
+                header("Location: ../../web/api/login.php");
+            }
             exit();
         } else {
             // Handle invalid password
@@ -41,4 +51,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 }
-?>
