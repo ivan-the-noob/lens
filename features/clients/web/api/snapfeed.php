@@ -1,7 +1,7 @@
 <?php
     session_start();
     if (!isset($_SESSION['email'])) {
-        header("Location: authentication/web/api/login.php");
+        header("Location: ../../../../authentication/web/api/login.php");
         exit();
     }
     $email = $_SESSION['email'];
@@ -76,12 +76,8 @@ if ($role != 'guest' && !empty($email)) {
                     <li class="nav-item">
                         <a class="nav-link" href="#snapfeed">Snapfeed</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#supplier">Supplier</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#profile">Profile</a>
-                    </li>
+
+                  
                 </ul>
                 <div class="d-flex ml-auto">
                     <?php if ($role != 'guest') { ?>

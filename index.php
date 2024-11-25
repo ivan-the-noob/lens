@@ -83,13 +83,7 @@ if ($role != 'guest' && !empty($email)) {
                     <?php endif; ?>
 
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="features/suppliers/web/api/about-me.php">Supplier</a>
-                    </li> 
                     
-                    <li class="nav-item">
-                        <a class="nav-link" href="features/index/web/api/profile.php">Profile</a>
-                    </li>
                 </ul>
 
                 <div class="d-flex ml-auto">

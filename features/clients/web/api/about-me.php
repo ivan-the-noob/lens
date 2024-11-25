@@ -70,9 +70,6 @@ if ($role != 'guest' && !empty($email)) {
                     <a class="nav-link" href="snapfeed.php">Snapfeed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#supplier">Supplier</a>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="#profile">Profile</a>
                 </li>
             </ul>

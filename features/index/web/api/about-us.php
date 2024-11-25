@@ -1,3 +1,30 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['email'])) {
+        header("Location: authentication/web/api/login.php");
+        exit();
+    }
+    $email = $_SESSION['email'];
+    $role = $_SESSION['role']; 
+
+    $profileImg = ''; 
+
+if ($role != 'guest' && !empty($email)) {
+    require '../../../../db/db.php';
+
+    $stmt = $conn->prepare("SELECT profile_img FROM users WHERE email = ?");
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($profileImg);
+    $stmt->fetch();
+    $stmt->close();
+    $conn->close();
+
+    $profileImg = '../../../../assets/img/profile/' . $profileImg;
+}
+
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,7 +58,7 @@
             </button>
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
+                <ul class="navbar-nav d-flex">
                     <li class="nav-item">
                         <a class="nav-link" href="../../../../index.php">Home</a>
                     </li>
@@ -39,17 +66,25 @@
                         <a class="nav-link" href="#">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="snapfeed.php">Snapfeed</a>
+                        <a class="nav-link" href="../../../clients/web/api/snapfeed.php">Snapfeed</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="supplier.php">Supplier</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="profile.php">Profile</a>
-                    </li>
+                 
+                    
                 </ul>
                 <div class="d-flex ml-auto">
-                    <a href="features/users/web/api/login.php" class="btn-theme" type="button">Login</a>
+                    <?php if ($role != 'guest') { ?>
+                        <div class="dropdown">
+                            <button class="btn btn-theme dropdown-toggle" type=" button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img" style="width: 50px; height: 50px; border-radius: 50%;">
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
+                            </ul>
+                            </div>
+                        <?php } else { ?>
+                        <!-- User is not logged in, display a login link -->
+                        <a href="authentication/web/api/login.php" class="btn-theme" type="button">Login</a>
+                    <?php } ?>
                 </div>
             </div>
         </div>
