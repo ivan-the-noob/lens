@@ -1,3 +1,48 @@
+<?php 
+session_start();
+require '../../../../db/db.php';
+
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : 'guest';
+$email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
+
+$totalClientsQuery = "SELECT COUNT(*) AS total_clients FROM users WHERE role = 'customer'";
+$totalClientsResult = $conn->query($totalClientsQuery);
+$totalClients = $totalClientsResult->fetch_assoc()['total_clients'];
+
+$newUsersQuery = "SELECT COUNT(*) AS new_users_this_week FROM users WHERE (role = 'customer' OR role = 'supplier') AND YEARWEEK(created_at, 1) = YEARWEEK(CURDATE(), 1)";
+$newUsersResult = $conn->query($newUsersQuery);
+$newUsers = $newUsersResult->fetch_assoc()['new_users_this_week']; 
+
+$totalSuppliersQuery = "SELECT COUNT(*) AS total_suppliers FROM users WHERE role = 'supplier'";
+$totalSuppliersResult = $conn->query($totalSuppliersQuery);
+$totalSuppliers = $totalSuppliersResult->fetch_assoc()['total_suppliers'];
+
+$supplierData = array_fill(0, 12, 0); 
+$clientData = array_fill(0, 12, 0); 
+
+
+$supplierData = array_fill(0, 12, 0); 
+$customerData = array_fill(0, 12, 0); 
+
+
+$sql = "SELECT MONTH(created_at) AS month, COUNT(*) AS user_count, role 
+        FROM users 
+        WHERE role IN ('customer', 'supplier') 
+        GROUP BY MONTH(created_at), role
+        ORDER BY MONTH(created_at)";
+$result = $conn->query($sql);
+
+
+while ($row = $result->fetch_assoc()) {
+    if ($row['role'] === 'supplier') {
+        $supplierData[$row['month'] - 1] = $row['user_count']; 
+    } elseif ($row['role'] === 'customer') {
+        $customerData[$row['month'] - 1] = $row['user_count']; 
+    }
+}
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -13,18 +58,23 @@
 
 <body>
     <!--Navigation Links-->
-    <div class="navbar flex-column bg-white shadow-sm p-3 collapse d-md-flex" id="navbar">
+    <div class="navbar flex-column shadow-sm p-3 collapse d-md-flex" id="navbar">
         <div class="navbar-links">
-            <a class="navbar-brand d-none d-md-block logo-container" href="#">
-                <img src="../../../../assets/img/logo.png" alt="Logo">
-            </a>
-            <a href="#dashboard" class="navbar-highlight">
-                <i class="fa-solid fa-tachometer-alt"></i>
+            <h5>LENSFOLIOHUB</h5>
+            <a href="#" class="navbar-highlight">
                 <span>Dashboard</span>
             </a>
-            <a href="#dashboard">
-                <i class="fa-solid fa-tachometer-alt"></i>
+            <a href="announcement.php">
                 <span>Announcement</span>
+            </a>
+            <a href="registered-client.php">
+                <span>Registered Client</span>
+            </a>
+            <a href="registered-supplier.php">
+                <span>Registered Supplier</span>
+            </a>
+            <a href="reports.php">
+                <span>Registered Supplier</span>
             </a>
         </div>
 
@@ -45,11 +95,11 @@
             <div class="profile-admin">
                 <div class="dropdown">
                     <button class="" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <img src="../../../../assets/img/vet logo.png"
+                        <img src="../../../../assets/img/profile/profile.jpg"
                             style="width: 40px; height: 40px; object-fit: cover;">
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="../../../users/web/api/logout.php">Logout</a></li>
+                        <li><a class="dropdown-item" href="../../../../authentication/web/api/logout.php">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -58,78 +108,189 @@
             <h3>Dashboard</h3>
             <div class="container total">
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card total-users">
-                            <div class="card-body">
+                            <div class="card-body d-flex userss">  
                                 <div class="d-flex gap-2">
-                                    <i class="fas fa-user"></i>
-                                    <h5>TOTAL USERS</h5>
+                                    <i class="fas fa-user d-flex align-items-center"></i>
                                 </div>
-                                <p>1000</p>
+                                <div class="total-number">
+                                    <p class="total-num"><?php echo $totalClients; ?></p>
+                                    <p class="total-title">Client Users</p>
+                                </div>
+                            </div>
+                            <div class="line"><hr></div>
+                            <div class="card-body d-flex plus-users">  
+                                <div class="d-flex gap-2">
+                                <i class="fas fa-plus d-flex align-items-center"></i>
+                                </div>
+                                <div class="total-number">
+                                    <p class="total-num"><?php echo $newUsers; ?></p>
+                                    <p class="total-title">New Users</p>
+                                </div>
+                            </div> 
+                            <div class="line"><hr></div>  
+                            <div class="card-body d-flex plus-users">  
+                                <div class="d-flex gap-2">
+                                <i class="fas fa-box d-flex align-items-center"></i>
+                                </div>
+                                <div class="total-number">
+                                    <p class="total-num"><?php echo $totalSuppliers; ?></p>
+                                    <p class="total-title">Total Suppliers</p>
+                                </div>
+                            </div>                   
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                    <div class="chart-container">
+                        <script>
+                            document.addEventListener("DOMContentLoaded", function() {
+    var ctx = document.getElementById('salesChart').getContext('2d');
 
-                            </div>
-                        </div>
+    var supplierData = <?php echo json_encode($supplierData); ?>;
+    var clientData = <?php echo json_encode($clientData); ?>;
+
+    var chartData = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [
+            {
+                label: 'Supplier Users',
+                data: supplierData,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 2,
+                fill: true,
+                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
+            },
+            {
+                label: 'Client Users',
+                data: clientData,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)', 
+                borderColor: 'rgba(255, 99, 132, 1)', 
+                borderWidth: 2,
+                fill: true,
+                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgba(255, 99, 132, 1)'
+            }
+        ]
+    };
+
+    var salesChart = new Chart(ctx, {
+        type: 'line',
+        data: chartData,
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 500, 
+                    ticks: {
+                        color: 'white', 
+                        callback: function(value) {
+                            return value + ' users';
+                        }
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.2)' 
+                    }
+                },
+                x: {
+                    ticks: {
+                        color: 'white' 
+                    },
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.2)'
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            var label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += context.raw + ' users';
+                            return label;
+                        }
+                    },
+                    bodyColor: 'white', 
+                    titleColor: 'white', 
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)' 
+                },
+                legend: {
+                    labels: {
+                        color: 'white' 
+                    }
+                }
+            }
+        }
+    });
+});
+                        </script>
+                        <h5 class="chart-title">Monthly Sales</h5>
+                        <canvas id="salesChart"></canvas>
                     </div>
-                    <div class="col-md-4">
-                        <div class="card new-users">
-                            <div class="card-body">
-                                <div class="d-flex gap-2">
-                                    <i class="fas fa-plus"></i>
-                                    <h5>NEW USERS</h5>
-                                </div>
-                                <p>1000</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="card total-suppliers">
-                            <div class="card-body">
-                                <div class="d-flex gap-2">
-                                    <i class="fas fa-user"></i>
-                                    <h5>TOTAL SUPPLIERS</h5>
-                                </div>
-                                <p>50</p>
-                            </div>
-                        </div>
-                    </div>
+                    </div>         
                 </div>
             </div>
+        
+            <div class="col-md-12 d-flex justify-content-center mx-auto">
+            <div class="container supplier-reg">
+                <h5>SUPPLIERS REGISTRATION REQUEST</h5>
+                <?php 
+                    include '../../function/php/supplier-req.php';
+                ?>
+                <div class="table-wrapper px-lg-5">
+                <table class="table table-hover table-remove-borders" style="background-color: #2A2E32; color: white;">
+                    <thead class="thead-light" style="background-color: #2A2E32; color: white;">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                        <?php if ($result->num_rows > 0): ?>
+                            <?php while ($user = $result->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?php echo $user['id']; ?></td>
+                                    <td><?php echo $user['name']; ?></td>
+                                    <td><?php echo $user['email']; ?></td>
+                                    <td class="d-flex gap-1 justify-content-center">
+                                    <form method="POST" action="../../function/php/supplier-req.php" style="display:inline;">
+                                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                        <button type="submit" name="accept" class="btn btn-success">Accept</button>
+                                    </form>
+                                    <form method="POST" action="../../function/php/supplier-req.php" style="display:inline;">
+                                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                        <button type="submit" name="delete" class="btn btn-danger">Delete</button>
+                                    </form>
+                                    </td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="4">No inactive suppliers found.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
+                </table>
 
-            <div class="container mt-2">
-                <div class="card registration">
-                    <div class="card-body">
-                        <h5>SUPPLIERS REGISTRATION REQUEST</h5>
-                        <div class="blank">
-
-                        </div>
-                        <div class="container">
-                            <div class="row justify-content-center mt-1">
-                                <div class="col-md-3">
-                                    <div class="d-flex">
-                                        <p>Name:</p>
-                                        <p>Ivan Ablanida</p>
-                                    </div>
-                                    <div class="d-flex">
-                                        <p>Service:</p>
-                                        <p>Videographer</p>
-                                    </div>
-                                </div>
-                                <div class="col-md-3 d-flex gap-1 align-items-center justify-content-center">
-                                    <button class=" btn btn-primary">View</button>
-                                    <button class="btn btn-success">Accept</button>
-                                    <button class="btn btn-danger">Delete</button>
-                                </div>
-                                <hr class="mt-2 mb-2">
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
             </div>
+            </div>
+        </div>
+
 
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 
 </html>

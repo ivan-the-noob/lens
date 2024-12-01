@@ -30,6 +30,10 @@
 					echo '<div class="alert alert-success">' . $_SESSION['signup_success'] . '</div>';
 					unset($_SESSION['signup_success']);
 				}
+				if (isset($_SESSION['login_error'])) {
+					echo '<div class="alert alert-danger">' . $_SESSION['login_error'] . '</div>';
+					unset($_SESSION['login_error']);
+				}
 			?>
 				<div class="wrapper">
 					<form action="../../function/php/login.php" method="POST">

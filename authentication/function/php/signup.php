@@ -9,10 +9,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT);
 
-    // Default profile image
     $profileImg = 'profile.jpg';
 
-    $sql = "INSERT INTO users (role, name, email, password, profile_img) VALUES ('$role', '$name', '$email', '$password', '$profileImg')";
+    $isActive = 0;
+
+    $sql = "INSERT INTO users (role, name, email, password, profile_img, is_active) VALUES ('$role', '$name', '$email', '$password', '$profileImg', '$isActive')";
 
     if ($conn->query($sql) === TRUE) {
         $_SESSION['signup_success'] = "Sign up successful! Log in to your account.";

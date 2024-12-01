@@ -380,7 +380,7 @@ body.loaded #preloader {
 
     .top-supplier .photo-card {
         width: 100%;
-        margin-bottom: 20px; /* Add space between stacked images */
+        margin-bottom: 20px; 
         height: auto;
     }
 
@@ -399,6 +399,8 @@ body.loaded #preloader {
         opacity: 1;
     }
 }
+
+
 
 .top-supplier .photo-card img {
     opacity: 0;

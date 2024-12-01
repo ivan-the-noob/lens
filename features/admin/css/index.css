@@ -10,7 +10,7 @@ body {
     margin: 0;
     padding: 0;
     display: flex;
-    background-color: #1F1F1F;
+    background-color: #212529;
 }
 
 :root{
@@ -18,8 +18,8 @@ body {
 }
 /*Navbar Section*/
 .navbar {
-    height: 100vh;
-    background-color: #FFFFFF;
+    height: auto;
+    background-color: #272B2F !important;
     display: flex;
     flex-direction: column;
     align-items: start;
@@ -27,8 +27,15 @@ body {
     box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
     min-width: 230px;
 }
+
+.navbar h5{
+    color :#fff !important;
+    text-align: center;
+    margin-top: 20px;
+    height: 16vh;
+}
 .navbar a {
-    color: #000;
+    color: #FFFFFF;
     padding: 12px 15px;
     text-decoration: none;
     width: 100%;
@@ -39,7 +46,7 @@ body {
     margin: 2px;
 }
 .navbar-highlight {
-    color: #FFFFFF !important;
+    color: #fff !important;
     border-radius: 10px;
     padding: 12px 15px;
     text-decoration: none;
@@ -48,12 +55,16 @@ body {
     align-items: center;
     gap: 10px;
     font-size: 14px;
-    background-color: #000;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
+    font-weight: bold;
 }
 .navbar a:hover {
-    background-color: #000;
-    color: #FFFFFF !important;
+    color:#fff !important;
     border-radius: 10px;
+    border-left: 2px solid #fff;
+    border-right: 2px solid #fff;
+    
 }
 
 .navbar-brand {
@@ -87,7 +98,7 @@ body {
     align-items: center;
     padding: 20px;
     justify-content: space-between;
-    background-color: #FFFFFF;
+    background-color: #272B2F;
 }
 
 .header button{
@@ -143,7 +154,7 @@ body {
     height: 40px;
     border-radius: 50%;
     margin-right: 10px;
-    border: 2px solid #7A3015;
+    border: 2px solid #fff;
 }
 
 .profile-admin button {
@@ -175,53 +186,171 @@ body {
 
 .card{
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    display: flex;
+    margin: auto;
 }
 
-.total i{
-    font-size: 32px;
+
+.userss i{
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    width: 30px;
+    background-color: #403C2E;
+    color: #FDBC2F;
+    padding: 10px 20px;
+    border-radius: 5px;
+}
+
+.plus-users i{
+    font-size: 18px;
+    display: flex;
+    justify-content: center;
+    width: 30px;
+    background-color: #403C2E;
+    color: #FDBC2F;
+    padding: 10px 20px;
+    border-radius: 5px;
+    
+}
+
+.total{
+    height: 100%;
+}
+
+.total p{
+    margin-bottom: 0;
+}
+
+.total-number {
+    display: flex;
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    width: 100%; 
+}
+
+.total-num{
+    font-size: 24px;
+}
+
+.total-title{
+    font-size: 12px;
+    opacity: 80%;
+}
+
+.total-users{
+    background-color: #272B2F;
+    color: #fff; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0. 0.1);
+    transition: box-shadow 0.3s ease-in-out;   
+}
+.total-users:hover{
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+.line{
+    width: 90%;
+    margin: auto;
+}
+
+hr{
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #808080;
+}
+
+
+
+/*Dashboard Section End*/
+
+/*Chart Section*/
+.chart-container {
+    padding: 20px;
+    background-color: #2A2E32;
+    border-radius: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0. 0.1);
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.chart-container:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+}
+
+.chart-title {
+    font-size: 18px; 
+    margin-bottom: 10px; 
+    color: #fff; 
+    padding: 10px 0 0 10px;
+    font-weight: 500;
+}
+
+@media (max-width: 768px) {
+    .chart-container {
+        width: 90%;
+        display: block; 
+        padding: 0;
+    }
+
+    .chart-title {
+        font-size: 16px;
+    }
+}
+
+/*Chart Section End*/
+
+/*Supplier Request*/
+
+.supplier-reg{
+    margin-top: 50px;
+
+}
+
+.supplier-reg h2{
+    display: flex;
+    justify-content: center;
+    color: #fff;
+}
+
+.supplier-reg h5{
+    color: #fff;
     display: flex;
     justify-content: center;
 }
 
-.total p{
-    font-size: 24px;
-    text-align: center;
-    margin-bottom: 0;
-    font-family: "Inter", sans-serif;
+table{
+    border-radius: 20px !important;
 }
 
-.total-users{
-    background-color: #E3FFA8;
+.report-table h5{
+    color: #fff !important;
+}
+
+.table-remove-borders th,
+.table-remove-borders td {
+    border: none !important;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #2A2E32;
     
 }
-
-
-.new-users{
-    background-color: #46FFBC;
+.table-remove-borders th{
+    background-color: #2A2E32 ;
+    color: #fff;
 }
 
-.total-suppliers{
-    background-color: #BCBBB7;
+.table-remove-borders td{
+    background-color: #F1F5F9 !important;
 }
 
-.total-users h5, .new-users h5, .total-suppliers h5{
-    font-weight: 600;
-    display: flex;
+tr:hover{
+    background-color: #FFFFFF;
 }
 
-.registration h5{
-    text-align: center;
-}
-.registration p{
-    margin-bottom: 0;
-}
 
-.blank{
-    border-top: 1px solid #000;
-    border-bottom: 1px solid #000;
-    height: 2vh;
-    width: 100%;
-    margin: 0 !important;
-}
 
-/*Dashboard Section End*/
+
+/*SUpplier Request End*/

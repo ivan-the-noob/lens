@@ -3,51 +3,69 @@ session_start();
 require '../../../db/db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (empty($_POST['email']) || empty($_POST['password'])) {
+        $_SESSION['login_error'] = "Please enter both email and password!";
+        header("Location: ../../web/api/login.php");
+        exit();
+    }
+
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    // Prepare SQL statement to prevent SQL injection
     $query = "SELECT * FROM users WHERE email = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("s", $email); // Bind email to the prepared statement
+    $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    // Check if the user exists
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
-        $hashedPassword = $user['password']; // Assume this is the hashed password stored in the DB
+        $hashedPassword = $user['password'];
 
-        // Verify the password using password_verify
         if (password_verify($password, $hashedPassword)) {
-            // Store session variables
-            $_SESSION['email'] = $user['email'];
-            $_SESSION['role'] = $user['role'];
-            $_SESSION['name'] = $user['name'];
+            $updateQuery = "UPDATE users SET last_login = NOW() WHERE id = ?";
+            $updateStmt = $conn->prepare($updateQuery);
+            $updateStmt->bind_param("i", $user['id']);
+            $updateStmt->execute();
 
-            // Redirect based on role
-            if ($user['role'] === 'admin') {
-                header("Location: ../../../features/admin/web/api/admin.php"); // Admin dashboard
-            } elseif ($user['role'] === 'client') {
-                header("Location: ../../../client/home.php"); // Client homepage
-            } elseif ($user['role'] === 'supplier') {
-                header("Location: ../../../supplier/portal.php"); // Supplier portal
+            if ($user['role'] === 'supplier') {
+                if ($user['is_active'] == 1) {
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['role'] = $user['role'];
+                    $_SESSION['name'] = $user['name'];
+                    header("Location: ../../../index.php"); 
+                    exit();
+                } else {
+                    $_SESSION['login_error'] = "Your account is inactive. Please contact support.";
+                    header("Location: ../../web/api/login.php");
+                    exit();
+                }
+            } elseif ($user['role'] === 'admin') {
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['role'] = $user['role'];
+                $_SESSION['name'] = $user['name'];
+                header("Location: ../../../features/admin/web/api/admin.php");
+                exit();
+            } elseif ($user['role'] === 'customer') {
+                $_SESSION['email'] = $user['email'];
+                $_SESSION['role'] = $user['role'];
+                $_SESSION['name'] = $user['name'];
+                header("Location: ../../../index.php");
+                exit();
             } else {
-                // Handle unexpected roles (optional)
                 $_SESSION['login_error'] = "Invalid role!";
                 header("Location: ../../web/api/login.php");
+                exit();
             }
-            exit();
         } else {
-            // Handle invalid password
             $_SESSION['login_error'] = "Invalid email or password!";
             header("Location: ../../web/api/login.php");
             exit();
         }
     } else {
-        // Handle case where the user doesn't exist
         $_SESSION['login_error'] = "Invalid email or password!";
         header("Location: ../../web/api/login.php");
         exit();
     }
 }
+?>

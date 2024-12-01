@@ -107,22 +107,48 @@ if ($role != 'guest' && !empty($email)) {
 
     <section class="news">
     <div class="container">
-        <div class="row align-items-center">
-            <!-- Left side with image -->
-            <div class="col-lg-6 col-md-12 mt-5">
-                <img src="assets/img/news.jpg" alt="Placeholder Image" class="img-fluid news-img">
-            </div>
+    <?php
+require 'db/db.php';
 
-            <!-- Right side with text and button -->
-            <div class="col-lg-6 col-md-12 mt-5">
-                <h3>Photographer’s Camera Trap Photos Of L.A Wildlife Are Spectacular</h3>
-                <h5>News by | Stephen Jukic | September 7, 2024</h5>
-                <p>Nature has ways of hiding its quiet beauty right next door to our urban world, and some lucky photographers find ways to capture it.</p>
-                <p>This is what one patient pro pulled off when she shot a whole series of carefully framed camera trap images of large fauna in the Verdugo Mountains right next to the massive Los Angeles metropolis.</p>
-                <p>As Johanna Turner bluntly explains to the website PetaPixel, “Camera trapping is the most frustrating photographic technique but when it works, it’s freaking amazing,”</p>
-                <button class="btn">Get Started</button>
-            </div>
-        </div>
+// Fetch the latest news article from the database
+$sql = "SELECT * FROM news ORDER BY date DESC LIMIT 1";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+
+    // Format the date to be in the format "Month Day, Year"
+    $formatted_date = date("F j, Y", strtotime($row['date']));
+
+    echo "<div class='row align-items-center'>";
+    
+    // Left side with image
+    echo "<div class='col-lg-6 col-md-12 mt-5'>";
+    // Check if there is an image and display it
+    if ($row['image']) {
+        echo "<img src='assets/img/" . $row['image'] . "' alt='News Image' class='img-fluid news-img'>";
+    } else {
+        // If no image, display a placeholder or default image
+        echo "<img src='assets/img/news.jpg' alt='Placeholder Image' class='img-fluid news-img'>";
+    }
+    echo "</div>";
+
+    // Right side with text and button
+    echo "<div class='col-lg-6 col-md-12 mt-5'>";
+    echo "<h3>" . $row['heading'] . "</h3>";
+    echo "<h5>News by | " . $row['uploader'] . " | " . $formatted_date . "</h5>";
+    echo "<p>" . $row['context'] . "</p>";
+    echo "<button class='btn'>Get Started</button>";
+    echo "</div>";
+
+    echo "</div>";
+} else {
+    echo "<p>No news available</p>";
+}
+
+$conn->close();
+?>
+
     </div>
 </section>
 
@@ -130,37 +156,70 @@ if ($role != 'guest' && !empty($email)) {
     <section class="top-supplier">
       <div class="container top3 mt-5">
           <div class="row text-center">
-              <div class="col-md-4 photo-card">
-                  <div class="photo-wrap">
-                      <img src="assets/img/top3/top2.jfif" alt="Photo 2" class="img-fluid">
-                      <button class="zoom-icon btn" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="assets/img/top3/top2.jfif"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
-                      <div class="photographer-info">
-                          <a href=""><img src="assets/img/profile/profile.jpg" alt="Photographer 2" class="profile-pic">
-                          <p class="photographer-name">Photographer 2</p></a>
-                      </div>
-                  </div>
-              </div>
-              <div class="col-md-4 photo-card">
-                <div class="photo-wrap">
-                    <img src="assets/img/top3/top2.jfif" alt="Photo 2" class="img-fluid">
-                    <button class="zoom-icon btn" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="assets/img/top3/top2.jfif"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
-                    <div class="photographer-info">
-                        <a href=""><img src="assets/img/profile/profile.jpg" alt="Photographer 2" class="profile-pic">
-                        <p class="photographer-name">Photographer 2</p></a>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4 photo-card">
-              <div class="photo-wrap">
-                  <img src="assets/img/top3/top2.jfif" alt="Photo 2" class="img-fluid">
-                  <button class="zoom-icon btn" data-bs-toggle="modal" data-bs-target="#imageModal" data-img-src="assets/img/top3/top2.jfif"><i class="fa-solid fa-up-right-and-down-left-from-center"></i></button>
-                  <div class="photographer-info">
-                      <a href=""><img src="assets/img/profile/profile.jpg" alt="Photographer 2" class="profile-pic">
-                      <p class="photographer-name">Photographer 2</p></a>
-                  </div>
-              </div>
-          </div>
-              <!-- Repeat for other photos -->
+          <?php
+require 'db/db.php';
+
+// Step 1: Get the top 3 emails with the highest counts from the `appointment` table
+$sql = "SELECT email_uploader, COUNT(email_uploader) AS email_count
+        FROM appointment
+        GROUP BY email_uploader
+        ORDER BY email_count DESC
+        LIMIT 3";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+    $data = [];
+
+    // Step 2: For each email, check for additional data in `snapfeed` and `users`
+    while ($row = $result->fetch_assoc()) {
+        $email = $row['email_uploader'];
+
+        // Get the latest card_img from snapfeed
+        $snapfeed_sql = "SELECT card_img 
+                        FROM snapfeed 
+                        WHERE email = '$email' 
+                        ORDER BY created_at DESC 
+                        LIMIT 1";
+        $snapfeed_result = $conn->query($snapfeed_sql);
+        $image = $snapfeed_result->num_rows > 0 ? $snapfeed_result->fetch_assoc()['card_img'] : 'No Image';
+
+        // Get the name from users
+        $users_sql = "SELECT name FROM users WHERE email = '$email'";
+        $users_result = $conn->query($users_sql);
+        $name = $users_result->num_rows > 0 ? $users_result->fetch_assoc()['name'] : 'Unknown';
+
+        $data[] = [
+            'email' => $email,
+            'image' => $image,
+            'name' => $name
+        ];
+    }
+}
+?>
+
+<section class="row text-center">
+    <?php
+    if (!empty($data)) {
+        foreach ($data as $index => $row) {
+            echo "<div class='col-md-4 photo-card'>";
+            echo "<div class='photo-wrap'>";
+            echo "<img src='assets/img/snapfeed/" . $row['image'] . "' alt='Photo " . ($index + 1) . "' class='img-fluid'>";
+            echo "<button class='zoom-icon btn' data-bs-toggle='modal' data-bs-target='#imageModal' data-img-src='assets/img/top3/" . $row['image'] . "'><i class='fa-solid fa-up-right-and-down-left-from-center'></i></button>";
+            echo "<div class='photographer-info'>";
+            echo "<a href=''><img src='assets/img/profile/profile.jpg' alt='Photographer " . ($index + 1) . "' class='profile-pic'>";
+            echo "<p class='photographer-name'>" . $row['name'] . "</p></a>";
+            echo "</div>";
+            echo "</div>";
+            echo "</div>";
+        }
+    } else {
+        echo "<p>No top photographers found</p>";
+    }
+    ?>
+</section>
+
+<?php $conn->close(); ?>
+
           </div>
       </div>
   </section>
@@ -207,36 +266,90 @@ if ($role != 'guest' && !empty($email)) {
       <div class="container mt-5">
         <div class="row justify-content-center mx-auto">
           <div class="col-lg-7 col-md-12 solo-img">
-            <div class="news-item position-relative">
-              <img src="assets/img/sub-news/news1.jpg" class="img-fluid img-opacity-animation" alt="Traffic Problems in Time Square">
-              <div class="news-text position-absolute bottom-0 start-0 p-4 text-white">
-                <span class="news-date">June 20, 2018</span>
-                <h3 class="news-title">Traffic Problems in Time Square</h3>
-              </div>
+          <?php
+            require 'db/db.php';
+
+            // Fetch the latest sub-news from the database, ordered by date (descending)
+            $sql = "SELECT * FROM sub_news ORDER BY date DESC LIMIT 1"; 
+            $result = $conn->query($sql);
+            ?>
+
+            <div class="news-item position-relative mb-2">
+            <?php
+            if ($result->num_rows > 0) {
+                $row = $result->fetch_assoc();
+                $formatted_date = date("M j, Y", strtotime($row['date'])); // Format the date
+                echo "<img src='assets/img/sub-news/" . $row['img'] . "' class='img-fluid img-opacity-animation' style='height:66vh' alt='" . $row['title'] . "'>";
+                echo "<div class='news-text position-absolute bottom-0 start-0 p-4 text-white'>";
+                echo "<span class='news-date'>$formatted_date</span>";
+                echo "<h3 class='news-title'>" . $row['title'] . "</h3>";
+                echo "</div>";
+            } else {
+                echo "<p>No news available</p>";
+            }
+            ?>
             </div>
+            <?php $conn->close(); ?>
+
           </div>
     
           <div class="col-lg-4 col-md-12 stacked-img">
-            <div class="news-item position-relative mb-4">
-              <img src="assets/img/sub-news/news2.jpg" class=" img-opacity-animation" alt="Best way to spend your holiday">
-              <div class="news-text position-absolute bottom-0 start-0 p-4 text-white">
-                <div class="stack-img">
-                  <span class="news-date">June 20, 2018</span>
-                  <h3 class="news-title">The best way to spend your holiday</h3>
-                </div>
-              </div>
-            </div>
+          <?php
+            require 'db/db.php';
+
+            $sql = "SELECT * FROM sub_news ORDER BY date DESC LIMIT 2"; 
+            $result = $conn->query($sql);
+            ?>
+
+            <div class="news-item position-relative mb-2">
+            <?php
+            if ($result->num_rows > 1) {
+                $result->data_seek(1);
+                $row = $result->fetch_assoc();
+                $formatted_date = date("M j, Y", strtotime($row['date'])); 
+                echo "<img src='assets/img/sub-news/" . $row['img'] . "' class='img-opacity-animation' alt='" . $row['title'] . "'>";
+                echo "<div class='news-text position-absolute bottom-0 start-0 p-4 text-white'>";
+                echo "<div class='stack-img'>";
+                echo "<span class='news-date'>$formatted_date</span>";
+                echo "<h3 class='news-title'>" . $row['title'] . "</h3>";
+                echo "</div>";
+                echo "</div>";
+            } else {
+                echo "<p>No second latest news available</p>";
+            }
+            ?>
+</div>
+<?php $conn->close(); ?>
+
     
 
-            <div class="news-item position-relative">
-              <img src="assets/img/sub-news/news3.jfif" class=" img-opacity-animation" alt="Sport results for the weekend games">
-              <div class="news-text position-absolute bottom-0 start-0 p-4 text-white">
-                <div class="stack-img">
-                  <span class="news-date">June 20, 2018</span>
-                  <h3 class="news-title">Sport results for the weekend games</h3>
-                </div> 
-              </div>
-            </div>
+<?php
+require 'db/db.php';
+
+$sql = "SELECT * FROM sub_news ORDER BY date DESC LIMIT 3"; 
+$result = $conn->query($sql);
+?>
+
+<div class="news-item position-relative">
+  <?php
+  if ($result->num_rows > 2) {
+    $result->data_seek(2);
+    $row = $result->fetch_assoc();
+    $formatted_date = date("M j, Y", strtotime($row['date'])); 
+    echo "<img src='assets/img/sub-news/" . $row['img'] . "' class='img-opacity-animation' alt='" . $row['title'] . "'>";
+    echo "<div class='news-text position-absolute bottom-0 start-0 p-4 text-white'>";
+    echo "<div class='stack-img'>";
+    echo "<span class='news-date'>$formatted_date</span>";
+    echo "<h3 class='news-title'>" . $row['title'] . "</h3>";
+    echo "</div>";
+    echo "</div>";
+  } else {
+    echo "<p>No third latest news available</p>";
+  }
+  ?>
+</div>
+<?php $conn->close(); ?>
+
           </div>
         </div>
       </div>

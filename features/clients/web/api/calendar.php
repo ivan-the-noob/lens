@@ -131,42 +131,44 @@ if ($role != 'guest' && !empty($email)) {
     <div class="container booking-container">
 
     <form action="../../function/php/save_appointment.php" method="POST">
-  <div class="card">
-  <div class="card-body">
+        <div class="card">
+        <div class="card-body">
+            
+        <h2 class="text-center mb-4">BOOK A SESSION</h2>
+            <div class="row mb-3 justify-content-center">
     
-  <h2 class="text-center mb-4">BOOK A SESSION</h2>
-    <div class="row mb-3 justify-content-center">
-   
-    <div class="col-10 d-flex gap-1 mt-2">
-        <label for="fullname" class="form-label">Full Name:</label>
-        <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Enter your full name" required>
-    </div>
-    <div class="col-10 d-flex flex-column gap-3">
-        <div class="d-flex gap-1 mt-2">
-            <label for="location" class="form-label">Location:</label>
-            <input type="text" class="form-control" id="search-location" placeholder="Search for a location in Cavite" required>
-            <input type="hidden" name="latitude" id="latitude">
-            <input type="hidden" name="longitude" id="longitude">
+        <div class="col-10 d-flex gap-1 mt-2">
+            <label for="fullname" class="form-label">Full Name:</label>
+            <input type="text" class="form-control" name="fullname" id="fullname" placeholder="Enter your full name" required>
         </div>
-        <div id="map" style="height: 300px; width: 100%; border: 1px solid #dddada; border-radius: 10px;"></div>
-    </div>
-    <div class="col-10 d-flex gap-1 mt-3">
-        <label for="event" class="form-label">Event:</label>
-        <select class="form-select" name="event" id="event" required>
-            <option value="" disabled selected>Select an option</option>
-            <option value="photography">Photography</option>
-            <option value="videography">Videography</option>
-        </select>
-    </div>
-    <div class="col-10 d-flex gap-1 mt-2">
-        <label for="time" class="form-label">Time:</label>
-        <input type="time" class="form-control" name="time" id="time" required>
-    </div>
-    <input type="hidden" id="selected_date" name="selected_date">
-    <div class="col-10 d-flex gap-1 mt-2 book">
-        <button type="submit" class="btn mt-2">Book</button>
-    </div>
-</form>
+        <div class="col-10 d-flex flex-column gap-3">
+            <div class="d-flex gap-1 mt-2">
+                <label for="location" class="form-label">Location:</label>
+                <input type="text" class="form-control" id="search-location" placeholder="Search for a location in Cavite" required>
+                <input type="hidden" name="latitude" id="latitude">
+                <input type="hidden" name="longitude" id="longitude">
+            </div>
+            <div id="map" style="height: 300px; width: 100%; border: 1px solid #dddada; border-radius: 10px;"></div>
+        </div>
+        <div class="col-10 d-flex gap-1 mt-3">
+            <label for="event" class="form-label">Event:</label>
+            <select class="form-select" name="event" id="event" required>
+                <option value="" disabled selected>Select an option</option>
+                <option value="photography">Photography</option>
+                <option value="videography">Videography</option>
+            </select>
+        </div>
+        <div class="col-10 d-flex gap-1 mt-2">
+            <label for="time" class="form-label">Time:</label>
+            <input type="time" class="form-control" name="time" id="time" required>
+        </div>
+        <input type="hidden" id="selected_date" name="selected_date">
+        <input type="hidden" name="email_uploader" id="email_uploader">
+        <input type="hidden" name="email" id="email" value="<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>">
+        <div class="col-10 d-flex gap-1 mt-2 book">
+            <button type="submit" class="btn mt-2">Book</button>
+        </div>
+    </form>
 
 
 
@@ -322,14 +324,17 @@ window.onload = initMap;
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
-    var uploaderEmail = localStorage.getItem("uploader_email"); // Get the uploader's email from localStorage
+    var uploaderEmail = localStorage.getItem("uploader_email"); 
 
     console.log('Uploader Email:', uploaderEmail);
 
-    if (!uploaderEmail) {
-        console.error("Uploader email not found in localStorage");
-        return; // Exit if no email found
-    }
+    if (uploaderEmail) {
+            document.getElementById('email_uploader').value = uploaderEmail;
+        } else {
+            console.error("Uploader email not found in localStorage");
+        }
+
+    
 
     // Fetch the available dates for the uploader
     fetch('../../function/php/get_user_dates.php', {
