@@ -159,7 +159,6 @@ $conn->close();
           <?php
 require 'db/db.php';
 
-// Step 1: Get the top 3 emails with the highest counts from the `appointment` table
 $sql = "SELECT email_uploader, COUNT(email_uploader) AS email_count
         FROM appointment
         GROUP BY email_uploader
@@ -170,11 +169,9 @@ $result = $conn->query($sql);
 if ($result->num_rows > 0) {
     $data = [];
 
-    // Step 2: For each email, check for additional data in `snapfeed` and `users`
     while ($row = $result->fetch_assoc()) {
         $email = $row['email_uploader'];
 
-        // Get the latest card_img from snapfeed
         $snapfeed_sql = "SELECT card_img 
                         FROM snapfeed 
                         WHERE email = '$email' 
@@ -183,7 +180,6 @@ if ($result->num_rows > 0) {
         $snapfeed_result = $conn->query($snapfeed_sql);
         $image = $snapfeed_result->num_rows > 0 ? $snapfeed_result->fetch_assoc()['card_img'] : 'No Image';
 
-        // Get the name from users
         $users_sql = "SELECT name FROM users WHERE email = '$email'";
         $users_result = $conn->query($users_sql);
         $name = $users_result->num_rows > 0 ? $users_result->fetch_assoc()['name'] : 'Unknown';
@@ -240,22 +236,18 @@ if ($result->num_rows > 0) {
       const section = document.querySelector('.top-supplier');
       const images = section.querySelectorAll('.photo-card img');
   
-      // Create an Intersection Observer instance
       const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
               if (entry.isIntersecting) {
-                  // Add a class to reveal the images
                   images.forEach(img => img.classList.add('in-view'));
               } else {
-                  // Optionally, remove the class if the section goes out of view
                   images.forEach(img => img.classList.remove('in-view'));
               }
           });
       }, {
-          threshold: 0.1 // Adjust based on when you want the animation to start
+          threshold: 0.1
       });
   
-      // Observe the section
       observer.observe(section);
   });
   </script>
@@ -268,8 +260,6 @@ if ($result->num_rows > 0) {
           <div class="col-lg-7 col-md-12 solo-img">
           <?php
             require 'db/db.php';
-
-            // Fetch the latest sub-news from the database, ordered by date (descending)
             $sql = "SELECT * FROM sub_news ORDER BY date DESC LIMIT 1"; 
             $result = $conn->query($sql);
             ?>
@@ -278,7 +268,7 @@ if ($result->num_rows > 0) {
             <?php
             if ($result->num_rows > 0) {
                 $row = $result->fetch_assoc();
-                $formatted_date = date("M j, Y", strtotime($row['date'])); // Format the date
+                $formatted_date = date("M j, Y", strtotime($row['date']));
                 echo "<img src='assets/img/sub-news/" . $row['img'] . "' class='img-fluid img-opacity-animation' style='height:66vh' alt='" . $row['title'] . "'>";
                 echo "<div class='news-text position-absolute bottom-0 start-0 p-4 text-white'>";
                 echo "<span class='news-date'>$formatted_date</span>";
@@ -361,24 +351,21 @@ $result = $conn->query($sql);
           const soloImg = section.querySelector('.solo-img');
           const stackedImg = section.querySelector('.stacked-img');
       
-          // Create an Intersection Observer instance
           const observer = new IntersectionObserver((entries) => {
               entries.forEach(entry => {
                   if (entry.isIntersecting) {
-                      // Add a class to reveal the images with animation
                       soloImg.classList.add('animate-left');
                       stackedImg.classList.add('animate-right');
                   } else {
-                      // Optionally, remove the class if the section goes out of view
+
                       soloImg.classList.remove('animate-left');
                       stackedImg.classList.remove('animate-right');
                   }
               });
           }, {
-              threshold: 0.1 // Adjust based on when you want the animation to start
+              threshold: 0.1 
           });
       
-          // Observe the section
           observer.observe(section);
       });
       </script>
