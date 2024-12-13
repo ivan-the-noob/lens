@@ -62,17 +62,20 @@ if ($role != 'guest' && !empty($email)) {
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- Links (left) -->
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="../../../../index.php">Home</a>
-                </li>
-                <li class="nav-item">
+            <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../.././../../index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
                     <a class="nav-link" href="../../../index/web/api/about-us.php">About</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="snapfeed.php">Snapfeed</a>
-                </li>
-            </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Snapfeed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about-me.php">Profile</a>
+                    </li>
+                </ul>
 
             <!-- Profile dropdown (right) -->
             <div class="d-flex ms-auto">

@@ -76,11 +76,15 @@ if ($role != 'guest' && !empty($email)) {
                         <li class="nav-item">
                             <a class="nav-link" href="features/clients/web/api/snapfeed.php">Snapfeed</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="features/clients/web/api/supplier.php">Supplier</a>
+                        </li>
                     <?php else: // For guests ?>
                         <li class="nav-item">
                             <a class="nav-link" href="authentication/web/api/login.php">Snapfeed</a>
                         </li>
                     <?php endif; ?>
+                    
 
 
                     
@@ -89,18 +93,25 @@ if ($role != 'guest' && !empty($email)) {
                 <div class="d-flex ml-auto">
                     <?php if ($role != 'guest') { ?>
                         <div class="dropdown">
-                            <button class="btn btn-theme dropdown-toggle" type=" button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
+                            <button class="btn btn-theme dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <?php if ($role === 'customer') { ?>
+                                    <li><a class="dropdown-item" href="customer/profile.php">Main Profile</a></li>
+                                    <li><a class="dropdown-item" href="customer/booking_status.php">Booking Status</a></li>
+                                    <li><a class="dropdown-item" href="customer/history.php">History</a></li>
+                                    <li><a class="dropdown-item" href="customer/notifications.php">Notifications</a></li>
+                                <?php } ?>
                                 <li><a class="dropdown-item" href="features/index/function/php/logout.php">Logout</a></li>
                             </ul>
-                            </div>
-                        <?php } else { ?>
+                        </div>
+                    <?php } else { ?>
                         <!-- User is not logged in, display a login link -->
                         <a href="authentication/web/api/login.php" class="btn-theme" type="button">Login</a>
                     <?php } ?>
-                </div>
+</div>
+
             </div>
         </div>
     </nav>
