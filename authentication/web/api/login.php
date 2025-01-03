@@ -118,19 +118,15 @@
 
 	<script>
    document.getElementById('signupForm').addEventListener('submit', function(event) {
-        // Get the password and confirm password values
         var password = document.getElementById('password').value;
         var confirmPassword = document.getElementById('confirm-password').value;
         var errorDiv = document.getElementById('password-error');
 
-        // Check if passwords match
         if (password !== confirmPassword) {
-            // Show error message and prevent form submission
             errorDiv.style.display = 'block';
-            event.preventDefault(); // Prevent form submission
-            return false; // Explicitly prevent submission
+            event.preventDefault(); 
+            return false; 
         } else {
-            // Hide error message and allow form submission
             errorDiv.style.display = 'none';
         }
     });

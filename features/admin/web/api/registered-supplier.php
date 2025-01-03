@@ -20,7 +20,7 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
     <link rel="stylesheet" href="../../css/index.css">
 </head>
 
-<body>
+<body style="min-height: 100vh;">
     <!--Navigation Links-->
     <div class="navbar flex-column shadow-sm p-3 collapse d-md-flex" id="navbar">
         <div class="navbar-links">
@@ -38,7 +38,7 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
                 <span>Registered Supplier</span>
             </a>
             <a href="reports.php">
-                <span>Registered Supplier</span>
+                <span>Reports</span>
             </a>
         </div>
 

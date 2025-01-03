@@ -40,6 +40,20 @@ while ($row = $result->fetch_assoc()) {
         $customerData[$row['month'] - 1] = $row['user_count']; 
     }
 }
+$customerQuery = "SELECT COUNT(*) AS customer_count FROM users WHERE role = 'customer'";
+$supplierQuery = "SELECT COUNT(*) AS supplier_count FROM users WHERE role = 'supplier'";
+
+$customerResult = $conn->query($customerQuery);
+$supplierResult = $conn->query($supplierQuery);
+
+$customerCount = $customerResult->fetch_assoc()['customer_count'];
+$supplierCount = $supplierResult->fetch_assoc()['supplier_count'];
+
+// Pass data to JavaScript
+$chartData = [
+    'customer' => $customerCount,
+    'supplier' => $supplierCount,
+];
 $conn->close();
 ?>
 
@@ -74,7 +88,7 @@ $conn->close();
                 <span>Registered Supplier</span>
             </a>
             <a href="reports.php">
-                <span>Registered Supplier</span>
+                <span>Reports</span>
             </a>
         </div>
 
@@ -140,103 +154,162 @@ $conn->close();
                                 </div>
                             </div>                   
                         </div>
+                            <div class="chart-container mt-3" style="position: relative; height: 300px; width: 100%;">
+                                    <h5 class="chart-title">Total Users Pie Chart</h5>
+                                    <canvas id="pieChart" style="max-height: 300px;"></canvas>
+                                    <script>
+                                        document.addEventListener("DOMContentLoaded", function () {
+                                            var ctx = document.getElementById('pieChart').getContext('2d');
+
+                                            var chartData = <?php echo json_encode($chartData); ?>;
+
+                                            var data = {
+                                                labels: ['Customer', 'Supplier'],
+                                                datasets: [{
+                                                    label: 'User Distribution',
+                                                    data: [chartData.customer, chartData.supplier],
+                                                    backgroundColor: [
+                                                        'rgba(75, 192, 192, 0.6)', // Customer color
+                                                        'rgba(255, 159, 64, 0.6)'  // Supplier color
+                                                    ],
+                                                    borderColor: [
+                                                        'rgba(75, 192, 192, 1)',
+                                                        'rgba(255, 159, 64, 1)'
+                                                    ],
+                                                    borderWidth: 1
+                                                }]
+                                            };
+
+                                            new Chart(ctx, {
+                                                type: 'pie',
+                                                data: data,
+                                                options: {
+                                                    responsive: true,
+                                                    plugins: {
+                                                        tooltip: {
+                                                            callbacks: {
+                                                                label: function (context) {
+                                                                    var label = context.label || '';
+                                                                    if (label) {
+                                                                        label += ': ';
+                                                                    }
+                                                                    label += context.raw + ' users';
+                                                                    return label;
+                                                                }
+                                                            }
+                                                        },
+                                                        legend: {
+                                                            display: true,
+                                                            labels: {
+                                                                color: 'black'
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                </div>
                     </div>
                     <div class="col-md-8">
-                    <div class="chart-container">
-                        <script>
-                            document.addEventListener("DOMContentLoaded", function() {
-    var ctx = document.getElementById('salesChart').getContext('2d');
+    <div class="chart-container">
+        <h5 class="chart-title">Total Users Line Graph</h5>
+        <canvas id="lineChart"></canvas>
+        <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                var ctx = document.getElementById('lineChart').getContext('2d');
 
-    var supplierData = <?php echo json_encode($supplierData); ?>;
-    var clientData = <?php echo json_encode($clientData); ?>;
+                var supplierData = <?php echo json_encode($supplierData); ?>;
+                var clientData = <?php echo json_encode($clientData); ?>;
 
-    var chartData = {
-        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        datasets: [
-            {
-                label: 'Supplier Users',
-                data: supplierData,
-                backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                borderColor: 'rgba(54, 162, 235, 1)',
-                borderWidth: 2,
-                fill: true,
-                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
-            },
-            {
-                label: 'Client Users',
-                data: clientData,
-                backgroundColor: 'rgba(255, 99, 132, 0.2)', 
-                borderColor: 'rgba(255, 99, 132, 1)', 
-                borderWidth: 2,
-                fill: true,
-                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: 'rgba(255, 99, 132, 1)'
-            }
-        ]
-    };
-
-    var salesChart = new Chart(ctx, {
-        type: 'line',
-        data: chartData,
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 500, 
-                    ticks: {
-                        color: 'white', 
-                        callback: function(value) {
-                            return value + ' users';
+                var chartData = {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                    datasets: [
+                        {
+                            label: 'Supplier Users',
+                            data: supplierData,
+                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                            borderColor: 'rgba(54, 162, 235, 1)',
+                            borderWidth: 2,
+                            fill: true,
+                            pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
+                        },
+                        {
+                            label: 'Client Users',
+                            data: clientData,
+                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                            borderColor: 'rgba(255, 99, 132, 1)',
+                            borderWidth: 2,
+                            fill: true,
+                            pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                            pointBorderColor: '#fff',
+                            pointHoverBackgroundColor: '#fff',
+                            pointHoverBorderColor: 'rgba(255, 99, 132, 1)'
                         }
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.2)' 
-                    }
-                },
-                x: {
-                    ticks: {
-                        color: 'white' 
-                    },
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.2)'
-                    }
-                }
-            },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            var label = context.dataset.label || '';
-                            if (label) {
-                                label += ': ';
+                    ]
+                };
+
+                new Chart(ctx, {
+                    type: 'line',
+                    data: chartData,
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 500,
+                                ticks: {
+                                    color: 'white',
+                                    callback: function (value) {
+                                        return value + ' users';
+                                    }
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.2)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    color: 'white'
+                                },
+                                grid: {
+                                    color: 'rgba(255, 255, 255, 0.2)'
+                                }
                             }
-                            label += context.raw + ' users';
-                            return label;
+                        },
+                        plugins: {
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        var label = context.dataset.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        label += context.raw + ' users';
+                                        return label;
+                                    }
+                                },
+                                bodyColor: 'white',
+                                titleColor: 'white',
+                                backgroundColor: 'rgba(0, 0, 0, 0.7)'
+                            },
+                            legend: {
+                                labels: {
+                                    color: 'white'
+                                }
+                            }
                         }
-                    },
-                    bodyColor: 'white', 
-                    titleColor: 'white', 
-                    backgroundColor: 'rgba(0, 0, 0, 0.7)' 
-                },
-                legend: {
-                    labels: {
-                        color: 'white' 
                     }
-                }
-            }
-        }
-    });
-});
-                        </script>
-                        <h5 class="chart-title">Monthly Sales</h5>
-                        <canvas id="salesChart"></canvas>
-                    </div>
-                    </div>         
+                });
+            });
+        </script>
+    </div>
+</div>
+
+
+                
                 </div>
             </div>
         
@@ -258,9 +331,10 @@ $conn->close();
                     </thead>
                     <tbody id="tableBody">
                         <?php if ($result->num_rows > 0): ?>
+                            <?php $counter = 1;?>
                             <?php while ($user = $result->fetch_assoc()): ?>
                                 <tr>
-                                    <td><?php echo $user['id']; ?></td>
+                                    <td><?php echo $counter++;?></td>
                                     <td><?php echo $user['name']; ?></td>
                                     <td><?php echo $user['email']; ?></td>
                                     <td class="d-flex gap-1 justify-content-center">

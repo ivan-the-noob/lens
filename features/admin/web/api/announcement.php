@@ -45,7 +45,7 @@ $results = $conn->query($sql);
                 <span>Registered Supplier</span>
             </a>
             <a href="reports.php">
-                <span>Registered Supplier</span>
+                <span>Reports</span>
             </a>
         </div>
 
@@ -129,7 +129,7 @@ $results = $conn->query($sql);
                             $row = $results->fetch_assoc();
 
                             $formatted_date = date("F j, Y", strtotime($row['date']));
-                            echo "<div class='card' style='background-color: #2A2E32; color: white;'>";
+                            echo "<div class='card' style='background-color: #a67b5b; color: white;'>";
                             
                             if ($row['image']) {
                                 echo "<img src='../../../../assets/img/" . $row['image'] . "' class='card-img-top' alt='News Image' style='height: 200px; object-fit: cover;'>";
