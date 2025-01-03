@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 01, 2024 at 07:09 AM
+-- Generation Time: Jan 03, 2025 at 06:04 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -118,26 +118,29 @@ CREATE TABLE `reports` (
   `reporter_email` varchar(255) NOT NULL,
   `reported_name` varchar(255) NOT NULL,
   `reported_email` varchar(255) NOT NULL,
+  `report_reason` text DEFAULT NULL,
+  `warning_reason` text DEFAULT NULL,
   `role` enum('customer','supplier') NOT NULL,
   `reason` text NOT NULL,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `disable_status` int(11) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `reports`
 --
 
-INSERT INTO `reports` (`id`, `reporter_name`, `reporter_email`, `reported_name`, `reported_email`, `role`, `reason`, `created_at`) VALUES
-(1, 'Alice Johnson', 'alice.johnson@example.com', 'Tom Smith', 'tom.smith@example.com', 'customer', 'Inappropriate behavior.', '2024-11-30 23:28:49'),
-(2, 'Bob Brown', 'bob.brown@example.com', 'Susan White', 'susan.white@example.com', 'customer', 'Fraudulent activity.', '2024-11-30 23:28:49'),
-(3, 'Carol Davis', 'carol.davis@example.com', 'Mark Taylor', 'mark.taylor@example.com', 'customer', 'Unreliable payment.', '2024-11-30 23:28:49'),
-(4, 'David Evans', 'david.evans@example.com', 'Emily Clark', 'emily.clark@example.com', 'customer', 'Breach of agreement.', '2024-11-30 23:28:49'),
-(5, 'Eve Miller', 'eve.miller@example.com', 'Jake Wilson', 'jake.wilson@example.com', 'customer', 'Unprofessional conduct.', '2024-11-30 23:28:49'),
-(6, 'Frank Moore', 'frank.moore@example.com', 'Nancy Green', 'nancy.green@example.com', 'supplier', 'Delayed deliveries.', '2024-11-30 23:28:49'),
-(7, 'Grace Taylor', 'grace.taylor@example.com', 'Henry Adams', 'henry.adams@example.com', 'supplier', 'Product quality issues.', '2024-11-30 23:28:49'),
-(8, 'Hank Harris', 'hank.harris@example.com', 'Olivia Baker', 'olivia.baker@example.com', 'supplier', 'Lack of communication.', '2024-11-30 23:28:49'),
-(9, 'Isabel King', 'isabel.king@example.com', 'Peter Wright', 'peter.wright@example.com', 'supplier', 'Overcharging for services.', '2024-11-30 23:28:49'),
-(10, 'Jack Lee', 'jack.lee@example.com', 'Laura Martin', 'laura.martin@example.com', 'supplier', 'Unethical practices.', '2024-11-30 23:28:49');
+INSERT INTO `reports` (`id`, `reporter_name`, `reporter_email`, `reported_name`, `reported_email`, `report_reason`, `warning_reason`, `role`, `reason`, `created_at`, `disable_status`) VALUES
+(1, 'Alice Johnson', 'alice.johnson@example.com', 'Tom Smith', 'tom.smith@example.com', NULL, NULL, 'customer', 'Inappropriate behavior.', '2024-11-30 23:28:49', 1),
+(2, 'Bob Brown', 'bob.brown@example.com', 'Susan White', 'susan.white@example.com', NULL, NULL, 'customer', 'Fraudulent activity.', '2024-11-30 23:28:49', 1),
+(3, 'Carol Davis', 'carol.davis@example.com', 'Mark Taylor', 'mark.taylor@example.com', NULL, NULL, 'customer', 'Unreliable payment.', '2024-11-30 23:28:49', 1),
+(4, 'David Evans', 'david.evans@example.com', 'Emily Clark', 'emily.clark@example.com', NULL, NULL, 'customer', 'Breach of agreement.', '2024-11-30 23:28:49', 1),
+(5, 'Eve Miller', 'eve.miller@example.com', 'Jake Wilson', 'jake.wilson@example.com', NULL, NULL, 'customer', 'Unprofessional conduct.', '2024-11-30 23:28:49', 1),
+(6, 'Frank Moore', 'frank.moore@example.com', 'Nancy Green', 'nancy.green@example.com', NULL, 'dsadas', 'customer', 'Delayed deliveries.', '2024-11-30 23:28:49', 2),
+(7, 'Grace Taylor', 'grace.taylor@example.com', 'Henry Adams', 'henry.adams@example.com', NULL, NULL, 'supplier', 'Product quality issues.', '2024-11-30 23:28:49', 1),
+(8, 'Hank Harris', 'hank.harris@example.com', 'Olivia Baker', 'olivia.baker@example.com', NULL, NULL, 'supplier', 'Lack of communication.', '2024-11-30 23:28:49', 1),
+(9, 'Isabel King', 'isabel.king@example.com', 'Peter Wright', 'peter.wright@example.com', NULL, NULL, 'supplier', 'Overcharging for services.', '2024-11-30 23:28:49', 1),
+(10, 'Jack Lee', 'jack.lee@example.com', 'Laura Martin', 'laura.martin@example.com', NULL, NULL, 'supplier', 'Unethical practices.', '2024-11-30 23:28:49', 1);
 
 -- --------------------------------------------------------
 
@@ -219,24 +222,25 @@ CREATE TABLE `users` (
   `age` int(11) DEFAULT NULL,
   `day_available` varchar(255) DEFAULT NULL,
   `is_active` tinyint(1) NOT NULL DEFAULT 0,
-  `last_login` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `last_login` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `disable_status` tinyint(4) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `role`, `name`, `email`, `password`, `created_at`, `updated_at`, `profile_img`, `about_me`, `profession`, `location`, `age`, `day_available`, `is_active`, `last_login`) VALUES
-(16, 'supplier', 'Ivan Ablanida', '1@gmail.com', '$2y$10$SXsGg/5MaeD3S.fdoldfgu5YYTZ/RpGLwEMocNmhwA/Pnq8909uHG', '2024-09-15 10:14:40', '2024-12-01 04:18:49', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-09,2024-11-08,2024-11-07', 1, '2024-12-01 04:18:49'),
-(17, 'supplier', 'Ivan Ablanida', 'supplier@gmail.com', '$2y$10$Nbgr8CZoIfG.DwKmzHQWn.53PiFMxsA1f0wGZgXDkTqMRRJokoZIK', '2024-09-15 10:57:46', '2024-12-01 04:43:03', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15', 1, '2024-12-01 04:43:03'),
-(18, 'supplier', 'Ivan', 'ivan@gmail.com', '$2y$10$UipF31UcmWtkvLLi/4pJv.q2swSPUpWGK.EqjJRPH17oqR8N7FS/S', '2024-09-15 12:01:03', '2024-09-15 12:01:03', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2024-11-30 22:36:31'),
-(19, 'customer', 'racel', 'racel@gmail.com', '$2y$10$YbfIIErUgASt3W0y6HpIi.y5667ofbX2bHYzWGYNRtWi8CAPopo0a', '2024-09-15 19:48:08', '2024-11-30 23:13:54', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2024-11-30 23:13:54'),
-(20, 'supplier', 'racels', '1ra@gmail.com', '$2y$10$hlBfashINKF7BGvZ2f/0SendLQMe/UYOUvGEgEv26wd.YGKsasp1G', '2024-09-15 19:53:50', '2024-12-01 04:48:38', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 1, '2024-12-01 04:48:38'),
-(22, 'customer', 'client', 'client@gmail.com', '$2y$10$TCR1OMGZyQ7c2CaObgVq3.XI8FDOhtct4fOfQiqekIPspMGouboui', '2024-09-24 02:57:18', '2024-12-01 04:04:26', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-10-03,2024-10-05,2024-10-12', 0, '2024-12-01 04:04:26'),
-(23, 'supplier', 'Test Updated', 'test@gmail.com', '$2y$10$E.NRidcwuXwIpmwfonL04.7HSPGq69xeA.8r3JF9IR2nanR7yv22y', '2024-09-24 03:48:59', '2024-10-31 05:44:12', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-10-03,2024-10-05,2024-10-12', 0, '2024-11-30 22:36:31'),
-(25, 'supplier', 'Ivan', 'kate@gmail.com', '$2y$10$ri6n0lqMhglZcELaRgPpPOmzmKR.gg242J7JXcwo0dLTtiLl0cSau', '2024-11-30 21:07:32', '2024-12-01 04:53:01', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2024-11-14,2024-11-07', 1, '2024-12-01 04:53:01'),
-(26, 'admin', 'admin', 'admin@gmail.com', '$2y$10$opUH24g9VfMnpi1qYe634u2OSYi7auE9AP2kFb1maZVZrx8ex5gMy', '2024-11-30 21:26:12', '2024-12-01 06:06:14', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2024-12-01 06:06:14'),
-(27, 'supplier', 'kate', 'kates@gmail.com', '$2y$10$IFxQruNE7x2sseGfxn4shuRrB/vtKWZZ5QuCuB1zvAeElGFPkdExi', '2024-12-01 04:49:15', '2024-12-01 04:51:41', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 1, '2024-12-01 04:51:41');
+INSERT INTO `users` (`id`, `role`, `name`, `email`, `password`, `created_at`, `updated_at`, `profile_img`, `about_me`, `profession`, `location`, `age`, `day_available`, `is_active`, `last_login`, `disable_status`) VALUES
+(16, 'supplier', 'Ivan Ablanida', '1@gmail.com', '$2y$10$SXsGg/5MaeD3S.fdoldfgu5YYTZ/RpGLwEMocNmhwA/Pnq8909uHG', '2024-09-15 10:14:40', '2024-12-01 04:18:49', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-09,2024-11-08,2024-11-07', 1, '2024-12-01 04:18:49', 1),
+(17, 'supplier', 'Ivan Ablanida', 'supplier@gmail.com', '$2y$10$Nbgr8CZoIfG.DwKmzHQWn.53PiFMxsA1f0wGZgXDkTqMRRJokoZIK', '2024-09-15 10:57:46', '2024-12-13 00:50:34', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15', 1, '2024-12-13 00:50:34', 1),
+(18, 'supplier', 'Ivan', 'ivan@gmail.com', '$2y$10$UipF31UcmWtkvLLi/4pJv.q2swSPUpWGK.EqjJRPH17oqR8N7FS/S', '2024-09-15 12:01:03', '2024-09-15 12:01:03', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2024-11-30 22:36:31', 1),
+(19, 'customer', 'racel', 'racel@gmail.com', '$2y$10$YbfIIErUgASt3W0y6HpIi.y5667ofbX2bHYzWGYNRtWi8CAPopo0a', '2024-09-15 19:48:08', '2025-01-03 03:34:20', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-03 03:34:20', 2),
+(20, 'supplier', 'racels', '1ra@gmail.com', '$2y$10$hlBfashINKF7BGvZ2f/0SendLQMe/UYOUvGEgEv26wd.YGKsasp1G', '2024-09-15 19:53:50', '2024-12-01 04:48:38', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 1, '2024-12-01 04:48:38', 1),
+(22, 'customer', 'client', 'client@gmail.com', '$2y$10$TCR1OMGZyQ7c2CaObgVq3.XI8FDOhtct4fOfQiqekIPspMGouboui', '2024-09-24 02:57:18', '2025-01-03 00:51:24', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-03 00:51:24', 1),
+(23, 'supplier', 'Test Updated', 'test@gmail.com', '$2y$10$E.NRidcwuXwIpmwfonL04.7HSPGq69xeA.8r3JF9IR2nanR7yv22y', '2024-09-24 03:48:59', '2024-10-31 05:44:12', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-10-03,2024-10-05,2024-10-12', 0, '2024-11-30 22:36:31', 1),
+(25, 'supplier', 'Ivan', 'kate@gmail.com', '$2y$10$ri6n0lqMhglZcELaRgPpPOmzmKR.gg242J7JXcwo0dLTtiLl0cSau', '2024-11-30 21:07:32', '2024-12-01 04:53:01', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2024-11-14,2024-11-07', 1, '2024-12-01 04:53:01', 1),
+(26, 'admin', 'admin', 'admin@gmail.com', '$2y$10$opUH24g9VfMnpi1qYe634u2OSYi7auE9AP2kFb1maZVZrx8ex5gMy', '2024-11-30 21:26:12', '2025-01-03 00:49:36', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-03 00:49:36', 1),
+(27, 'supplier', 'kate', 'kates@gmail.com', '$2y$10$IFxQruNE7x2sseGfxn4shuRrB/vtKWZZ5QuCuB1zvAeElGFPkdExi', '2024-12-01 04:49:15', '2024-12-01 04:51:41', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 1, '2024-12-01 04:51:41', 1);
 
 --
 -- Indexes for dumped tables
