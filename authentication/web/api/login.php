@@ -10,6 +10,7 @@
 
 	<link rel="stylesheet" href="../../css/login.css">
 </head>
+
 <body>
 
 	<div class="scene d-flex justify-content-center align-items-center">
@@ -19,9 +20,12 @@
 			<div class="box1 box11 text-center">
 				<h3>LENSFOLIOHUB</h3>
 				<div class="line"></div>
-				<p class="register-p">Enter your details and start your journey with us</p>
-				<button class="registerbtn" id="registerBtn">GET STARTED</button>
-			</div>
+				<div class="dont mt-4">
+					<p class="register-p">Enter your details and start your journey with us</p>
+					<p class="mb-0 d-flex text-align-center justify-content-center align-items-center mx-auto gap-1 mt-2" >Don't have an account?</p>
+					<button class="registerbtn" id="registerBtn">GET STARTED</button>
+				</div>
+				</div>
 			<div class="box2 box22">
 			<?php
 			session_start();
@@ -49,9 +53,7 @@
 						<a href="#" class="forgot">Forgot Password?</a>
 						
 						<button type="submit" class="mt-2">Log In</button>
-						<div class="d-flex register">
-							<p class="mb-0 d-flex text-align-center justify-content-center align-items-center mx-auto gap-1 mt-2" >Don't have an account?<a href="#" class="a-reg">Register</a></p>
-						</div>
+						
 					</form>
 				</div>
 
@@ -65,48 +67,86 @@
 			<div class="box1 box33">
 				<h3 class="create-account">CREATE ACCOUNT</h3>
 				<form action="../../function/php/signup.php" method="POST" id="signupForm">
-				<div class="form-group">
-					<label class="hidden-label">Are you a:</label>
-					<div>					
-						<div class="radio-group">
-							<input type="radio" id="customer" name="role" value="customer" required>
-							<label for="customer">Customer</label>
+					<div class="form-group">
+						<label class="hidden-label">Are you a:</label>
+						<div>
+							<div class="radio-group">
+								<input type="radio" id="customer" name="role" value="customer" required>
+								<label for="customer">Customer</label>
+							</div>
+						</div>
+						<div>
+							<div class="radio-group">
+								<input type="radio" id="supplier" name="role" value="supplier" required>
+								<label for="supplier">Supplier</label>
+							</div>
 						</div>
 					</div>
-					<div>
-						<div class="radio-group">
-							<input type="radio" id="supplier" name="role" value="supplier" required>
-							<label for="supplier">Supplier</label>
+
+					<!-- Common fields for both roles -->
+					<div class="input-field">
+						<input type="text" name="name" required>
+						<label for="name">Enter your name</label>
+					</div>
+
+					<div class="input-field">
+						<input type="text" name="address" id="address" required>
+						<label for="address">Enter your address</label>
+					</div>
+
+					<div class="input-field">
+						<input type="date" name="birthday" placeholder="hi" required>
+						<label for="birthday">Enter your birthdate</label>
+					</div>
+
+					<div class="input-field">
+						<input type="url" name="social_link" required>
+						<label for="social_link">Enter your fb/ig link</label>
+					</div>
+
+					<!-- Customer-specific fields -->
+					<div id="customerFields" class="roleFields" style="display:none;">
+						<div class="input-field">
+							<input type="text" name="username" required>
+							<label for="username">Enter your username</label>
 						</div>
 					</div>
-				</div>
-				<div class="input-field">
-					<input type="text" name="name" required>
-					<label for="name">Enter your name</label>
-				</div>
 
-				<div class="input-field">
-					<input type="email" name="email" required>
-					<label for="email">Enter your email</label>
-				</div>
+					<!-- Supplier-specific fields -->
+					<div id="supplierFields" class="roleFields" style="display:none;">
+						<div class="input-field">
+							<input type="text" name="profession">
+							<label for="profession">Enter your profession</label>
+						</div>
 
-				<div class="input-field">
-					<input type="password" name="password" id="password" required>
-					<label for="password">Enter your password</label>
-				</div>
+						<div class="input-field">
+							<input type="number" name="years_in_profession">
+							<label for="years_in_profession">Years in Profession</label>
+						</div>
 
-				<div class="input-field">
-					<input type="password" name="confirm-password" id="confirm-password" required>
-					<label for="confirm-password">Confirm your password</label>
-				</div>
+						<div class="input-field">
+							<input type="text" name="username">
+							<label for="username">Enter your username</label>
+						</div>
+					</div>
+					<div class="d-flex gap-2">
+						<div class="input-field">
+							<input type="password" name="password" id="password" required pattern=".{8,}" title="Password must be at least 8 characters long and contain at least one special character">
+							<label for="password">Enter your password</label>
+						</div>
 
-
-				<div class="alert-error" role="alert" id="password-error" style="display: none;">
+						<div class="input-field">
+							<input type="password" name="confirm-password" id="confirm-password" required>
+							<label for="confirm-password">Confirm your password</label>
+						</div>
+					</div>
+					<div class="alert-error" role="alert" id="password-error" style="display: none;">
 						Passwords do not match!
 					</div>
-				<button type="submit" class="loginbtn">Sign Up</button>
+
+					<button type="submit" class="loginbtn">Sign Up</button>
+				</form>
 			</div>
-			</form>
 			<div class="box2 box44 text-center">
 				<h3>Welcome Back!</h3>
 				<div class="lined"></div>
@@ -114,23 +154,61 @@
 				<button class="loginbtn" id="loginBtn">LOG-IN</button>
 			</div>
 		</div>
-	</div>
 
 	<script>
-   document.getElementById('signupForm').addEventListener('submit', function(event) {
-        var password = document.getElementById('password').value;
-        var confirmPassword = document.getElementById('confirm-password').value;
-        var errorDiv = document.getElementById('password-error');
+		document.getElementById('signupForm').addEventListener('submit', function(event) {
+			var password = document.getElementById('password').value;
+			var confirmPassword = document.getElementById('confirm-password').value;
+			var errorDiv = document.getElementById('password-error');
+			var specialCharPattern = /[!@#$%^&*(),.?":{}|<>]/;
 
-        if (password !== confirmPassword) {
-            errorDiv.style.display = 'block';
-            event.preventDefault(); 
-            return false; 
-        } else {
-            errorDiv.style.display = 'none';
-        }
+			if (password !== confirmPassword) {
+				errorDiv.textContent = "Passwords do not match!";
+				errorDiv.style.display = 'block';
+				event.preventDefault();
+				return false;
+			} else if (password.length < 8) {
+				errorDiv.textContent = "Password must be at least 8 characters long!";
+				errorDiv.style.display = 'block';
+				event.preventDefault();
+				return false;
+			} else if (!specialCharPattern.test(password)) {
+				errorDiv.textContent = "Password must contain at least one special character!";
+				errorDiv.style.display = 'block';
+				event.preventDefault();
+				return false;
+			} else {
+				errorDiv.style.display = 'none';
+			}
+		});
+
+		document.getElementById('customer').addEventListener('change', function() {
+        document.getElementById('customerFields').style.display = 'block';
+        document.getElementById('supplierFields').style.display = 'none';
+		});
+
+		document.getElementById('supplier').addEventListener('change', function() {
+			document.getElementById('supplierFields').style.display = 'block';
+			document.getElementById('customerFields').style.display = 'none';
+		});
+		document.querySelectorAll('input[name="role"]').forEach(role => {
+        role.addEventListener('change', function () {
+            const isCustomer = this.value === 'customer';
+
+            document.querySelectorAll('.customer-only').forEach(field => {
+                field.style.display = isCustomer ? 'block' : 'none';
+                field.querySelector('input').disabled = !isCustomer;
+            });
+
+            document.querySelectorAll('.supplier-only').forEach(field => {
+                field.style.display = !isCustomer ? 'block' : 'none';
+                field.querySelector('input').disabled = isCustomer;
+            });
+        });
     });
-</script>
+
+		
+	</script>
 
 	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>

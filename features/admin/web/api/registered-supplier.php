@@ -72,12 +72,11 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
         
             <div class="col-md-12 d-flex justify-content-center mx-auto">
             <div class="container supplier-reg">
-                <h5>Registered Supplier</h5>
+                <h2>Registered Supplier</h2>
                 <?php 
                 include '../../function/php/registered-supplier.php';
                 ?>
             <div class="table-wrapper px-lg-5">
-                <h2 class="text-center">All Suppliers</h2>
 
                 <table class="table table-hover table-remove-borders" style="background-color: #2A2E32; color: white;">
                     <thead class="thead-light" style="background-color: #2A2E32; color: white;">
@@ -93,22 +92,59 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
                     <tbody id="tableBody">
                         <?php if ($result->num_rows > 0): ?>
                             <?php while ($user = $result->fetch_assoc()): ?>
-                                <tr>
+                                <!-- Make the entire <tr> clickable -->
+                                <tr data-bs-toggle="modal" data-bs-target="#viewUserModal_<?php echo $user['id']; ?>" style="cursor: pointer;">
                                     <td><?php echo $user['id']; ?></td>
-                                    <td><?php echo $user['name']; ?></td>
-                                    <td><?php echo $user['email']; ?></td>
-                                    <td><?php 
-                                        echo $user['last_login'] ? date('Y-m-d H:i:s', strtotime($user['last_login'])) : 'Never';
-                                    ?></td>
+                                    <td><?php echo htmlspecialchars($user['name']); ?></td>
+                                    <td><?php echo htmlspecialchars($user['email']); ?></td>
                                     <td>
+                                        <?php 
+                                            echo $user['last_login'] ? date('Y-m-d H:i:s', strtotime($user['last_login'])) : 'Never';
+                                        ?>
+                                    </td>
+                                    <td>
+                                        <!-- Delete Button -->
                                         <button class="btn btn-danger btn-sm delete-btn" 
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#confirmDeleteModal" 
-                                                data-id="<?php echo $user['id']; ?>">
+                                                data-id="<?php echo $user['id']; ?>"
+                                                onclick="event.stopPropagation();">
                                             Delete
                                         </button>
                                     </td>
                                 </tr>
+
+                                <!-- Modal for Viewing User Details -->
+                                <div class="modal fade" id="viewUserModal_<?php echo $user['id']; ?>" tabindex="-1" aria-labelledby="viewUserModalLabel_<?php echo $user['id']; ?>" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="viewUserModalLabel_<?php echo $user['id']; ?>">User Details</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="container">
+                                                    <div class="row">
+                                                        <div class="col-md-5">
+                                                            <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($user['profile_img']); ?>" alt="Profile Picture" class="img-fluid" style="max-width: 100%; height: 30vh;">
+                                                        </div>
+                                                        <div class="col-md-7">
+                                                            <p><strong>Name:</strong> <?php echo htmlspecialchars($user['name']); ?></p>
+                                                            <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
+                                                            <p><strong>About me:</strong> <?php echo htmlspecialchars($user['about_me']); ?></p>
+                                                            <p><strong>Profession: </strong> <?php echo htmlspecialchars($user['profession']); ?></p>
+                                                            <p><strong>Age:</strong> <?php echo htmlspecialchars($user['age']); ?> Yrs Old.</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
@@ -116,6 +152,7 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
                             </tr>
                         <?php endif; ?>
                     </tbody>
+
                 </table>
             </div>
             </div>

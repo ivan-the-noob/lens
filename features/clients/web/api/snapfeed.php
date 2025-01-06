@@ -107,6 +107,12 @@ if ($role != 'guest' && !empty($email)) {
 
     <div class="text-box">
         POWER TO THE CREATORS
+        <div class="search-container">
+            <input type="text" placeholder="Search..." class="search-input" />
+            <button class="search-button">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
     </div>
     
 

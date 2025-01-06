@@ -117,12 +117,12 @@ if ($role != 'guest' && !empty($email)) {
         <div class="container">
   <div class="row mt-5">
     <!-- Calendar Section -->
-    <div class="col-md-6">
+    <div class="col-md-5">
       <div id="calendar"></div>
     </div>
 
     <!-- Booking Form and Map Section -->
-    <div class="col-md-6 ">
+    <div class="col-md-7 ">
     <div class="container booking-container">
   <h2 class="text-center mb-4">BOOKING REQUEST</h2>
 
@@ -134,27 +134,57 @@ if ($role != 'guest' && !empty($email)) {
 
 $query = "SELECT * FROM appointment";
 $result = $conn->query($query);
+
+
 ?>
 
-<div class="row mb-3 justify-content-center">
-    <div class="col-7 d-flex flex-column confirm-button">
-        <?php if ($result->num_rows > 0): ?>
-            <?php while ($appointment = $result->fetch_assoc()): ?>
-                <div class="mb-3 d-flex justify-content-between"> <!-- Group buttons in a flex container -->
-                   
-                    <div>
-                    <button type="button" class="btn btn-primary" 
-                            data-bs-toggle="modal" 
-                            data-bs-target="#bookingModal<?php echo $appointment['id']; ?>">
-                        View
-                    </button>
-                        <button class="btn btn-success">ACCEPT</button>
-                        <button class="btn btn-danger">DECLINE</button>
-                    </div>
-                </div>
 
-                <!-- Modal for Booking Details -->
-                <div class="modal fade" id="bookingModal<?php echo $appointment['id']; ?>" tabindex="-1" aria-labelledby="bookingModalLabel<?php echo $appointment['id']; ?>" aria-hidden="true">
+
+<div class="row mb-3 justify-content-center">
+    <div class="col-12 d-flex flex-column confirm-button">
+    <?php if ($result->num_rows > 0): ?>
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Appointment</th>
+                    <th>Date</th>
+                    <th>Full Name</th>
+                    <th>Event</th>
+                    <th>Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                <?php   
+                $counter = 1;
+                while ($appointment = $result->fetch_assoc()): ?>
+                    <tr>
+                    <td class="text-center"><?php echo $counter++; ?></td>
+                        <td>
+                            <?php 
+                                $date = new DateTime($appointment['selected_date']);
+                                echo $date->format('M j, Y'); 
+                            ?>
+                        </td>
+                        <td><?php echo $appointment['name']; ?></td>
+                      
+                        <td><?php echo $appointment['event']; ?></td>
+                        <td><?php echo $appointment['time']; ?></td>
+                        <td>
+                            <!-- Action Buttons -->
+                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" 
+                                data-bs-target="#bookingModal<?php echo $appointment['id']; ?>">
+                                View
+                            </button>
+                            <button class="btn btn-success">ACCEPT</button>
+                            <button class="btn btn-danger">DECLINE</button>
+                        </td>
+                    </tr>
+
+                    <!-- Modal for Booking Details -->
+                    <div class="modal fade" id="bookingModal<?php echo $appointment['id']; ?>" tabindex="-1" aria-labelledby="bookingModalLabel<?php echo $appointment['id']; ?>" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -228,10 +258,14 @@ $result = $conn->query($query);
                         </div>
                     </div>
                 </div>
-            <?php endwhile; ?>
-        <?php else: ?>
-            <p>No appointments available.</p>
-        <?php endif; ?>
+                <?php endwhile; ?>
+            </tbody>
+        </table>
+    </div>
+<?php else: ?>
+    <p>No appointments available.</p>
+<?php endif; ?>
+
     </div>
 </div>
 

@@ -451,6 +451,37 @@ form {
       }
 /*Calendar Section End*/
 
+/*Table Section*/
+
+.table {
+    border: 1px solid #ddd; 
+
+}
+
+.table th, .table td {
+    border: 1px solid #ddd; 
+    
+}
+
+td, tr{
+    height: 5vh !important;
+}
+
+.table th {
+    background-color: #f8f9fa;
+}
+
+.table td {
+    white-space: nowrap; 
+}
+
+.table-responsive {
+    overflow-x: auto; /* Make the table horizontally scrollable on small screens */
+}
+
+
+/*Table Section End*/
+
 
 /*Footer Section*/
 footer{

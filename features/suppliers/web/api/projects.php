@@ -136,8 +136,8 @@ if ($role != 'guest' && !empty($email)) {
         <div class="container mt-5">
             <!-- Buttons to toggle between Style 1 (Grid) and Style 2 (Carousel) -->
             <div class="text-center mb-3">
-                <button id="style1" class="btn style-btn">Style 1 (Grid)</button>
-                <button id="style2" class="btn style-btn">Style 2 (Carousel)</button>
+                <button id="style1" class="btn style-btn">Layout 1</button>
+                <button id="style2" class="btn style-btn">Layout 2</button>
             </div>
         
             <!-- Style 1: Grid Layout -->
