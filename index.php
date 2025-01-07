@@ -98,8 +98,8 @@ if ($role != 'guest' && !empty($email)) {
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <?php if ($role === 'customer') { ?>
-                                    <li><a class="dropdown-item" href="customer/profile.php">Main Profile</a></li>
-                                    <li><a class="dropdown-item" href="customer/booking_status.php">Booking Status</a></li>
+                                    <li><a class="dropdown-item" href="features/clients/web/api/profile.php">Main Profile</a></li>
+                                    <li><a class="dropdown-item" href="features/clients/web/api/status.php">Booking Status</a></li>
                                     <li><a class="dropdown-item" href="customer/history.php">History</a></li>
                                     <li><a class="dropdown-item" href="customer/notifications.php">Notifications</a></li>
                                 <?php } ?>
@@ -170,39 +170,48 @@ $conn->close();
           <?php
 require 'db/db.php';
 
-$sql = "SELECT email_uploader, COUNT(email_uploader) AS email_count
-        FROM appointment
-        GROUP BY email_uploader
-        ORDER BY email_count DESC
+// Query to get the top 3 suppliers with the highest total rating
+$sql = "SELECT a.supplier_email, SUM(a.rating) AS total_rating, COUNT(a.rating) AS rating_count
+        FROM ratings a
+        GROUP BY a.supplier_email
+        ORDER BY total_rating DESC
         LIMIT 3";
+
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
     $data = [];
 
     while ($row = $result->fetch_assoc()) {
-        $email = $row['email_uploader'];
+        $supplier_email = $row['supplier_email'];
+        $total_rating = $row['total_rating'];
+        $rating_count = $row['rating_count'];
 
+        // Get the latest image from the snapfeed table
         $snapfeed_sql = "SELECT card_img 
                         FROM snapfeed 
-                        WHERE email = '$email' 
+                        WHERE email = '$supplier_email' 
                         ORDER BY created_at DESC 
                         LIMIT 1";
         $snapfeed_result = $conn->query($snapfeed_sql);
         $image = $snapfeed_result->num_rows > 0 ? $snapfeed_result->fetch_assoc()['card_img'] : 'No Image';
 
-        $users_sql = "SELECT name FROM users WHERE email = '$email'";
+        // Get the supplier's name from the users table
+        $users_sql = "SELECT name FROM users WHERE email = '$supplier_email'";
         $users_result = $conn->query($users_sql);
         $name = $users_result->num_rows > 0 ? $users_result->fetch_assoc()['name'] : 'Unknown';
 
         $data[] = [
-            'email' => $email,
-            'image' => $image,
-            'name' => $name
+            'email' => $supplier_email,
+            'name' => $name,
+            'total_rating' => $total_rating,
+            'rating_count' => $rating_count,
+            'image' => $image
         ];
     }
 }
 ?>
+
 
 <section class="row text-center">
     <?php

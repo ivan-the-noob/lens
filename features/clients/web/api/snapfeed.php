@@ -107,12 +107,7 @@ if ($role != 'guest' && !empty($email)) {
 
     <div class="text-box">
         POWER TO THE CREATORS
-        <div class="search-container">
-            <input type="text" placeholder="Search..." class="search-input" />
-            <button class="search-button">
-                <i class="fa fa-search"></i>
-            </button>
-        </div>
+        
     </div>
     
 
@@ -164,7 +159,7 @@ if ($role != 'guest' && !empty($email)) {
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
-                        <img id="modal-main-img" src="" class="img-fluid" alt="Image from Snapfeed">
+                        <img id="modal-main-img" src="../../../../assets/img/snapfeed/" class="img-fluid" alt="Image from Snapfeed">
                     </div>
                     <div class="col-md-6 d-flex flex-column">
                         <p id="modal-main-title" class="img-title"></p>

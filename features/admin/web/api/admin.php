@@ -90,6 +90,9 @@ $conn->close();
             <a href="reports.php">
                 <span>Reports</span>
             </a>
+            <a href="recover.php">
+                <span>Recovery</span>
+            </a>
         </div>
 
     </div>
@@ -211,102 +214,223 @@ $conn->close();
                                     </script>
                                 </div>
                     </div>
-                    <div class="col-md-8">
-    <div class="chart-container">
-        <h5 class="chart-title">Total Users Line Graph</h5>
-        <canvas id="lineChart"></canvas>
-        <script>
-            document.addEventListener("DOMContentLoaded", function () {
-                var ctx = document.getElementById('lineChart').getContext('2d');
+                    <div class="col-md-9">
+                        <div class="chart-container">
+                            <h5 class="chart-title">Total Users Line Graph</h5>
+                            <canvas id="lineChart"></canvas>
+                            <script>
+                                document.addEventListener("DOMContentLoaded", function () {
+                                    var ctx = document.getElementById('lineChart').getContext('2d');
 
-                var supplierData = <?php echo json_encode($supplierData); ?>;
-                var clientData = <?php echo json_encode($clientData); ?>;
+                                    var supplierData = <?php echo json_encode($supplierData); ?>;
+                                    var clientData = <?php echo json_encode($clientData); ?>;
 
-                var chartData = {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-                    datasets: [
-                        {
-                            label: 'Supplier Users',
-                            data: supplierData,
-                            backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                            borderColor: 'rgba(54, 162, 235, 1)',
-                            borderWidth: 2,
-                            fill: true,
-                            pointBackgroundColor: 'rgba(54, 162, 235, 1)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
-                        },
-                        {
-                            label: 'Client Users',
-                            data: clientData,
-                            backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                            borderColor: 'rgba(255, 99, 132, 1)',
-                            borderWidth: 2,
-                            fill: true,
-                            pointBackgroundColor: 'rgba(255, 99, 132, 1)',
-                            pointBorderColor: '#fff',
-                            pointHoverBackgroundColor: '#fff',
-                            pointHoverBorderColor: 'rgba(255, 99, 132, 1)'
-                        }
-                    ]
-                };
+                                    var chartData = {
+                                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                                        datasets: [
+                                            {
+                                                label: 'Supplier Users',
+                                                data: supplierData,
+                                                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                                borderColor: 'rgba(54, 162, 235, 1)',
+                                                borderWidth: 2,
+                                                fill: true,
+                                                pointBackgroundColor: 'rgba(54, 162, 235, 1)',
+                                                pointBorderColor: '#fff',
+                                                pointHoverBackgroundColor: '#fff',
+                                                pointHoverBorderColor: 'rgba(54, 162, 235, 1)'
+                                            },
+                                            {
+                                                label: 'Client Users',
+                                                data: clientData,
+                                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                                                borderColor: 'rgba(255, 99, 132, 1)',
+                                                borderWidth: 2,
+                                                fill: true,
+                                                pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+                                                pointBorderColor: '#fff',
+                                                pointHoverBackgroundColor: '#fff',
+                                                pointHoverBorderColor: 'rgba(255, 99, 132, 1)'
+                                            }
+                                        ]
+                                    };
 
-                new Chart(ctx, {
-                    type: 'line',
-                    data: chartData,
-                    options: {
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                max: 500,
-                                ticks: {
-                                    color: 'white',
-                                    callback: function (value) {
-                                        return value + ' users';
-                                    }
-                                },
-                                grid: {
-                                    color: 'rgba(255, 255, 255, 0.2)'
-                                }
-                            },
-                            x: {
-                                ticks: {
-                                    color: 'white'
-                                },
-                                grid: {
-                                    color: 'rgba(255, 255, 255, 0.2)'
-                                }
-                            }
-                        },
-                        plugins: {
-                            tooltip: {
-                                callbacks: {
-                                    label: function (context) {
-                                        var label = context.dataset.label || '';
-                                        if (label) {
-                                            label += ': ';
+                                    new Chart(ctx, {
+                                        type: 'line',
+                                        data: chartData,
+                                        options: {
+                                            scales: {
+                                                y: {
+                                                    beginAtZero: true,
+                                                    max: 500,
+                                                    ticks: {
+                                                        color: 'white',
+                                                        callback: function (value) {
+                                                            return value + ' users';
+                                                        }
+                                                    },
+                                                    grid: {
+                                                        color: 'rgba(255, 255, 255, 0.2)'
+                                                    }
+                                                },
+                                                x: {
+                                                    ticks: {
+                                                        color: 'white'
+                                                    },
+                                                    grid: {
+                                                        color: 'rgba(255, 255, 255, 0.2)'
+                                                    }
+                                                }
+                                            },
+                                            plugins: {
+                                                tooltip: {
+                                                    callbacks: {
+                                                        label: function (context) {
+                                                            var label = context.dataset.label || '';
+                                                            if (label) {
+                                                                label += ': ';
+                                                            }
+                                                            label += context.raw + ' users';
+                                                            return label;
+                                                        }
+                                                    },
+                                                    bodyColor: 'white',
+                                                    titleColor: 'white',
+                                                    backgroundColor: 'rgba(0, 0, 0, 0.7)'
+                                                },
+                                                legend: {
+                                                    labels: {
+                                                        color: 'white'
+                                                    }
+                                                }
+                                            }
                                         }
-                                        label += context.raw + ' users';
-                                        return label;
+                                    });
+                                });
+                            </script>
+                        </div>
+                        <div class="row d-flex justify-content-center mt-4">
+                        <?php
+
+                            include '../../../../db/db.php';
+
+                            $sql = "
+                                SELECT supplier_email, name, SUM(rating) AS total_rating
+                                FROM ratings
+                                GROUP BY supplier_email
+                                ORDER BY total_rating DESC
+                                LIMIT 5
+                            ";
+
+                            $result = $conn->query($sql);
+
+                            if ($result->num_rows > 0) {
+                                echo '<div class="col-md-6">';
+                                echo '<div class="card">';
+                                echo '<div class="card-body">';
+                                echo '<p class="text-center text-white">Top 5 Highest Rated Suppliers</p>';
+
+                                echo '<hr class="mt-2">';
+                                echo '<ul class="list-group list-group-flush">';
+
+                                $rank = 1; 
+                                while ($row = $result->fetch_assoc()) {
+                                    $supplier_email = $row['supplier_email'];
+                                    $name = $row['name'];
+                                    $total_rating = $row['total_rating']; 
+
+                                    $medal = '';
+                                    if ($rank == 1) {
+                                        $medal = '<img src="../../../../assets/img/medal/gold.png" alt="Gold Medal" style="width: 40px; height: 40px;">';
+                                    } elseif ($rank == 2) {
+                                        $medal = '<img src="../../../../assets/img/medal/silver.png" alt="Silver Medal" style="width: 40px; height: 40px;">';
+                                    } elseif ($rank == 3) {
+                                        $medal = '<img src="../../../../assets/img/medal/bronze.png" alt="Bronze Medal" style="width: 40px; height: 40px;">';
                                     }
-                                },
-                                bodyColor: 'white',
-                                titleColor: 'white',
-                                backgroundColor: 'rgba(0, 0, 0, 0.7)'
-                            },
-                            legend: {
-                                labels: {
-                                    color: 'white'
+
+                                    echo '<li class="list-group-item">';
+                                    echo '<div class="d-flex justify-content-between align-items-center">'; 
+                                    echo '<div>' . $medal . '</div>'; 
+                                    echo '<div class="d-flex justify-content-between w-100">'; 
+                                    echo '<div class="">';
+                                    echo '<p class="mb-0">' . htmlspecialchars($name) . '</p>';
+                                    echo '<p>' . htmlspecialchars($supplier_email) . '</p>';
+                                    echo '</div>';
+                                    echo '<p class="mb-0 mt-3">' . htmlspecialchars($total_rating) . ' <i class="fas fa-star" style="color: yellow;"></i></p>';
+                                    echo '</div>';
+                                    echo '</div>';
+                                    echo '</li>';
+
+                                    $rank++; 
                                 }
+
+                                echo '</ul>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</div>';
+                            } else {
+                                echo '<p>No ratings available.</p>';
                             }
+                            ?>
+
+
+                    <?php
+
+                    include '../../../../db/db.php';
+
+                    // Query to fetch the 5 lowest-rated suppliers
+                    $sql = "
+                        SELECT supplier_email, name, SUM(rating) AS total_rating
+                        FROM ratings
+                        GROUP BY supplier_email
+                        ORDER BY total_rating ASC
+                        LIMIT 5
+                    ";
+
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        echo '<div class="col-md-6">';
+                        echo '<div class="card">';
+                        echo '<div class="card-body">';
+                        echo '<p class="text-center text-white">Top 5 Lowest Rated Suppliers</p>';
+                        echo '<hr class="mt-2">';
+                        echo '<ul class="list-group list-group-flush">';
+
+                        $rank = 1; 
+                        while ($row = $result->fetch_assoc()) {
+                            $supplier_email = $row['supplier_email'];
+                            $name = $row['name'];
+                            $total_rating = $row['total_rating'];
+
+                            echo '<li class="list-group-item">';
+                            echo '<div class="d-flex justify-content-between align-items-center">'; 
+                            echo '<div>' . $medal . '</div>'; 
+                            echo '<div class="d-flex justify-content-between w-100">'; 
+                            echo '<div class="">';
+                            echo '<p class="mb-0">' . htmlspecialchars($name) . '</p>';
+                            echo '<p>' . htmlspecialchars($supplier_email) . '</p>';
+                            echo '</div>';
+                            echo '<p class="mb-0 mt-3">' . htmlspecialchars($total_rating) . ' <i class="fas fa-star" style="color: yellow;"></i></p>';
+                            echo '</div>';
+                            echo '</div>';
+                            echo '</li>';
+
+                            $rank++;
                         }
+
+                        echo '</ul>';
+                        echo '</div>';
+                        echo '</div>';
+                        echo '</div>';
+                    } else {
+                        echo '<p>No ratings available.</p>';
                     }
-                });
-            });
-        </script>
-    </div>
-</div>
+                    ?>
+
+                        </div>
+                    </div>
+                  
 
 
                 

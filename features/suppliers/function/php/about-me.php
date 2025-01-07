@@ -16,7 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $age = $_POST['age'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
-    $location_text = $_POST['location_text']; 
+    $location_text = $_POST['location_text'];
+    $price = $_POST['price'];  // Add price to the POST data
 
     // Handle file upload
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == UPLOAD_ERR_OK) {
@@ -56,17 +57,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($count > 0) {
         // Update existing record
-        $stmt = $conn->prepare("UPDATE about_me SET profile_image = ?, profession = ?, about_me = ?, age = ?, latitude = ?, longitude = ?, location_text = ? WHERE email = ?");
-        $stmt->bind_param('ssssdsss', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $email);
+        $stmt = $conn->prepare("UPDATE about_me SET profile_image = ?, profession = ?, about_me = ?, age = ?, latitude = ?, longitude = ?, location_text = ?, price = ? WHERE email = ?");
+        $stmt->bind_param('ssssdssss', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
     } else {
         // Insert new record
-        $stmt = $conn->prepare("INSERT INTO about_me (profile_image, profession, about_me, age, latitude, longitude, location_text, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('ssssdsss', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $email);
+        $stmt = $conn->prepare("INSERT INTO about_me (profile_image, profession, about_me, age, latitude, longitude, location_text, price, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('ssssdssss', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
     }
 
     // Execute the query
     if ($stmt->execute()) {
-        echo 'Data saved successfully!';
+       header('Location: ../../web/api/about-me.php');
+       exit();
     } else {
         echo 'Error: ' . $stmt->error;
     }

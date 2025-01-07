@@ -128,9 +128,10 @@ if ($role != 'guest' && !empty($email)) {
         $age = '';
         $latitude = '';
         $longitude = '';
+        $price = '';
         
         // Prepare and execute SQL statement to retrieve existing data
-        $stmt = $conn->prepare("SELECT profile_image, profession, about_me, age, latitude, longitude FROM about_me WHERE email = ?");
+        $stmt = $conn->prepare("SELECT profile_image, profession, about_me, age, latitude, longitude, price FROM about_me WHERE email = ?");
         if ($stmt === false) {
             die('Prepare failed: ' . $conn->error);
         }
@@ -141,7 +142,7 @@ if ($role != 'guest' && !empty($email)) {
             die('Execute failed: ' . $stmt->error);
         }
         
-        $stmt->bind_result($profileImg, $profession, $about_me, $age, $latitude, $longitude);
+        $stmt->bind_result($profileImg, $profession, $about_me, $age, $latitude, $longitude, $price);
         if (!$stmt->fetch()) {
             // Handle the case where no data is found
             $profileImg = 'default_image.jpg'; // Default image
@@ -150,6 +151,7 @@ if ($role != 'guest' && !empty($email)) {
             $age = '';
             $latitude = '';
             $longitude = '';
+            $price = '';
         }
         
         $stmt->close();
@@ -198,6 +200,10 @@ if ($role != 'guest' && !empty($email)) {
 
                 <div class="mb-3">
                     <input type="number" class="form-control" name="age" placeholder="Age" value="<?php echo htmlspecialchars($age); ?>">
+                </div>
+                
+                <div class="mb-3">
+                    <input type="number" class="form-control" name="price" placeholder="Price" value="<?php echo htmlspecialchars($price); ?>">
                 </div>
 
                 <button type="submit" class="btn about-me-button">Save</button>

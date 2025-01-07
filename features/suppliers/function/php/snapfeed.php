@@ -8,7 +8,8 @@ require '../../../../db/db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle the file upload for card image
     $target_dir = "../../../../assets/img/snapfeed/";  // Folder where images will be stored
-    $card_img = $target_dir . basename($_FILES["card_img"]["name"]);
+    $file_name = basename($_FILES["card_img"]["name"]); // Get only the file name
+    $card_img = $target_dir . $file_name;  // Create the full file path
 
     // Move the uploaded file to the target directory
     if (move_uploaded_file($_FILES["card_img"]["tmp_name"], $card_img)) {
@@ -33,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Insert data into the MySQL database
         $sql = "INSERT INTO snapfeed (img_title, card_img, card_text, email) 
-                VALUES ('$img_title', '$card_img', '$card_text', '$email')";
+                VALUES ('$img_title', '$file_name', '$card_text', '$email')"; // Use the file name here
 
         if ($conn->query($sql) === TRUE) {
             header("Location: ../../web/api/snapfeed.php");
@@ -45,6 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         echo "Sorry, there was an error uploading your file.";
     }
 }
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $imageId = $_POST['image_id'];

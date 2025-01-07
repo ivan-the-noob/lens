@@ -34,7 +34,7 @@ if ($result->num_rows > 0) {
     
         echo '
         <div class="col-md-3 mb-3 gallery-item position-relative" id="gallery-item-' . $id . '">
-            <img src="' . $imgSrc . '" class="img-fluid img-wh" alt="Image from Snapfeed" 
+            <img src="../../../../assets/img/snapfeed/' . $imgSrc . '" class="img-fluid img-wh" alt="Image from Snapfeed" 
                  data-bs-toggle="modal" data-bs-target="#modal-' . $id . '"
                  data-img-src="' . htmlspecialchars($imgSrc) . '" 
                  data-img-title="' . htmlspecialchars($imgTitle) . '" 

@@ -9,7 +9,7 @@
 
 }
 body{
-    background-color: #FBF9FA;
+    background-color: #FAF7F2;
 }
 
 /*Preloader*/
@@ -168,107 +168,42 @@ body.loaded #preloader {
     background-color: #7A3015;
     color: #fff !important;
     border: none;
-    border-radius: 3px;
     padding: 10px 15px;
     text-decoration: none;
 }
 
+.dropdown img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #a67b5b;
+}
+
+.profile-imgs{
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 50% !important;
+    border: 2px solid #FFFFFF !important;
+    margin-bottom: 10px;
+}
+
+.dropdown-toggle{
+    color: #7A3015 !important;
+}
+
+.navbar-collapse {
+    flex-grow: 0 !important;
+}
+
+
 /* navbar end */
 
-/*Supplier Section*/
- 
-  .search-bar {
-    margin: 20px 0;
-  }
-  .recent-searches .card {
-    margin-bottom: 20px;
-  }
- 
-  .card-rating {
-    display: flex;
-    gap: 5px;
-  }
-  .star {
-    color: #FFD700; /* Gold star */
-  }
- .search-bar{
-    margin-top: 30% !important;
-  }
-
-  .search-bars{
-    border-radius: 30px;
-    padding: 15px;
-    margin-bottom: 0 !important;  
-    position: relative;
-    z-index: 2;
-    border: 1px solid #a67b5b;
-  }
-
-  .search-button{
-    background-color: #a67b5b;
-    color: #fff;  
-    min-width: 100% !important;
-    max-width: 100% !important;
-    margin: 2px;
-  }
-  .name{
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-  }
-  .pricing{
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
-  }
-
-  .search-button:hover{
-    background-color: #b4794b;
-  }
-
-  .filter-buttons{
-    position: relative;
-    bottom: 10px;
-    z-index: 1;
-  }
-  .profile{
-    object-fit: cover;
+.status{
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: auto;
-    height: 100%;
-    padding: 10px;
-  }
-   .top{
-    border-top: 1px solid #a67b5b;
-    background-color: #a67b5b;
-    height: 20px;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-   }
-
-   .card{
-    border: 1px solid #a67b5b;
-   }
-
-  .card p{
-    margin-bottom: 0;
-    color: #000;
-  }
-
-/*Supplier Section End*/
-
-
-/*Footer Section*/
-footer{
-    color: #fff;
-    background-color: #a67b5b;
-    font-weight: 400;
 }
-footer a{
-    color: #fff;
-    text-decoration: none;
-    font-weight: 400;
+
+.card{
+    background-color: #FBF9FA !important;
 }
-footer h5{
-    font-weight: 600;
-}
+

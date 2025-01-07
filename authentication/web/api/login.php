@@ -57,10 +57,51 @@
 					</form>
 				</div>
 
+				<?php if (isset($_SESSION['disable_status']) && $_SESSION['disable_status'] === true): ?>
+				<script>
+					document.addEventListener("DOMContentLoaded", function() {
+						var modal = new bootstrap.Modal(document.getElementById('disableModal'));
+						modal.show();
+					});
+				</script>
+				<?php unset($_SESSION['disable_status']); ?>
+			<?php endif; ?>
+
+		
+
+
 
 
 			</div>
 		</div>
+
+		<div class="modal fade" id="recoverModal" tabindex="-1" role="dialog" aria-labelledby="recoverModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered" role="document">
+				<div class="modal-content">
+					<form action="../../function/php/process_recovery.php" method="POST">
+						<div class="modal-header">
+							<h5 class="modal-title" id="recoverModalLabel">Request Account Recovery</h5>
+							<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+						</div>
+						<div class="modal-body">
+							<div class="mb-3">
+								<label for="emailAddress" class="form-label">Email Address</label>
+								<input type="email" class="form-control" id="emailAddress" name="email" value="<?php echo htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES); ?>" required>
+							</div>
+							<div class="mb-3">
+								<label for="recoveryReason" class="form-label">Explain why your account should be recovered:</label>
+								<textarea class="form-control" id="recoveryReason" name="recovery_reason" rows="4" required></textarea>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+							<button type="submit" class="btn btn-primary">Submit Request</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+
 
 		<!-- Second container (Registration) -->
 		<div class="container2 box">
@@ -154,6 +195,8 @@
 				<button class="loginbtn" id="loginBtn">LOG-IN</button>
 			</div>
 		</div>
+
+		
 
 	<script>
 		document.getElementById('signupForm').addEventListener('submit', function(event) {

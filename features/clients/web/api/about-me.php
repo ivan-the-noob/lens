@@ -150,7 +150,7 @@ if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
 
 if (!empty($uploaderEmail)) {
 
-    $sql = "SELECT u.name, u.profile_img, a.about_me, a.profession, a.latitude, a.longitude, a.age, a.location_text
+    $sql = "SELECT u.name, u.profile_img, a.about_me, a.profession, a.latitude, a.longitude, a.age, a.location_text, a.price
             FROM about_me a 
             JOIN users u ON a.email = u.email 
             WHERE a.email = ?";
@@ -174,6 +174,7 @@ if (!empty($uploaderEmail)) {
         $longitude = $user['longitude'];
         $age = $user['age'];
         $location_text = $user['location_text']; 
+        $price = $user['price'];
     } else {
         echo "No data found for this user.";
     }
@@ -343,8 +344,8 @@ $conn->close();
           <div class="col-md-6 mb-4">
             <div class="card h-100 text-center">
               <div class="card-body">
-                <h5 class="card-title">Review</h5>
-                <a href="#" class="btn btn-link">More</a>
+                <h5 class="card-title">Pricing</h5>
+                <p class="card-text">₱<?php echo $price; ?> /hr</p>
               </div>
             </div>
           </div>

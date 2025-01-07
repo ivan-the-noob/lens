@@ -22,34 +22,34 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $user = $result->fetch_assoc();
         $hashedPassword = $user['password'];
 
+        // Check if disable_status == 0 (disabled)
+        if ($user['disable_status'] == 0) { 
+            $_SESSION['login_error'] = 'Your account has been disabled due to many reports. 
+            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#recoverModal">Recover</button>';
+            header("Location: ../../web/api/login.php"); 
+            exit();
+        }
+        
+
+        // Verify password
         if (password_verify($password, $hashedPassword)) {
             $updateQuery = "UPDATE users SET last_login = NOW() WHERE id = ?";
             $updateStmt = $conn->prepare($updateQuery);
             $updateStmt->bind_param("i", $user['id']);
             $updateStmt->execute();
 
+            $_SESSION['email'] = $user['email'];
+            $_SESSION['role'] = $user['role'];
+            $_SESSION['name'] = $user['name'];
+
+            // Redirect based on role
             if ($user['role'] === 'supplier') {
-                if ($user['is_active'] == 1) {
-                    $_SESSION['email'] = $user['email'];
-                    $_SESSION['role'] = $user['role'];
-                    $_SESSION['name'] = $user['name'];
-                    header("Location: ../../../index.php"); 
-                    exit();
-                } else {
-                    $_SESSION['login_error'] = "Your account is inactive. Please contact support.";
-                    header("Location: ../../web/api/login.php");
-                    exit();
-                }
+                header("Location: ../../../index.php");
+                exit();
             } elseif ($user['role'] === 'admin') {
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = $user['role'];
-                $_SESSION['name'] = $user['name'];
                 header("Location: ../../../features/admin/web/api/admin.php");
                 exit();
             } elseif ($user['role'] === 'customer') {
-                $_SESSION['email'] = $user['email'];
-                $_SESSION['role'] = $user['role'];
-                $_SESSION['name'] = $user['name'];
                 header("Location: ../../../index.php");
                 exit();
             } else {
@@ -68,4 +68,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 }
+
 ?>

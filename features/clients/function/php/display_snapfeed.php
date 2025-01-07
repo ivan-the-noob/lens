@@ -42,9 +42,9 @@ if ($result->num_rows > 0) {
 
         echo '
         <div class="col-md-4 mb-3 gallery-item position-relative" id="gallery-item-' . $id . '">
-            <img src="' . $imgSrc . '" class="img-fluid img-wh" alt="Image from Snapfeed" 
+            <img src="../../../../assets/img/snapfeed/' . $imgSrc . '" class="img-fluid img-wh" alt="Image from Snapfeed" 
                  data-bs-toggle="modal" data-bs-target="#modal-' . $id . '"
-                 data-img-src="' . htmlspecialchars($imgSrc) . '" 
+                 data-img-src="../../../../assets/img/snapfeed/' . htmlspecialchars($imgSrc) . '" 
                  data-img-title="' . htmlspecialchars($imgTitle) . '" 
                  data-img-text="' . htmlspecialchars($cardText) . '"
                  data-email="' . htmlspecialchars($uploaderEmail) . '"
@@ -65,7 +65,7 @@ if ($result->num_rows > 0) {
                     <div class="modal-body">
                         <div class="row">
                             <div class="col-md-6">
-                                <img id="modal-main-img-' . $id . '" src="' . $imgSrc . '" class="img-fluid" alt="Image from Snapfeed">
+                              <img id="modal-main-img-' . $id . '" src="../../../../../assets/img/snapfeed/' . $imgSrc . '" class="img-fluid" alt="Image from Snapfeed">
                             </div>
                             <div class="col-md-6 d-flex flex-column">
                                <div class="d-flex align-items-center mb-3">
@@ -121,8 +121,8 @@ if ($result->num_rows > 0) {
                                     while ($img_row = $img_result->fetch_assoc()) {
                                         echo '
                                         <div class="col-md-4 mb-3 gallery-item" id="gallery-item-' . $img_row['id'] . '">
-                                            <img id="additional-image-' . $img_row['id'] . '" src="' . htmlspecialchars($img_row['card_img']) . '" class="img-fluid modal-img" alt="Additional Image from Snapfeed" 
-                                                data-img-src="' . htmlspecialchars($img_row['card_img']) . '" 
+                                            <img id="additional-image-' . $img_row['id'] . '" src="../../../../assets/img/snapfeed/' . htmlspecialchars($img_row['card_img']) . '" class="img-fluid modal-img" alt="Additional Image from Snapfeed" 
+                                                data-img-src="../../../../assets/img/snapfeed/' . htmlspecialchars($img_row['card_img']) . '" 
                                                 data-img-title="' . htmlspecialchars($img_row['img_title']) . '" 
                                                 data-img-text="' . htmlspecialchars($img_row['card_text']) . '"
                                                 data-modal-id="' . $id . '" 
@@ -200,14 +200,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 });
-
-
-
-
-
-
-
-
 
 function saveUploaderEmail(email) {
         localStorage.setItem('uploader_email', email);

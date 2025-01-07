@@ -191,6 +191,13 @@ body {
     width: 100%;
     display: flex;
     margin: auto;
+    background-color: var(--theme);
+}
+
+.card li{
+    background-color: var(--theme);
+    color: #fff;
+    font-weight: 500;
 }
 
 

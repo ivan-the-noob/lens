@@ -47,6 +47,9 @@ $result_suppliers = $conn->query($sql_suppliers);
             <a href="#" class="navbar-highlight">
                 <span>Reports</span>
             </a>
+            <a href="recover.php">
+                <span>Recovery</span>
+            </a>
         </div>
 
     </div>

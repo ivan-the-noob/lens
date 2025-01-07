@@ -100,74 +100,117 @@ if ($role != 'guest' && !empty($email)) {
         </div>
     </nav>
     
-<div class="container ">
+    <div class="container ">
     <!-- Search Bar Section -->
     <div class="container">
-      <div class="row justify-content-center">
-          <div class="col-md-6 col-sm-8 col-10">
-              <div class="search-container">
-                  <div class="search-bar">
-                      <div class="position-relative" style="margin: auto; ">
-                          <input type="text" class="form-control search-bars" placeholder="Search" aria-label="Search" style="padding-right: 40px;">
-                          
-                      </div>
-                      <!-- Filter Buttons -->
-                      <div class="filter-buttons d-flex flex-column">
-                          <div class="btn-group-vertical" role="group" aria-label="Filter options">
-                              <button type="button" class="btn search-button name">Name</button>
-                              <button type="button" class="btn search-button">Location</button>
-                              <button type="button" class="btn search-button">Category</button>
-                              <button type="button" class="btn search-button pricing">Pricing</button>
-                          </div>
-                      </div>
-                  </div>
-              </div>
-          </div>
-      </div>
-  </div>
-  
-  
-    <h4>Recent Searches</h4>
-    <div class="recent-searches row">
-      <div class="col-md-5">
-        <div class="card">
-            <div class="row ">
-              <div class="top"></div>
-                <div class="col-md-4">
-                    <img src="../../../assets/img/profile/profile.jpg" class="img-fluid profile" alt="Photographer">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <p class="card-title"><strong>Name:</strong> Photographer</p>
-                        <p class="card-text"><strong>Location:</strong> Sydney</p>
-                        <p class="card-text"><strong>Profession:</strong> Photographer</p>
-                        <p class="card-text"><strong>Age:</strong> 30</p>
-                        <div class="card-rating justify-content-end">
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">★</span>
-                            <span class="star">☆</span>
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-sm-8 col-10">
+                <div class="search-container">
+                    <div class="search-bar">
+                        <div class="position-relative" style="margin: auto;">
+                            <input type="text" class="form-control search-bars" id="searchInput" placeholder="Search" aria-label="Search" style="padding-right: 40px;">
+                        </div>
+
+                        <!-- Filter Buttons -->
+                        <div class="filter-buttons d-flex flex-column">
+                            <div class="btn-group-vertical" role="group" aria-label="Filter options">
+                                <button type="button" class="btn search-button name" data-filter="name">Name</button>
+                                <button type="button" class="btn search-button location" data-filter="location">Location</button>
+                                <button type="button" class="btn search-button profession" data-filter="profession">Profession</button> 
+                                <button type="button" class="btn search-button pricing" data-filter="pricing">Pricing</button>
+                            </div>
                         </div>
                     </div>
                 </div>
+
+                <!-- Display Results -->
+                <div id="searchResults"></div>
             </div>
         </div>
     </div>
-    
-  
-      
-      
-      <!-- Add more cards here for additional searches -->
-    </div>
-  </div>
 
-    
-    
-    
+    <h4>Recent Searches</h4>
+    <?php
+    require '../../../../db/db.php';
+
+    $sql = "SELECT 
+                u.name,
+                u.email,
+                u.profile_img,
+                a.location_text,
+                a.profession,
+                a.age,
+                a.price,
+                AVG(r.rating) AS average_rating
+            FROM 
+                users u
+            JOIN 
+                about_me a ON u.email = a.email
+            LEFT JOIN 
+                ratings r ON u.email = r.supplier_email
+            WHERE 
+                u.role = 'supplier'
+            GROUP BY
+                u.email, a.location_text, a.profession, a.age, a.price";
+
+    $result = $conn->query($sql);
+
+    if ($result->num_rows > 0) {
+        echo '<div class="recent-searches"><div class="row" id="recentSearchResults">'; 
+
+        while($user = $result->fetch_assoc()) {
+            $filledStars = round($user['average_rating']) ?: 0;
+            $emptyStars = 5 - $filledStars; 
+
+            echo '<div class="col-md-6 search-result" data-name="' . strtolower(htmlspecialchars($user['name'])) . '" data-location="' . strtolower(htmlspecialchars($user['location_text'])) . '" data-profession="' . strtolower(htmlspecialchars($user['profession'])) . '" data-price="' . strtolower(htmlspecialchars($user['price'])) . '">
+                    <div class="card">
+                        <div class="top p-0"></div>
+                        <div class="d-flex">
+                            <div class="col-md-4">
+                                <img src="../../../../assets/img/profile/' . htmlspecialchars($user['profile_img']) . '" class="img-fluid profile" alt="Photographer">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <p class="card-title"><strong>Name:</strong> ' . htmlspecialchars($user['name']) . '</p>
+                                       <p class="card-title"><strong>Email:</strong> ' . htmlspecialchars($user['email']) . '</p>
+                                    <p class="card-text"><strong>Location:</strong> ' . htmlspecialchars($user['location_text']) . '</p>
+                                    <p class="card-text"><strong>Profession:</strong> ' . htmlspecialchars($user['profession']) . '</p>
+                                    <p class="card-text"><strong>Age:</strong> ' . htmlspecialchars($user['age']) . ' Yrs Old</p>
+                                    <p class="card-text"><strong>Price:</strong> $' . htmlspecialchars($user['price']) . ' / Hr</p>
+                                   
+                                    <div class="card-rating justify-content-start">';
+
+                                    for ($i = 0; $i < $filledStars; $i++) {
+                                        echo '<span class="star">★</span>';
+                                    }
+
+                                    for ($i = 0; $i < $emptyStars; $i++) {
+                                        echo '<span class="star">☆</span>';
+                                    }
+
+                                    echo '  </div>
+                                    <form action="about-me.php" method="POST" class="mb-0">
+                                        <input type="hidden" name="uploader_email" value="' . htmlspecialchars($user['email']) . '">
+                                        <button type="submit" class="btn btn-primary w-50 mt-3 mx-auto d-flex justify-content-center">Hire me!</button>
+                                    </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>'; 
+                                }
+
+                                echo '</div></div>'; 
+                            } else {
+                                echo "No suppliers found.";
+                            }
+
+                            $conn->close();
+                            ?>   
 
 
-     
+</div>
+
     <div class="wave">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250" style="margin-bottom: -5px;">
           <path fill="#a67b5b" fill-opacity="1"
@@ -175,51 +218,50 @@ if ($role != 'guest' && !empty($email)) {
           </path>
         </svg>
       </div>
-
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <!-- About Section -->
-                <div class="col-md-4">
-                    <h5>About Photography News</h5>
-                    <p>Stay updated with the latest news, trends, and innovations in the world of photography. Whether you're a professional or an enthusiast, our articles are designed to inspire and inform.</p>
-                </div>
-    
-                <!-- Quick Links -->
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Latest News</a></li>
-                        <li><a href="#">Photography Tips</a></li>
-                        <li><a href="#">Camera Reviews</a></li>
-                    </ul>
-                </div>
-    
-                <!-- Contact Section -->
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <p>Email: info@photographynews.com</p>
-                    <p>Phone: +123 456 7890</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
-
-    
+  
     <script src="../../function/script/pre-loadall.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
+    <script>
+// JavaScript for handling search filtering
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchButtons = document.querySelectorAll('.search-button');
+    let selectedFilter = 'name';  // Default filter is by name
 
+    // Set the filter based on the button clicked
+    searchButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            selectedFilter = this.getAttribute('data-filter');
+            searchInput.placeholder = `Search by ${selectedFilter.charAt(0).toUpperCase() + selectedFilter.slice(1)}`;
+            searchInput.value = '';  // Clear the search input when changing filter
+            searchInput.focus();  // Focus on the input field
+        });
+    });
+
+    // Function to fetch and display search results based on the input value and selected filter
+    searchInput.addEventListener('input', function() {
+        const query = searchInput.value.trim().toLowerCase();
+        
+        if (query !== '') {
+            // Show only results that match the search query
+            const results = document.querySelectorAll('.search-result');
+            results.forEach(result => {
+                let match = result.getAttribute(`data-${selectedFilter}`).toLowerCase().includes(query);
+                if (match) {
+                    result.style.display = '';  // Show result
+                } else {
+                    result.style.display = 'none';  // Hide result
+                }
+            });
+        } else {
+            const results = document.querySelectorAll('.search-result');
+            results.forEach(result => {
+                result.style.display = '';  
+            });
+        }
+    });
+});
+</script>
 </body>
 </html>

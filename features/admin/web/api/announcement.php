@@ -47,6 +47,9 @@ $results = $conn->query($sql);
             <a href="reports.php">
                 <span>Reports</span>
             </a>
+            <a href="recover.php">
+                <span>Recovery</span>
+            </a>
         </div>
 
     </div>
