@@ -28,6 +28,8 @@ if ($role != 'guest' && !empty($email)) {
 
 ?>
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,12 +41,11 @@ if ($role != 'guest' && !empty($email)) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/snapfeed.css">
 
+
+
 </head>
 
-<style>
-      
-        
-</style>
+
 <body>
     <div id="preloader">
         <div class="line"></div>
@@ -149,28 +150,7 @@ if ($role != 'guest' && !empty($email)) {
     </div>
 </div>
 
-<!-- Single Modal Structure -->
-<div class="modal fade" id="mainModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-xl">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <img id="modal-main-img" src="../../../../assets/img/snapfeed/" class="img-fluid" alt="Image from Snapfeed">
-                    </div>
-                    <div class="col-md-6 d-flex flex-column">
-                        <p id="modal-main-title" class="img-title"></p>
-                        <p id="modal-main-text" class="card-text"></p>
-                        <h5>Gallery of <span id="gallery-uploader"></span></h5>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
 
      
     <div class="wave">
@@ -219,14 +199,49 @@ if ($role != 'guest' && !empty($email)) {
         </div>
     </footer>
 
+   
 
     
 
     
     <script src="../../function/script/pre-loadall.js"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"  crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
 </body>
+
+<script type="text/javascript">
+$(document).ready(function () {
+    // Function to copy text to clipboard
+    function copyToClipboard() {
+        var aux = document.createElement("input");
+        aux.setAttribute("value", "LENSFOLIOHUB COPYRIGHT PROTECTION.");
+        document.body.appendChild(aux);
+        aux.focus(); // Focus on the input element
+        aux.select(); // Select the text for copying
+        document.execCommand("copy"); // Copy the text to clipboard
+        document.body.removeChild(aux);
+        console.log("Text copied to clipboard.");
+    }
+
+    // Listen for keyup event globally
+    $(document).on('keyup', function (e) {
+        if (e.keyCode === 44) { // Check if PrintScreen key is pressed
+            e.preventDefault(); // Prevent default PrintScreen behavior (optional)
+            // Copy to clipboard regardless of modal state
+            copyToClipboard();
+        }
+    });
+
+ 
+});
+</script>
+
+
+
+
+
+
 
 </html>
