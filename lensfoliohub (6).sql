@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 08, 2025 at 09:39 AM
+-- Generation Time: Jan 08, 2025 at 05:40 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -51,7 +51,7 @@ INSERT INTO `about_me` (`id`, `profile_image`, `profession`, `about_me`, `age`, 
 (2, '../../../../assets/img/profile/gallery-6.jpg', 'photographer,videographer', 'dasasdsa', 12, 14.2838325, 120.8668772, '2024-09-17 08:37:24', '', NULL, 'grid', 0.00),
 (3, 'default_image.jpg', 'photographer', 'hello real', 13, 14.2813281, 120.8703823, '2024-09-17 08:40:36', '1@gmail.com', 'Trece Martires City Hall, Governor\'s Drive, Trece Martires, Cavite, Philippines', 'carousel', 0.00),
 (4, 'default_image.jpg', 'photographer,videographer', 'Hey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good hehe', 12, 14.2838325, 120.8668772, '2024-09-26 20:22:51', 'test@gmail.com', '', 'carousel', 10.00),
-(5, '../../../../assets/img/profile/medal (1).png', 'photographer,videographer', 'Hello I\'m Ivans', 12, 14.3274718, 120.9505047, '2024-10-23 00:57:47', 'supplier@gmail.com', '', 'grid', 0.00);
+(5, '../../../../assets/img/profile/medal (1).png', 'photographer,videographer', 'Hello Diana', 12, 14.3274718, 120.9505047, '2024-10-23 00:57:47', 'supplier@gmail.com', '', 'grid', 0.00);
 
 -- --------------------------------------------------------
 
@@ -78,11 +78,11 @@ CREATE TABLE `appointment` (
 --
 
 INSERT INTO `appointment` (`id`, `name`, `latitude`, `longitude`, `event`, `time`, `selected_date`, `email_uploader`, `email`, `status`, `cancel_reason`) VALUES
-(7, 'Ivan Ablanida', 14.283833, 120.866877, 'photography', '00:30:00', '2024-11-08', '1@gmail.com', 'client@gmail.com', 'Accepted', 'hey'),
-(8, 'Ej Ivan Ablanida', 14.283833, 120.866877, 'photography', '01:43:00', '2024-11-02', 'supplier@gmail.com', 'clients@gmail.com', 'Accepted', NULL),
-(9, 'Kate', 14.283833, 120.866877, 'videography', '11:54:00', '2024-11-02', 'kate@gmail.com', 'clients@gmail.com', 'Completed', NULL),
-(10, 'Ivan Ablanida', 14.283833, 120.866877, 'photography', '22:52:00', '2025-01-11', 'supplier@gmail.com', 'client@gmail.com', 'Accepted', 'help'),
-(11, 'Ivan Ablanida', 14.283833, 120.866877, 'photography', '22:52:00', '2025-01-11', 'supplier@gmail.com', 'client@gmail.com', 'Accepted', 'dasdas');
+(7, 'Diana', 14.283833, 120.866877, 'photography', '00:30:00', '2024-11-08', '1@gmail.com', 'client@gmail.com', 'Accepted', 'hey'),
+(8, 'Diana', 14.283833, 120.866877, 'photography', '01:43:00', '2024-11-02', 'supplier@gmail.com', 'clients@gmail.com', 'Accepted', NULL),
+(9, 'Diana', 14.283833, 120.866877, 'videography', '11:54:00', '2024-11-02', 'kate@gmail.com', 'clients@gmail.com', 'Completed', NULL),
+(10, 'Diana', 14.283833, 120.866877, 'photography', '22:52:00', '2025-01-11', 'supplier@gmail.com', 'client@gmail.com', 'Accepted', 'help'),
+(11, 'Diana', 14.283833, 120.866877, 'photography', '22:52:00', '2025-01-11', 'supplier@gmail.com', 'client@gmail.com', 'Accepted', 'dasdas');
 
 -- --------------------------------------------------------
 
@@ -350,17 +350,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `role`, `name`, `email`, `password`, `created_at`, `updated_at`, `profile_img`, `about_me`, `profession`, `location`, `age`, `day_available`, `is_active`, `last_login`, `disable_status`, `address`, `birthday`, `social_link`, `years_in_profession`, `username`) VALUES
 (16, 'supplier', 'Kate', '1@gmail.com', '$2y$10$SXsGg/5MaeD3S.fdoldfgu5YYTZ/RpGLwEMocNmhwA/Pnq8909uHG', '2024-09-15 10:14:40', '2025-01-07 03:51:39', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-09,2024-11-08,2024-11-07', 1, '2025-01-07 03:51:39', 1, '', NULL, '', NULL, ''),
-(17, 'supplier', 'Ivan Ablanida', 'supplier@gmail.com', '$2y$10$Nbgr8CZoIfG.DwKmzHQWn.53PiFMxsA1f0wGZgXDkTqMRRJokoZIK', '2024-09-15 10:57:46', '2025-01-08 05:01:55', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2025-01-04,2025-01-03,2025-01-02,2025-01-01,2025-01-05,2025-01-06,2025-01-08,2025-01-09,2025-01-10,2025-01-07,2025-01-11', 0, '2025-01-08 05:01:55', 1, '', NULL, '', NULL, ''),
-(18, 'supplier', 'Ivan', 'ivan@gmail.com', '$2y$10$UipF31UcmWtkvLLi/4pJv.q2swSPUpWGK.EqjJRPH17oqR8N7FS/S', '2024-09-15 12:01:03', '2024-09-15 12:01:03', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2024-11-30 22:36:31', 1, '', NULL, '', NULL, ''),
-(19, 'customer', 'racel', 'racel@gmail.com', '$2y$10$YbfIIErUgASt3W0y6HpIi.y5667ofbX2bHYzWGYNRtWi8CAPopo0a', '2024-09-15 19:48:08', '2025-01-03 03:34:20', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-03 03:34:20', 2, '', NULL, '', NULL, ''),
+(17, 'supplier', 'Diana Supplier', 'supplier@gmail.com', '$2y$10$Nbgr8CZoIfG.DwKmzHQWn.53PiFMxsA1f0wGZgXDkTqMRRJokoZIK', '2024-09-15 10:57:46', '2025-01-08 16:39:04', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2025-01-04,2025-01-03,2025-01-02,2025-01-01,2025-01-05,2025-01-06,2025-01-08,2025-01-09,2025-01-10,2025-01-07,2025-01-11', 0, '2025-01-08 16:39:04', 1, '', NULL, '', NULL, ''),
 (20, 'supplier', 'racels', '1ra@gmail.com', '$2y$10$hlBfashINKF7BGvZ2f/0SendLQMe/UYOUvGEgEv26wd.YGKsasp1G', '2024-09-15 19:53:50', '2024-12-01 04:48:38', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 1, '2024-12-01 04:48:38', 1, '', NULL, '', NULL, ''),
-(22, 'customer', 'Ivansss', 'client@gmail.com', '$2y$10$pvkJfihudzcDOvsyD3BquO.2PBPdTW.jqp40LRdN4Moxp58w.CNcG', '2024-09-24 02:57:18', '2025-01-08 08:36:00', 'profile_677db8b339e4b2.85245037.png', NULL, NULL, 'Blk 4 Lot 23', 5, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-08 08:36:00', 1, 'Blk 4 Lot 23', '2025-01-16', 'https://www.facebook.com/', NULL, ''),
+(22, 'customer', 'Diana Client', 'client@gmail.com', '$2y$10$pvkJfihudzcDOvsyD3BquO.2PBPdTW.jqp40LRdN4Moxp58w.CNcG', '2024-09-24 02:57:18', '2025-01-08 16:39:35', 'profile_677db8b339e4b2.85245037.png', NULL, NULL, 'Blk 4 Lot 23', 5, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-08 16:39:35', 1, 'Blk 4 Lot 23', '2025-01-16', 'https://www.facebook.com/', NULL, ''),
 (23, 'supplier', 'Test Updated', 'test@gmail.com', '$2y$10$E.NRidcwuXwIpmwfonL04.7HSPGq69xeA.8r3JF9IR2nanR7yv22y', '2024-09-24 03:48:59', '2025-01-07 10:30:02', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-07 10:30:02', 1, '', NULL, '', NULL, ''),
-(25, 'supplier', 'Ivan', 'kate@gmail.com', '$2y$10$ri6n0lqMhglZcELaRgPpPOmzmKR.gg242J7JXcwo0dLTtiLl0cSau', '2024-11-30 21:07:32', '2024-12-01 04:53:01', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2024-11-14,2024-11-07', 1, '2024-12-01 04:53:01', 1, '', NULL, '', NULL, ''),
-(26, 'admin', 'admin', 'admin@gmail.com', '$2y$10$opUH24g9VfMnpi1qYe634u2OSYi7auE9AP2kFb1maZVZrx8ex5gMy', '2024-11-30 21:26:12', '2025-01-07 13:03:44', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-07 13:03:44', 1, '', NULL, '', NULL, ''),
-(27, 'supplier', 'kate', 'kates@gmail.com', '$2y$10$IFxQruNE7x2sseGfxn4shuRrB/vtKWZZ5QuCuB1zvAeElGFPkdExi', '2024-12-01 04:49:15', '2024-12-01 04:51:41', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 1, '2024-12-01 04:51:41', 1, '', NULL, '', NULL, ''),
-(28, 'customer', 'ejivan23', 'ejivancablanida@gmail.com', '$2y$10$V6eDObCYbmL8AY/HK.8CTe5eyUNmanwwjrZue0kOZUz9NjupdmU82', '2025-01-06 07:37:00', '2025-01-06 07:37:00', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-06 07:37:00', 1, '', NULL, '', NULL, ''),
-(29, 'customer', 'Ivan ablanida', '', '$2y$10$J9o19r.caR.7jiW9UEo/auqULLVZDSgjA0b7nI7.UpVlKBUuheWjK', '2025-01-06 09:08:43', '2025-01-06 09:08:43', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-06 09:08:43', 1, 'Blk 4 Lot 23', '2025-01-06', 'https://www.facebook.com/', NULL, '');
+(26, 'admin', 'admin', 'admin@gmail.com', '$2y$10$opUH24g9VfMnpi1qYe634u2OSYi7auE9AP2kFb1maZVZrx8ex5gMy', '2024-11-30 21:26:12', '2025-01-07 13:03:44', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-07 13:03:44', 1, '', NULL, '', NULL, '');
 
 --
 -- Indexes for dumped tables

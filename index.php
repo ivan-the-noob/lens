@@ -220,7 +220,7 @@ if ($result->num_rows > 0) {
             echo "<div class='col-md-4 photo-card'>";
             echo "<div class='photo-wrap'>";
             echo "<img src='assets/img/snapfeed/" . $row['image'] . "' alt='Photo " . ($index + 1) . "' class='img-fluid'>";
-            echo "<button class='zoom-icon btn' data-bs-toggle='modal' data-bs-target='#imageModal' data-img-src='assets/img/top3/" . $row['image'] . "'><i class='fa-solid fa-up-right-and-down-left-from-center'></i></button>";
+            echo "<button class='zoom-icon btn' data-bs-toggle='modal' data-bs-target='#imageModal' data-img-src='assets/img/snapfeed/" . $row['image'] . "'><i class='fa-solid fa-up-right-and-down-left-from-center'></i></button>";
             echo "<div class='photographer-info'>";
             echo "<a href=''><img src='assets/img/profile/profile.jpg' alt='Photographer " . ($index + 1) . "' class='profile-pic'>";
             echo "<p class='photographer-name'>" . $row['name'] . "</p></a>";
