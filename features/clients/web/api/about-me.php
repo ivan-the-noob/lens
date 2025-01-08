@@ -363,51 +363,7 @@ $conn->close();
       </div>
     </div>
   </div>
-    <div class="container mt-5 about-section">
-        <div class="col-md-6 d-flex flex-column justify-content-center">
-            <div class="mb-1">
-                <div class="d-flex justify-content-center mx-auto">
-                    <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-imgs">
-                </div>
-            </div>
-
-            <div class="mb-3">
-                <div class="d-flex justify-content-center">
-                    <h3 class=""><?php echo htmlspecialchars($name); ?></h3> 
-                </div>
-                <p class="text-center"><?php echo htmlspecialchars($uploaderEmail); ?></p>
-            </div>
-
-            <div class="mb-3">
-                <p><strong>Profession:</strong></p>
-                <p>  <?php 
-                    $professionsArray = explode(',', $profession); 
-                    echo !empty($professionsArray) ? implode(', ', array_map('htmlspecialchars', $professionsArray)) : 'None'; 
-                    ?></p>
-            </div>
-
-          
-
-            <div class="mb-3">
-                <p><strong>About Me:</strong></p>
-                <p><?php echo nl2br(htmlspecialchars($about_me)); ?></p>
-            </div>
-
-       
-
-            <div class="mb-3">
-                <p><strong>Location:</strong> 
-                <p><?php echo htmlspecialchars($location_text); ?></p>
-                    <div id="map" style="height: 200px; width: 100%;"></div>
-                </p>
-            </div>
-
-            <div class="mb-3">
-                <p><strong>Age:</strong> <?php echo htmlspecialchars($age); ?></p>
-            </div>
-        </div>
-    </div>
-</div>
+    
 
 
          
