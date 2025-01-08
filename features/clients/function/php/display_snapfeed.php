@@ -1,18 +1,22 @@
 <?php
-if (!isset($_SESSION['email'])) {
-    header("Location: authentication/web/api/login.php");
-    exit();
+
+require '../../../../db/db.php';
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
 $email = $_SESSION['email'];
 $role = $_SESSION['role']; 
 $name = $_SESSION['name'];
 
-require '../../../../db/db.php';
 
 
+
+// Query to get snapfeed data and join with users table
 $sql = "
-SELECT snapfeed.id, snapfeed.img_title, snapfeed.card_img, snapfeed.card_text, snapfeed.email, 
+SELECT snapfeed.id, snapfeed.img_title, snapfeed.hearts_count, snapfeed.card_img, snapfeed.card_text, snapfeed.email, 
        users.name, users.profile_img 
 FROM snapfeed 
 LEFT JOIN users ON snapfeed.email = users.email 
@@ -38,7 +42,8 @@ if ($result->num_rows > 0) {
         $cardText = $row['card_text'];
         $uploaderEmail = $row['email'];
         $name = $row['name'] ?? 'Unknown'; 
-        $profileImg = $row['profile_img'] ? '../../../../assets/img/profile/' . $row['profile_img'] : '../../../../default-profile.jpg'; // Prepend path and set default profile image
+        $profileImg = $row['profile_img'] ? '../../../../assets/img/profile/' . $row['profile_img'] : '../../../../default-profile.jpg'; 
+        $heartsCount = $row['hearts_count'] ? $row['hearts_count'] : 0;
 
         echo '
         <div class="col-md-4 mb-3 gallery-item position-relative" id="gallery-item-' . $id . '">
@@ -82,30 +87,70 @@ if ($result->num_rows > 0) {
                                 <p id="modal-main-text-' . $id . '" class="card-text">' . htmlspecialchars($cardText) . '</p>
 
                                 <!-- Arrow button to go to comments -->
-                                <button id="show-comments-' . $id . '" class="btn btn-link p-0 text-decoration-none">
+                                <button id="show-comments-' . $id . '" class="btn btn-link p-0 text-decoration-none justify-content-end">
                                     <i class="fas fa-chevron-right"></i>
                                 </button>
 
-                                <div class="container mt-auto comments" id="comments-section-' . $id . '" style="display: none;">
-                                    <!-- Arrow button to go back to text -->
-                                    <button id="show-text-' . $id . '" class="btn btn-link p-0 text-decoration-none mb-2">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </button>
+                                <div class="container comments" id="comments-section-' . $id . '" style="display: none;">
+                                    <div class="comments-box">';
 
-                                    <div class="input-container d-flex align-items-center">
-                                        <form action="../../function/php/post_comments.php" method="post">
-                                            <input type="hidden" name="id" value="' . $id . '"> <!-- Ensure this is correct -->
-                                            <input type="text" class="form-control input-field" name="comments" placeholder="Type something" required>
-                                            <button class="btn send" type="submit">
-                                                <i class="fas fa-paper-plane"></i>
-                                            </button>
-                                        </form>
-                                         
+                                    $comments_sql = "
+                                    SELECT users.name, users.profile_img, comments.comments 
+                                    FROM comments 
+                                    JOIN snapfeed ON comments.card_img = snapfeed.card_img 
+                                    JOIN users ON comments.email = users.email
+                                    WHERE comments.card_img = ? AND comments.session_email = ?";
+
+                                    $comments_stmt = $conn->prepare($comments_sql);
+                                    $comments_stmt->bind_param("ss", $imgSrc, $email);
+                                    $comments_stmt->execute();
+                                    $comments_result = $comments_stmt->get_result();
+
+                                    if ($comments_result->num_rows > 0) {
+                                        while ($comment_row = $comments_result->fetch_assoc()) {
+                                            $commentName = $comment_row['name'];
+                                            $commentProfileImg = $comment_row['profile_img'] ? '../../../../assets/img/profile/' . $comment_row['profile_img'] : '../../../../default-profile.jpg'; // Path to profile image
+                                            $commentText = $comment_row['comments'];
+
+                                            echo '
+                                            <div class="comment d-flex align-items-center mb-2">
+                                                <img src="' . htmlspecialchars($commentProfileImg) . '" alt="Profile Image" class="rounded-circle me-2" width="40" height="40">
+                                                <strong>' . htmlspecialchars($commentName) . ':</strong> ' . htmlspecialchars($commentText) . '
+                                            </div>';
+                                        }
+                                    } else {
+                                        echo '<p>No comments yet.</p>';
+                                    }
+
+                                    echo '
                                     </div>
+                                    <div class="d-flex gap-4">
+                                        <button id="show-text-' . $id . '" class="btn btn-link p-0 text-decoration-none mb-2">
+                                            <i class="fas fa-chevron-left"></i>
+                                        </button>
+
+                                        <div class="input-container d-flex align-items-center">
+                                            <form action="../../function/php/post_comments.php" method="post">
+                                                <div class="d-flex">
+                                                    <input type="hidden" name="id" value="' . $id . '"> 
+                                                    <input type="text" class="form-control input-field" name="comments" placeholder="Type something" required>
+                                                    <button class="btn send" type="submit">
+                                                        <i class="fas fa-paper-plane"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            </form>
+                                            
+                                        <div class="d-flex align-items-center">
+                                            <button class="heart-btn" data-id="' . $id . '" data-card-img="' . $imgSrc . '" data-email="' . $email . '">
+                                                <i class="fas fa-heart"></i>
+                                            </button>
+                                            <span id="heartCount" class="heart-count">' . htmlspecialchars($heartsCount) . '</span>
+                                        </div>
+                                        </div>
                                 </div>
                             </div>
                         </div>
-
                         <div class="row mt-3">
                             <div class="col-md-12">
                                 <h5>Gallery of <span id="gallery-uploader-' . htmlspecialchars($name) . '">' . htmlspecialchars($name) . '</span></h5>
@@ -148,8 +193,8 @@ if ($result->num_rows > 0) {
     echo '</div>'; // Closing row div
 }
 
-
 ?>
+
 
 <script>
 var previouslyHiddenGalleryItem = null;
@@ -208,3 +253,50 @@ function saveUploaderEmail(email) {
 
     
 </script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Select all heart buttons using the class name
+    const heartButtons = document.querySelectorAll('.heart-btn');
+    
+    heartButtons.forEach(function(heartButton) {
+        const heartCount = heartButton.closest('.modal').querySelector('.heart-count');
+        
+        heartButton.addEventListener('click', function() {
+            const id = heartButton.getAttribute('data-id');
+            const cardImg = heartButton.getAttribute('data-card-img');
+            const email = heartButton.getAttribute('data-email');
+            
+            // Toggle the heart button state
+            heartButton.classList.toggle('active');
+            
+            // Determine the action (active or inactive)
+            const action = heartButton.classList.contains('active') ? 'active' : 'inactive';
+            
+            // Update the heart count based on the current state
+            let count = parseInt(heartCount.textContent);
+            count = action === 'active' ? count + 1 : count - 1;
+            heartCount.textContent = count;
+
+            // Send an AJAX request to update the heart count
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', '../../function/php/update_heart_count.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            
+            xhr.onload = function() {
+                const response = JSON.parse(xhr.responseText);
+                if (response.status === 'error') {
+                    // If there was an error, revert the count and heart state
+                    heartCount.textContent = action === 'active' ? count - 1 : count + 1;
+                    heartButton.classList.toggle('active');
+                }
+            };
+            
+            // Send the data to the server
+            xhr.send('id=' + encodeURIComponent(id) + '&card_img=' + encodeURIComponent(cardImg) + '&email=' + encodeURIComponent(email) + '&action=' + encodeURIComponent(action));
+        });
+    });
+});
+
+</script>
+

@@ -12,7 +12,7 @@
 if ($role != 'guest' && !empty($email)) {
     require '../../../../db/db.php';
 
-    $stmt = $conn->prepare("SELECT profile_img FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT profile_image FROM about_me WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->bind_result($profileImg);
@@ -20,7 +20,7 @@ if ($role != 'guest' && !empty($email)) {
     $stmt->close();
     $conn->close();
 
-    $profileImg = '../../../../assets/img/profile/' . $profileImg;
+
 }
 
 ?>
@@ -131,8 +131,13 @@ if ($role != 'guest' && !empty($email)) {
 
   require '../../../../db/db.php';
 
-
-$query = "SELECT * FROM appointment";
+  $query = "SELECT * FROM appointment ORDER BY 
+  CASE 
+      WHEN status = 'Pending' THEN 1
+      WHEN status = 'Accepted' THEN 2
+      ELSE 3
+  END, 
+  selected_date ASC"; 
 $result = $conn->query($query);
 
 
@@ -150,6 +155,7 @@ $result = $conn->query($query);
                     <th>Appointment</th>
                     <th>Date</th>
                     <th>Full Name</th>
+                    <th>Email</th>
                     <th>Event</th>
                     <th>Time</th>
                     <th>Actions</th>
@@ -169,17 +175,28 @@ $result = $conn->query($query);
                             ?>
                         </td>
                         <td><?php echo $appointment['name']; ?></td>
+                        <td><?php echo $appointment['email']; ?></td>
                       
                         <td><?php echo $appointment['event']; ?></td>
                         <td><?php echo $appointment['time']; ?></td>
                         <td>
-                            <!-- Action Buttons -->
-                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" 
-                                data-bs-target="#bookingModal<?php echo $appointment['id']; ?>">
-                                View
-                            </button>
-                            <button class="btn btn-success">ACCEPT</button>
-                            <button class="btn btn-danger">DECLINE</button>
+                            <div class="d-flex">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal" 
+                                    data-bs-target="#bookingModal<?php echo $appointment['id']; ?>">
+                                    View
+                                </button>
+                                <div class="dropdown">
+                                    <button class="btn btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <?php echo htmlspecialchars($appointment['status']); ?>
+                                    </button>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                        <li><a class="dropdown-item" href="#" onclick="updateStatus(<?php echo $appointment['id']; ?>, 'Pending')">Pending</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="updateStatus(<?php echo $appointment['id']; ?>, 'Accepted')">Accept</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="updateStatus(<?php echo $appointment['id']; ?>, 'Declined')">Declined</a></li>
+                                        <li><a class="dropdown-item" href="#" onclick="updateStatus(<?php echo $appointment['id']; ?>, 'Completed')">Completed</a></li>
+                                    </ul>
+                                </div>
+                            </div>
                         </td>
                     </tr>
 
@@ -268,13 +285,6 @@ $result = $conn->query($query);
 
     </div>
 </div>
-
-
-<?php
-// Close the database connection
-$conn->close();
-?>
-
       
       </div>
     </div>
@@ -440,6 +450,25 @@ $conn->close();
     }
 });
   </script>
+
+<script>
+    function updateStatus(appointmentId, status) {
+        // Send an AJAX request to update the status in the database
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '../../function/php/update_status.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+        xhr.onload = function() {
+            if (xhr.status == 200) {
+                // Successfully updated
+                alert('Status updated to ' + status);
+                location.reload(); // Reload the page to reflect the changes
+            } else {
+                alert('Error updating status');
+            }
+        };
+        xhr.send('appointmentId=' + appointmentId + '&status=' + status);
+    }
+</script>
 
 </body>
 </html>

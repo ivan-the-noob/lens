@@ -518,6 +518,33 @@ textarea{
 }
 
 
+.comments-box{
+    height: 50vh;
+    border: 1px solid #808080;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.heart-btn {
+    background: transparent;
+    border: none;
+    color: #ccc;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.heart-btn.active {
+    color: red;
+}
+
+.heart-count {
+    font-size: 1.5rem;
+    margin-left: 10px;
+}
+
 
 
 

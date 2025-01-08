@@ -100,8 +100,8 @@ if ($role != 'guest' && !empty($email)) {
                                 <?php if ($role === 'customer') { ?>
                                     <li><a class="dropdown-item" href="features/clients/web/api/profile.php">Main Profile</a></li>
                                     <li><a class="dropdown-item" href="features/clients/web/api/status.php">Booking Status</a></li>
-                                    <li><a class="dropdown-item" href="customer/history.php">History</a></li>
-                                    <li><a class="dropdown-item" href="customer/notifications.php">Notifications</a></li>
+                                    <li><a class="dropdown-item" href="features/clients/web/api/history.php">History</a></li>
+                                    <li><a class="dropdown-item" href="features/clients/web/api/notifications.php">Notifications</a></li>
                                 <?php } ?>
                                 <li><a class="dropdown-item" href="features/index/function/php/logout.php">Logout</a></li>
                             </ul>

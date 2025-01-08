@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 07, 2025 at 02:15 PM
+-- Generation Time: Jan 08, 2025 at 09:39 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -51,7 +51,7 @@ INSERT INTO `about_me` (`id`, `profile_image`, `profession`, `about_me`, `age`, 
 (2, '../../../../assets/img/profile/gallery-6.jpg', 'photographer,videographer', 'dasasdsa', 12, 14.2838325, 120.8668772, '2024-09-17 08:37:24', '', NULL, 'grid', 0.00),
 (3, 'default_image.jpg', 'photographer', 'hello real', 13, 14.2813281, 120.8703823, '2024-09-17 08:40:36', '1@gmail.com', 'Trece Martires City Hall, Governor\'s Drive, Trece Martires, Cavite, Philippines', 'carousel', 0.00),
 (4, 'default_image.jpg', 'photographer,videographer', 'Hey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good hehe', 12, 14.2838325, 120.8668772, '2024-09-26 20:22:51', 'test@gmail.com', '', 'carousel', 10.00),
-(5, 'default_image.jpg', 'photographer,videographer', 'Hello I\'m Ivan', 12, 14.3274718, 120.9505047, '2024-10-23 00:57:47', 'supplier@gmail.com', 'Ivan\'s Animal Clinic, Dominador Mangubat Boulevard, Burol Main, Dasmariñas, Cavite, Philippines', 'grid', 0.00);
+(5, '../../../../assets/img/profile/medal (1).png', 'photographer,videographer', 'Hello I\'m Ivans', 12, 14.3274718, 120.9505047, '2024-10-23 00:57:47', 'supplier@gmail.com', '', 'grid', 0.00);
 
 -- --------------------------------------------------------
 
@@ -78,9 +78,34 @@ CREATE TABLE `appointment` (
 --
 
 INSERT INTO `appointment` (`id`, `name`, `latitude`, `longitude`, `event`, `time`, `selected_date`, `email_uploader`, `email`, `status`, `cancel_reason`) VALUES
-(7, 'Ivan Ablanida', 14.283833, 120.866877, 'photography', '00:30:00', '2024-11-08', '1@gmail.com', 'client@gmail.com', 'Pending', 'dsadas'),
-(8, 'Ej Ivan Ablanida', 14.283833, 120.866877, 'photography', '01:43:00', '2024-11-02', 'supplier@gmail.com', 'clients@gmail.com', 'Pending', NULL),
-(9, 'Kate', 14.283833, 120.866877, 'videography', '11:54:00', '2024-11-02', 'kate@gmail.com', 'clients@gmail.com', 'Completed', NULL);
+(7, 'Ivan Ablanida', 14.283833, 120.866877, 'photography', '00:30:00', '2024-11-08', '1@gmail.com', 'client@gmail.com', 'Accepted', 'hey'),
+(8, 'Ej Ivan Ablanida', 14.283833, 120.866877, 'photography', '01:43:00', '2024-11-02', 'supplier@gmail.com', 'clients@gmail.com', 'Accepted', NULL),
+(9, 'Kate', 14.283833, 120.866877, 'videography', '11:54:00', '2024-11-02', 'kate@gmail.com', 'clients@gmail.com', 'Completed', NULL),
+(10, 'Ivan Ablanida', 14.283833, 120.866877, 'photography', '22:52:00', '2025-01-11', 'supplier@gmail.com', 'client@gmail.com', 'Accepted', 'help'),
+(11, 'Ivan Ablanida', 14.283833, 120.866877, 'photography', '22:52:00', '2025-01-11', 'supplier@gmail.com', 'client@gmail.com', 'Accepted', 'dasdas');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `comments`
+--
+
+CREATE TABLE `comments` (
+  `id` int(11) NOT NULL,
+  `card_img` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `comments` text NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `session_email` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `comments`
+--
+
+INSERT INTO `comments` (`id`, `card_img`, `email`, `comments`, `created_at`, `session_email`) VALUES
+(2, 'Rectangle 53.png', 'supplier@gmail.com', 'dasdsa', '2025-01-08 05:37:14', 'client@gmail.com'),
+(3, 'silver.png', 'test@gmail.com', 'hey', '2025-01-08 05:37:43', 'client@gmail.com');
 
 -- --------------------------------------------------------
 
@@ -108,6 +133,34 @@ INSERT INTO `news` (`id`, `image`, `uploader`, `date`, `heading`, `context`, `da
 (3, 'image3.jpg', 'Alice Johnson', '2024-11-28', 'Health Update: Tips for Staying Fit', 'Vestibulum auctor dapibus neque. Vivamus sit amet semper lacus, in mollis libero.', '2024-12-03'),
 (4, 'image4.jpg', 'Bob Brown', '2024-11-27', 'New Policy Changes Announced', 'Sed sed orci sit amet lectus hendrerit consectetur et in magna. Cras sed nulla ac urna venenatis.', '2024-12-04'),
 (5, 'sneaker.jpg', 'DIANA', '2024-11-30', 'Breaking News: Something Big Happened', 'LOREM IPSUM LOREM IPSUMLOREM IPSUM', NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notification`
+--
+
+CREATE TABLE `notification` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `email_uploader` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `status` enum('pending','completed','cancelled','update','Accepted','declined') DEFAULT 'pending',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notification`
+--
+
+INSERT INTO `notification` (`id`, `email`, `email_uploader`, `message`, `status`, `created_at`) VALUES
+(1, 'client@gmail.com', 'supplier@gmail.com', 'Your appointment is pending approval.', 'pending', '2025-01-08 02:50:41'),
+(2, 'client@gmail.com', 'supplier@gmail.com', 'Your appointment is pending approval.', 'pending', '2025-01-08 02:51:23'),
+(3, 'client@gmail.com', '', 'Profile has been updated.', 'update', '2025-01-08 03:05:29'),
+(4, 'client@gmail.com', '', 'Password has been changed.', 'update', '2025-01-08 03:06:00'),
+(7, 'client@gmail.com', 'supplier@gmail.com', 'Appointment has been cancelled.', 'cancelled', '2025-01-08 03:28:09'),
+(14, 'client@gmail.com', 'supplier@gmail.com', 'Your appointment has been accepted.', 'Accepted', '2025-01-08 04:12:40'),
+(15, 'client@gmail.com', 'supplier@gmail.com', 'Your appointment has been accepted.', 'Accepted', '2025-01-08 05:02:07');
 
 -- --------------------------------------------------------
 
@@ -235,7 +288,8 @@ INSERT INTO `snapfeed` (`id`, `card_img`, `card_text`, `created_at`, `img_title`
 (30, 'camera.png', 'TEST', '2024-10-31 07:29:19', 'TEST', 'supplier@gmail.com', 0, '\"dasdas\"'),
 (32, 'MSI_MEG_ACE.jpg', 'test lorem ipsum', '2024-12-01 04:52:49', 'try', 'kate@gmail.com', 0, NULL),
 (33, 'silver.png', 'dasdas', '2025-01-07 10:27:54', 'dasdas', 'test@gmail.com', 0, NULL),
-(35, 'Rectangle 53.png', '321312', '2025-01-07 10:36:07', 'dasdasda', 'test@gmail.com', 0, NULL);
+(35, 'Rectangle 53.png', '321312', '2025-01-07 10:36:07', 'dasdasda', 'test@gmail.com', 2, NULL),
+(36, 'Rectangle 53.png', 'Hello', '2025-01-08 02:42:02', 'Resort', 'supplier@gmail.com', 15, '\"wonderful!\"');
 
 -- --------------------------------------------------------
 
@@ -296,11 +350,11 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `role`, `name`, `email`, `password`, `created_at`, `updated_at`, `profile_img`, `about_me`, `profession`, `location`, `age`, `day_available`, `is_active`, `last_login`, `disable_status`, `address`, `birthday`, `social_link`, `years_in_profession`, `username`) VALUES
 (16, 'supplier', 'Kate', '1@gmail.com', '$2y$10$SXsGg/5MaeD3S.fdoldfgu5YYTZ/RpGLwEMocNmhwA/Pnq8909uHG', '2024-09-15 10:14:40', '2025-01-07 03:51:39', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-09,2024-11-08,2024-11-07', 1, '2025-01-07 03:51:39', 1, '', NULL, '', NULL, ''),
-(17, 'supplier', 'Ivan Ablanida', 'supplier@gmail.com', '$2y$10$Nbgr8CZoIfG.DwKmzHQWn.53PiFMxsA1f0wGZgXDkTqMRRJokoZIK', '2024-09-15 10:57:46', '2025-01-07 09:51:10', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2025-01-04', 0, '2025-01-07 09:51:10', 1, '', NULL, '', NULL, ''),
+(17, 'supplier', 'Ivan Ablanida', 'supplier@gmail.com', '$2y$10$Nbgr8CZoIfG.DwKmzHQWn.53PiFMxsA1f0wGZgXDkTqMRRJokoZIK', '2024-09-15 10:57:46', '2025-01-08 05:01:55', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2025-01-04,2025-01-03,2025-01-02,2025-01-01,2025-01-05,2025-01-06,2025-01-08,2025-01-09,2025-01-10,2025-01-07,2025-01-11', 0, '2025-01-08 05:01:55', 1, '', NULL, '', NULL, ''),
 (18, 'supplier', 'Ivan', 'ivan@gmail.com', '$2y$10$UipF31UcmWtkvLLi/4pJv.q2swSPUpWGK.EqjJRPH17oqR8N7FS/S', '2024-09-15 12:01:03', '2024-09-15 12:01:03', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2024-11-30 22:36:31', 1, '', NULL, '', NULL, ''),
 (19, 'customer', 'racel', 'racel@gmail.com', '$2y$10$YbfIIErUgASt3W0y6HpIi.y5667ofbX2bHYzWGYNRtWi8CAPopo0a', '2024-09-15 19:48:08', '2025-01-03 03:34:20', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-03 03:34:20', 2, '', NULL, '', NULL, ''),
 (20, 'supplier', 'racels', '1ra@gmail.com', '$2y$10$hlBfashINKF7BGvZ2f/0SendLQMe/UYOUvGEgEv26wd.YGKsasp1G', '2024-09-15 19:53:50', '2024-12-01 04:48:38', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 1, '2024-12-01 04:48:38', 1, '', NULL, '', NULL, ''),
-(22, 'customer', 'client', 'client@gmail.com', '$2y$10$TCR1OMGZyQ7c2CaObgVq3.XI8FDOhtct4fOfQiqekIPspMGouboui', '2024-09-24 02:57:18', '2025-01-07 10:49:15', 'profile.jpg', NULL, NULL, NULL, 5, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-07 10:49:15', 1, '', NULL, '', NULL, ''),
+(22, 'customer', 'Ivansss', 'client@gmail.com', '$2y$10$pvkJfihudzcDOvsyD3BquO.2PBPdTW.jqp40LRdN4Moxp58w.CNcG', '2024-09-24 02:57:18', '2025-01-08 08:36:00', 'profile_677db8b339e4b2.85245037.png', NULL, NULL, 'Blk 4 Lot 23', 5, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-08 08:36:00', 1, 'Blk 4 Lot 23', '2025-01-16', 'https://www.facebook.com/', NULL, ''),
 (23, 'supplier', 'Test Updated', 'test@gmail.com', '$2y$10$E.NRidcwuXwIpmwfonL04.7HSPGq69xeA.8r3JF9IR2nanR7yv22y', '2024-09-24 03:48:59', '2025-01-07 10:30:02', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-07 10:30:02', 1, '', NULL, '', NULL, ''),
 (25, 'supplier', 'Ivan', 'kate@gmail.com', '$2y$10$ri6n0lqMhglZcELaRgPpPOmzmKR.gg242J7JXcwo0dLTtiLl0cSau', '2024-11-30 21:07:32', '2024-12-01 04:53:01', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2024-11-14,2024-11-07', 1, '2024-12-01 04:53:01', 1, '', NULL, '', NULL, ''),
 (26, 'admin', 'admin', 'admin@gmail.com', '$2y$10$opUH24g9VfMnpi1qYe634u2OSYi7auE9AP2kFb1maZVZrx8ex5gMy', '2024-11-30 21:26:12', '2025-01-07 13:03:44', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-07 13:03:44', 1, '', NULL, '', NULL, ''),
@@ -325,9 +379,21 @@ ALTER TABLE `appointment`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `comments`
+--
+ALTER TABLE `comments`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `news`
 --
 ALTER TABLE `news`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `notification`
+--
+ALTER TABLE `notification`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -381,13 +447,25 @@ ALTER TABLE `about_me`
 -- AUTO_INCREMENT for table `appointment`
 --
 ALTER TABLE `appointment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+
+--
+-- AUTO_INCREMENT for table `comments`
+--
+ALTER TABLE `comments`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `notification`
+--
+ALTER TABLE `notification`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `ratings`
@@ -411,7 +489,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `snapfeed`
 --
 ALTER TABLE `snapfeed`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `sub_news`

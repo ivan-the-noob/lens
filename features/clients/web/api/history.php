@@ -26,7 +26,7 @@ $sql = "
         a.email_uploader = u.email 
     WHERE 
         a.email = ?
-        AND a.status = 'completed'
+        AND a.status IN ('completed', 'cancelled')
 ";
 
 
@@ -109,6 +109,10 @@ $result = $stmt->get_result();
                             <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="profile.php">Main Profile</a></li>
+                                    <li><a class="dropdown-item" href="status.php">Booking Status</a></li>
+                                    <li><a class="dropdown-item" href="history.php">History</a></li>
+                                    <li><a class="dropdown-item" href="notifications.php">Notifications</a></li>
                             <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
                         </ul>
                     </div>

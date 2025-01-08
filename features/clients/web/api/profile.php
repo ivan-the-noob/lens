@@ -4,21 +4,35 @@ if (!isset($_SESSION['email'])) {
     header("Location: authentication/web/api/login.php");
     exit();
 }
+include '../../../../db/db.php';
 
 $email = $_SESSION['email'];
 $role = $_SESSION['role'] ?? '';
 
-// Default profile image
-$defaultProfileImg = 'profile.jpg'; // Adjust path if needed
-$profileImg = $defaultProfileImg;
+$query = "SELECT * FROM users WHERE email = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param('s', $email);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $row = $result->fetch_assoc();
+    $profileImg = $row['profile_img'];
+    $name = $row['name'];
+    $address = $row['location'];
+    $birthday = $row['birthday'];
+    $social_link = $row['social_link'];
+} else {
+    die('No user found.');
+}
+
+$stmt->close();
+$conn->close();
 
 
 
-
-
-// Adjust profile image path
-$profileImg = '../../../../assets/img/profile/' . $profileImg;
 ?>
+
 
 
 
@@ -64,10 +78,10 @@ $profileImg = '../../../../assets/img/profile/' . $profileImg;
                     <a class="nav-link" href="../../../index/web/api/about-us.php">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Snapfeed</a>
+                        <a class="nav-link" href="snapfeed.php">Snapfeed</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about-me.php">Profile</a>
+                        <a class="nav-link" href="#">Profile</a>
                     </li>
                 </ul>
 
@@ -79,6 +93,10 @@ $profileImg = '../../../../assets/img/profile/' . $profileImg;
                             <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="profile.php">Main Profile</a></li>
+                                    <li><a class="dropdown-item" href="status.php">Booking Status</a></li>
+                                    <li><a class="dropdown-item" href="history.php">History</a></li>
+                                    <li><a class="dropdown-item" href="notifications.php">Notifications</a></li>
                             <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
                         </ul>
                     </div>
@@ -95,23 +113,14 @@ $profileImg = '../../../../assets/img/profile/' . $profileImg;
     <section class="supplier-profile">
         
 
-        <?php
-        include '../../../../db/db.php';
-        if (!isset($_SESSION['email'])) {
-            die('Email not found in session.');
-        }
-
-        $email = $_SESSION['email'];
-    
-        ?>
 
 <div class="about-me-section">
     <div class="container mt-5 about-section">
         <div class="col-md-6 d-flex flex-column justify-content-center">
-            <form enctype="multipart/form-data" method="POST" action="profile.php" class="about-mes">
+            <form enctype="multipart/form-data" method="POST" action="../../function/php/profile.php" class="about-mes">
                 <div class="mb-3 text-center">
                     <!-- Display profile image -->
-                    <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-imgs">
+                    <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-imgs">
                     <input class="form-control mt-3" type="file" name="profile_img" accept="image/*">
                 </div>
                 <div class="mb-3">
@@ -139,7 +148,7 @@ $profileImg = '../../../../assets/img/profile/' . $profileImg;
                     <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password">
                 </div>
                 <!-- Submit button -->
-                <button type="submit" class="btn about-me-button">Save</button>
+                <button type="submit" class="btn about-me-button d-flex justify-content-center mx-auto">Save</button>
             </form>
         </div>
     </div>
@@ -158,44 +167,6 @@ $profileImg = '../../../../assets/img/profile/' . $profileImg;
       </div>
 
 
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <!-- About Section -->
-                <div class="col-md-4">
-                    <h5>About Photography News</h5>
-                    <p>Stay updated with the latest news, trends, and innovations in the world of photography. Whether you're a professional or an enthusiast, our articles are designed to inspire and inform.</p>
-                </div>
-    
-                <!-- Quick Links -->
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Latest News</a></li>
-                        <li><a href="#">Photography Tips</a></li>
-                        <li><a href="#">Camera Reviews</a></li>
-                    </ul>
-                </div>
-    
-                <!-- Contact Section -->
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <p>Email: info@photographynews.com</p>
-                    <p>Phone: +123 456 7890</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
 
     <script src="../../function/script/slider-img.js"></script>
     <script src="../../function/script/pre-loadall.js"></script>

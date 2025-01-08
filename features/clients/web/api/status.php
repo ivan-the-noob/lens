@@ -26,7 +26,7 @@ $sql = "
         a.email_uploader = u.email 
     WHERE 
         a.email = ?
-         AND a.status != 'completed'
+        AND a.status NOT IN ('completed', 'cancelled')
 ";
 
 
@@ -109,6 +109,10 @@ $result = $stmt->get_result();
                             <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="customer/profile.php">Main Profile</a></li>
+                                    <li><a class="dropdown-item" href="status.php">Booking Status</a></li>
+                                    <li><a class="dropdown-item" href="history.php">History</a></li>
+                                    <li><a class="dropdown-item" href="notifications.php">Notifications</a></li>
                             <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
                         </ul>
                     </div>
@@ -177,7 +181,7 @@ $result = $stmt->get_result();
                                             <textarea class="form-control" id="cancelReason" name="cancelReason" rows="3" required></textarea>
                                         </div>
                                         <input type="hidden" id="appointmentId" name="appointmentId" value="<?php echo $row['id']; ?>"> <!-- Hidden input for appointment ID -->
-                                        <button type="submit" class="btn btn-danger d-flex w-50 mx-auto">Submit</button>
+                                        <button type="submit" class="btn btn-danger d-flex w-50 mx-auto align-items-center justify-content-center">Submit</button>
                                         </form>
                                     </div>
                                     </div>

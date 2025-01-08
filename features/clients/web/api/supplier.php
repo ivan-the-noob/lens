@@ -84,10 +84,10 @@ if ($role != 'guest' && !empty($email)) {
                             <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #000;" >
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="customer/profile.php">Main Profile</a></li>
-                                    <li><a class="dropdown-item" href="customer/booking_status.php">Booking Status</a></li>
-                                    <li><a class="dropdown-item" href="customer/history.php">History</a></li>
-                                    <li><a class="dropdown-item" href="customer/notifications.php">Notifications</a></li>
+                                    <li><a class="dropdown-item" href="profile.php">Main Profile</a></li>
+                                    <li><a class="dropdown-item" href="status.php">Booking Status</a></li>
+                                    <li><a class="dropdown-item" href="history.php">History</a></li>
+                                    <li><a class="dropdown-item" href="notification.php">Notifications</a></li>
                                 <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
                             </ul>
                             </div>

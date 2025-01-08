@@ -16,7 +16,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("sddsssss", $name, $latitude, $longitude, $event, $time, $selected_date, $email_uploader, $email);
 
     if ($stmt->execute()) {
-        echo "Appointment booked successfully!";
+        $message = "Your appointment is pending approval.";
+
+        $notifStmt = $conn->prepare("INSERT INTO notification (email, email_uploader, message, status) 
+                                     VALUES (?, ?, ?, 'pending')");
+        $notifStmt->bind_param("sss", $email, $email_uploader, $message);
+
+        if ($notifStmt->execute()) {
+            header('Location:../../web/api/status.php');
+            exit();
+        } else {
+            echo "Error sending notification: " . $notifStmt->error;
+        }
+
+        $notifStmt->close();
     } else {
         echo "Error: " . $stmt->error;
     }
