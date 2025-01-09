@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 09, 2025 at 12:44 PM
+-- Generation Time: Jan 09, 2025 at 07:58 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -222,7 +222,7 @@ CREATE TABLE `ratings` (
 INSERT INTO `ratings` (`id`, `user_email`, `supplier_email`, `rating`, `review`, `created_at`, `name`) VALUES
 (5, 'client@gmail.com', '1@gmail.com', 3, 'dsadas', '2025-01-07 05:56:59', 'client'),
 (6, 'client1@gmail.com', '1@gmail.com', 4, 'Great service!', '2025-01-06 20:00:00', 'Client 1'),
-(7, 'client2@gmail.com', 'supplier@gmail.com', 5, 'Excellent quality!', '2025-01-06 20:05:00', 'Client 2'),
+(7, 'client2@gmail.com', 'supplier@gmail.com', 6, 'Excellent quality!', '2025-01-06 20:05:00', 'Client 2'),
 (8, 'client3@gmail.com', 'test@gmail.com', 5, 'Satisfactory experience.', '2025-01-06 20:10:00', 'Client 3'),
 (9, 'client4@gmail.com', 'supplier3@gmail.com', 2, 'Could be better.', '2025-01-06 20:15:00', 'Client 4'),
 (10, 'client5@gmail.com', 'supplier5@gmail.com', 4, 'Good value for money.', '2025-01-06 20:20:00', 'Client 5'),
@@ -387,13 +387,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `role`, `name`, `email`, `password`, `created_at`, `updated_at`, `profile_img`, `about_me`, `profession`, `location`, `age`, `day_available`, `is_active`, `last_login`, `disable_status`, `address`, `birthday`, `social_link`, `years_in_profession`, `username`, `test_password`) VALUES
-(16, 'supplier', 'Kate', '1@gmail.com', '$2y$10$SXsGg/5MaeD3S.fdoldfgu5YYTZ/RpGLwEMocNmhwA/Pnq8909uHG', '2024-09-15 10:14:40', '2025-01-07 03:51:39', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-09,2024-11-08,2024-11-07', 1, '2025-01-07 03:51:39', 1, '', NULL, '', NULL, '', ''),
-(17, 'supplier', 'Diana Supplier', 'supplier@gmail.com', '$2y$10$Nbgr8CZoIfG.DwKmzHQWn.53PiFMxsA1f0wGZgXDkTqMRRJokoZIK', '2024-09-15 10:57:46', '2025-01-09 08:33:55', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2025-01-04,2025-01-03,2025-01-02,2025-01-01,2025-01-05,2025-01-06,2025-01-08,2025-01-09,2025-01-10,2025-01-07,2025-01-11', 0, '2025-01-09 08:33:55', 1, '', NULL, '', NULL, '', ''),
-(20, 'supplier', 'racels', 'test@gmail.com', '$2y$10$hlBfashINKF7BGvZ2f/0SendLQMe/UYOUvGEgEv26wd.YGKsasp1G', '2024-09-15 19:53:50', '2025-01-09 11:39:39', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 1, '2025-01-09 11:39:39', 1, '', NULL, '', NULL, '', ''),
-(22, 'customer', 'Diana Client', 'client@gmail.com', '$2y$10$pvkJfihudzcDOvsyD3BquO.2PBPdTW.jqp40LRdN4Moxp58w.CNcG', '2024-09-24 02:57:18', '2025-01-09 10:02:16', 'profile_677db8b339e4b2.85245037.png', NULL, NULL, 'Blk 4 Lot 23', 5, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-09 10:02:16', 1, 'Blk 4 Lot 23', '2025-01-16', 'https://www.facebook.com/', NULL, '', ''),
-(23, 'supplier', 'Test Updated', 'ejivancablanida@gmail.com', 'ivan', '2024-09-24 03:48:59', '2025-01-09 10:13:47', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-09 10:13:47', 1, '', NULL, '', NULL, '', 'ivan'),
-(26, 'admin', 'admin', 'admin@gmail.com', '$2y$10$opUH24g9VfMnpi1qYe634u2OSYi7auE9AP2kFb1maZVZrx8ex5gMy', '2024-11-30 21:26:12', '2025-01-09 11:43:20', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-09 11:43:20', 1, '', NULL, '', NULL, '', ''),
-(30, 'customer', 'Ivan ablanida', 'ejivan23@gmail.com', '$2y$10$BtgegI4nre0M//3df3se.ett/.WAiuQbWfb0fyWuXvLR0AnTx6nJq', '2025-01-09 10:18:50', '2025-01-09 10:18:55', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-09 10:18:55', 1, 'dsadas', '2025-01-01', 'https://www.facebook.com/', NULL, '', '');
+(16, 'supplier', 'Kate', '1@gmail.com', '$2y$10$SXsGg/5MaeD3S.fdoldfgu5YYTZ/RpGLwEMocNmhwA/Pnq8909uHG', '2024-09-15 10:14:40', '2025-01-09 18:49:45', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-09,2024-11-08,2024-11-07', 1, '2025-01-09 18:49:45', 1, '', NULL, '', NULL, '', ''),
+(17, 'supplier', 'Diana Supplier', 'supplier@gmail.com', '$2y$10$Nbgr8CZoIfG.DwKmzHQWn.53PiFMxsA1f0wGZgXDkTqMRRJokoZIK', '2024-09-15 10:57:46', '2025-01-09 18:49:47', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2025-01-04,2025-01-03,2025-01-02,2025-01-01,2025-01-05,2025-01-06,2025-01-08,2025-01-09,2025-01-10,2025-01-07,2025-01-11', 0, '2025-01-09 18:49:47', 1, '', NULL, '', NULL, '', ''),
+(20, 'supplier', 'racels', 'test@gmail.com', '$2y$10$hlBfashINKF7BGvZ2f/0SendLQMe/UYOUvGEgEv26wd.YGKsasp1G', '2024-09-15 19:53:50', '2025-01-09 18:49:54', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 1, '2025-01-09 18:49:54', 1, '', NULL, '', NULL, '', ''),
+(22, 'customer', 'Diana Client', 'client@gmail.com', '$2y$10$pvkJfihudzcDOvsyD3BquO.2PBPdTW.jqp40LRdN4Moxp58w.CNcG', '2024-09-24 02:57:18', '2025-01-09 18:49:52', 'profile.jpg', NULL, NULL, 'Blk 4 Lot 23', 5, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-09 18:49:52', 1, 'Blk 4 Lot 23', '2025-01-16', 'https://www.facebook.com/', NULL, '', ''),
+(23, 'supplier', 'Test Updated', 'ejivancablanida@gmail.com', 'ivan', '2024-09-24 03:48:59', '2025-01-09 18:49:51', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-09 18:49:51', 1, '', NULL, '', NULL, '', 'ivan'),
+(26, 'admin', 'admin', 'admin@gmail.com', '$2y$10$opUH24g9VfMnpi1qYe634u2OSYi7auE9AP2kFb1maZVZrx8ex5gMy', '2024-11-30 21:26:12', '2025-01-09 18:49:50', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-09 18:49:50', 1, '', NULL, '', NULL, '', ''),
+(30, 'customer', 'Ivan ablanida', 'ejivan23@gmail.com', '$2y$10$BtgegI4nre0M//3df3se.ett/.WAiuQbWfb0fyWuXvLR0AnTx6nJq', '2025-01-09 10:18:50', '2025-01-09 18:49:49', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-09 18:49:49', 1, 'dsadas', '2025-01-01', 'https://www.facebook.com/', NULL, '', '');
 
 --
 -- Indexes for dumped tables

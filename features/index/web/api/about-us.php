@@ -58,6 +58,9 @@
                             }
                         }
                     ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="supplier.php">Supplier</a>
+                    </li>
                     
                 </ul>
                 <div class="d-flex ml-auto">

@@ -253,7 +253,7 @@ body.loaded #preloader {
 /*Top Featured*/
 
 .top-feautered{
-    height: 50vh;
+    height: 70vh;
 }
 
 .cards{
@@ -264,15 +264,18 @@ body.loaded #preloader {
 }
 
 .box{
-    border: 1px solid #000;
+    border: none;
     height: 40vh;
     position: relative;
     top: 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0. 0.5);
 }
 
 .box img{
     height: 100%;
     width: 100%;    
+    border-radius: 10px;
 }
 .highlight{
     position: relative;

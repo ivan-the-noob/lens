@@ -326,9 +326,9 @@ $conn->close();
 
                             if ($result->num_rows > 0) {
                                 echo '<div class="col-md-6">';
-                                echo '<div class="card">';
+                                echo '<div class="card total-users">';
                                 echo '<div class="card-body">';
-                                echo '<p class="text-center text-white">Top 5 Highest Rated Suppliers</p>';
+                                echo '<p class="text-center text-black">Top 5 Highest Rated Suppliers</p>';
 
                                 echo '<hr class="mt-2">';
                                 echo '<ul class="list-group list-group-flush">';
@@ -391,9 +391,9 @@ $conn->close();
 
                     if ($result->num_rows > 0) {
                         echo '<div class="col-md-6">';
-                        echo '<div class="card">';
+                        echo '<div class="card total-users">';
                         echo '<div class="card-body">';
-                        echo '<p class="text-center text-white">Top 5 Lowest Rated Suppliers</p>';
+                        echo '<p class="text-center text-black">Top 5 Lowest Rated Suppliers</p>';
                         echo '<hr class="mt-2">';
                         echo '<ul class="list-group list-group-flush">';
 

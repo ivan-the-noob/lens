@@ -84,6 +84,9 @@ if ($role != 'guest' && !empty($email)) {
                             <a class="nav-link" href="features/index/web/api/snapfeed.php">Snapfeed</a>
                         </li>
                     <?php endif; ?>
+                    <li class="nav-item">
+                            <a class="nav-link" href="features/index/web/api/supplier.php">Supplier</a>
+                        </li>
                     
 
 
@@ -193,15 +196,15 @@ $conn->close();
                 $name = $user_data['name'] ?? 'Unknown';
                 $profile_img = $user_data['profile_img'] 
                     ? 'assets/img/profile/' . htmlspecialchars($user_data['profile_img']) 
-                    : 'assets/img/profile/default.jpg';
+                    : 'assets/img/profile/profile.jpg';
 
                 // Render the card
                 echo '<div class="col-md-3">
                         <div class="box">
                             <img src="' . $profile_img . '" alt="Profile Image">
-                            <div class="highlight">
-                                <p>Name: ' . htmlspecialchars($name) . '</p>
-                                <p>Rating: ' . htmlspecialchars($total_rating) . '<i class="fas fa-star" style="color: yellow;" font-size: 20px;"></i></p>
+                            <div class="highlight" style="backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 80%; padding: 10px; border-radius: 10px;">
+                                <p class="fw-bold"> ' . htmlspecialchars($name) . '</p>
+                                <p>Rating: ' . htmlspecialchars($total_rating) . '<i class="fas fa-star" style="color: #FFD700; font-size: 16px;"></i></p>
                             </div>
                         </div>
                       </div>';
