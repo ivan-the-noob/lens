@@ -81,7 +81,7 @@ if ($role != 'guest' && !empty($email)) {
                         </li>
                     <?php else: // For guests ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="authentication/web/api/login.php">Snapfeed</a>
+                            <a class="nav-link" href="features/index/web/api/snapfeed.php">Snapfeed</a>
                         </li>
                     <?php endif; ?>
                     
@@ -143,15 +143,14 @@ if ($result->num_rows > 0) {
         echo "<img src='assets/img/news.jpg' alt='Placeholder Image' class='img-fluid news-img'>";
     }
     echo "</div>";
-
-    // Right side with text and button
     echo "<div class='col-lg-6 col-md-12 mt-5'>";
     echo "<h3>" . $row['heading'] . "</h3>";
     echo "<h5>News by | " . $row['uploader'] . " | " . $formatted_date . "</h5>";
     echo "<p>" . $row['context'] . "</p>";
-    echo "<button class='btn'>Get Started</button>";
+    if (!isset($_SESSION['email']) || empty($_SESSION['email'])) {
+        echo "<a href='authentication/web/api/login.php'>Get Started</a>";
+    }
     echo "</div>";
-
     echo "</div>";
 } else {
     echo "<p>No news available</p>";
@@ -162,6 +161,60 @@ $conn->close();
 
     </div>
 </section>
+
+<section class="top-feautered">
+    <div class="col-md-11 d-flex flex-column mx-auto">
+    <div class="cards">
+    <h1 class="text-center" style="position: relative; top: 20px;">Top Supplier</h1>
+    <div class="row d-flex justify-content-center">
+        <?php
+        require 'db/db.php';
+        $sql = "SELECT a.supplier_email, SUM(a.rating) AS total_rating
+                FROM ratings a
+                GROUP BY a.supplier_email
+                ORDER BY total_rating DESC
+                LIMIT 3";
+
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+                $supplier_email = $row['supplier_email'];
+                $total_rating = $row['total_rating'];
+
+                // Get the profile image and name from the users table
+                $user_query = "SELECT name, profile_img FROM users WHERE email = ?";
+                $stmt = $conn->prepare($user_query);
+                $stmt->bind_param("s", $supplier_email);
+                $stmt->execute();
+                $user_result = $stmt->get_result();
+                $user_data = $user_result->fetch_assoc();
+
+                $name = $user_data['name'] ?? 'Unknown';
+                $profile_img = $user_data['profile_img'] 
+                    ? 'assets/img/profile/' . htmlspecialchars($user_data['profile_img']) 
+                    : 'assets/img/profile/default.jpg';
+
+                // Render the card
+                echo '<div class="col-md-3">
+                        <div class="box">
+                            <img src="' . $profile_img . '" alt="Profile Image">
+                            <div class="highlight">
+                                <p>Name: ' . htmlspecialchars($name) . '</p>
+                                <p>Rating: ' . htmlspecialchars($total_rating) . '<i class="fas fa-star" style="color: yellow;" font-size: 20px;"></i></p>
+                            </div>
+                        </div>
+                      </div>';
+            }
+        } else {
+            echo '<p>No top suppliers found.</p>';
+        }
+        ?>
+    </div>
+</div>
+    </div>
+</section>
+
 
 
     <section class="top-supplier">
@@ -233,6 +286,7 @@ if ($result->num_rows > 0) {
     }
     ?>
 </section>
+
 
 <?php $conn->close(); ?>
 
@@ -444,12 +498,20 @@ $result = $conn->query($sql);
   btn.addEventListener('click', function () {
     const imgSrc = this.getAttribute('data-img-src');
     const modalImg = document.querySelector('.full-screen-img');
-    modalImg.src = imgSrc; // Set the modal image source to the clicked image
+    modalImg.src = imgSrc; 
   });
 });
-
-
   </script>
+
+<?php
+    if (isset($_GET['#registerBtn'])) {
+        echo "<script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.getElementById('registerBtn').click();
+                });
+              </script>";
+    }
+    ?>
 
     
     <script src="features/clients/function/script/pre-load.js"></script>

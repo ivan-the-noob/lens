@@ -1,5 +1,7 @@
 
 
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,9 +9,17 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>LENSFOLIOHUB</title>
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 	<link rel="stylesheet" href="../../css/login.css">
 </head>
+
+
+
+<script>
+	document.querySelector('input[type="date"]').addEventListener('focus', function() {
+    this.value = '';  // Clear default value
+});
+</script>
 
 <body>
 
@@ -39,23 +49,118 @@
 					unset($_SESSION['login_error']);
 				}
 			?>
-				<div class="wrapper">
-					<form action="../../function/php/login.php" method="POST">
-						<h2>Login</h2>
-						<div class="input-field">
-							<input type="text" name="email" required>
-							<label>Enter your email</label>
-						</div>
-						<div class="input-field">
-							<input type="password" name="password" required>
-							<label>Enter your password</label>
-						</div>
-						<a href="#" class="forgot">Forgot Password?</a>
-						
-						<button type="submit" class="mt-2">Log In</button>
-						
-					</form>
-				</div>
+			<div class="wrapper">
+    <form id="loginForm" action="../../function/php/login.php" method="POST">
+        <h2>Login</h2>
+        <div class="input-field">
+            <input type="text" name="email" required>
+            <label>Enter your email</label>
+        </div>
+        <div class="input-field">
+            <input type="password" name="password" required>
+            <label>Enter your password</label>
+        </div>
+        <a href="#" id="forgotPassword" class="forgot">Forgot Password?</a>
+        <button type="submit" class="mt-2">Log In</button>
+    </form>
+    
+    <form id="resetForm" style="display:none;">
+        <h2>Forgot Password?</h2>
+        <div class="input-field">
+            <input type="email" name="reset_email" required>
+            <label>Enter your email</label>
+        </div>
+        <button type="button" id="sendCode" class="mt-2">Send Code</button>
+    </form>
+    
+    <form id="resetCodeForm" style="display:none;">
+        <h2>Enter the 4-digit Code</h2>
+        <div class="input-field">
+            <input type="text" name="reset_code" required>
+            <label>Enter 4-digit code</label>
+        </div>
+        <button type="submit" class="mt-2">Verify</button>
+    </form>
+    
+    <form id="passwordResetForm" style="display:none;">
+        <h2>Reset Password</h2>
+        <div class="input-field">
+            <input type="password" name="password" required>
+            <label>Enter new password</label>
+        </div>
+        <button type="submit" class="mt-2">Reset Password</button>
+    </form>
+</div>
+
+<script>
+ document.getElementById('forgotPassword').addEventListener('click', function(e) {
+    e.preventDefault();
+    document.getElementById('loginForm').style.display = 'none';
+    document.getElementById('resetForm').style.display = 'block';
+});
+
+document.getElementById('sendCode').addEventListener('click', function(e) {
+    e.preventDefault();
+    var email = document.querySelector('input[name="reset_email"]').value;
+
+    // Send the email with the reset code via AJAX
+    sendResetEmail(email);
+});
+
+function sendResetEmail(email) {
+    $.ajax({
+        type: "POST",
+        url: "../../function/php/send_reset_code.php",
+        data: {email: email, send_reset_email: true},
+        success: function(response) {
+            console.log('Response from server: ', response);
+            alert(response);  // Display the success message
+            document.getElementById('resetForm').style.display = 'none';
+            document.getElementById('resetCodeForm').style.display = 'block';
+        },
+        error: function(error) {
+            console.log('Error: ', error);
+            alert('Error sending email. Please try again.');
+        }
+    });
+}
+
+document.getElementById('resetCodeForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var enteredCode = document.querySelector('input[name="reset_code"]').value;
+    var newPassword = document.querySelector('input[name="password"]').value;  // Correct form field for password
+
+    // Send the verification code and new password to reset the password via AJAX
+    $.ajax({
+        type: "POST",
+        url: "../../function/php/send_reset_code.php",
+        data: {verification_code: enteredCode, password: newPassword, verify_reset_code: true},
+        success: function(response) {
+            console.log('Response from server: ', response);
+            if (response.includes('successful')) {
+                alert(response);  // Display the success message
+                document.getElementById('resetCodeForm').style.display = 'none';
+                document.getElementById('passwordResetForm').style.display = 'block';
+            } else {
+                alert(response);  // Display error messages if not successful
+            }
+        },
+        error: function(error) {
+            console.log('Error: ', error);
+            alert('Error resetting password. Please try again.');
+        }
+    });
+});
+
+
+
+</script>
+
+
+
+
+
+
 
 				<?php if (isset($_SESSION['disable_status']) && $_SESSION['disable_status'] === true): ?>
 				<script>
@@ -131,13 +236,20 @@
 					</div>
 
 					<div class="input-field">
+						<input type="email" name="email" required>
+						<label for="email">Enter your email</label>
+					</div>
+
+					<div class="input-field">
 						<input type="text" name="address" id="address" required>
 						<label for="address">Enter your address</label>
 					</div>
 
+					
+
 					<div class="input-field">
 						<input type="date" name="birthday" placeholder="hi" required>
-						<label for="birthday">Enter your birthdate</label>
+						<label for="birthday"></label>
 					</div>
 
 					<div class="input-field">
@@ -249,11 +361,9 @@
             });
         });
     });
-
-		
 	</script>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 	<script src="../../function/script/login.js"></script>

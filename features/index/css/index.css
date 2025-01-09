@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 
 *{
-    font-family: "Poppins", sans-serif;
+      font-family: Arial, sans-serif;
     font-weight: 400;
     font-style: normal;
     padding: 0;
@@ -142,13 +142,13 @@ body.loaded #preloader {
     transform: scale(1);
 }
 
-.news h3, .news h5, .news p, .news .btn {
+.news h3, .news h5, .news p, .news a {
     opacity: 0;
     transform: translateY(20px);
     transition: opacity 0.5s ease-out 0.2s, transform 0.5s ease-out 0.2s;
 }
 
-.news.visible h3, .news.visible h5, .news.visible p, .news.visible .btn {
+.news.visible h3, .news.visible h5, .news.visible p, .news.visible a {
     opacity: 1;
     transform: translateY(0);
 }
@@ -233,21 +233,60 @@ body.loaded #preloader {
     font-size: 16px;
 }
 
-.news button{
+.news a{
     background-color: #a67b5b;
     border: none;
     color: #fffaf0;
     padding: 10px 20px;
     border-radius: 15px;
+    text-decoration: none;
     
 }
 
-.news button:hover{
+.news a:hover{
     background-color: #e0c097;
     color: #fffaf0;
 }
 
 /*News Section End*/
+
+/*Top Featured*/
+
+.top-feautered{
+    height: 50vh;
+}
+
+.cards{
+    border: 1px solid #808080;
+    border-radius: 2px;
+    height:30vh;
+    position: relative;
+}
+
+.box{
+    border: 1px solid #000;
+    height: 40vh;
+    position: relative;
+    top: 50px;
+}
+
+.box img{
+    height: 100%;
+    width: 100%;    
+}
+.highlight{
+    position: relative;
+    bottom: 80px;
+    left: 10px;
+    width: auto;
+    color: #000;
+    font-weight: bold;
+}
+.highlight p{
+    margin-bottom: 0;
+}
+
+/*Top Featured Section*/
 
 
 /*Top Supplier Section*/

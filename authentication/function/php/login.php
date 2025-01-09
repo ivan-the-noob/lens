@@ -12,8 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $email = $_POST['email'];
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE email = ?";
-    $stmt = $conn->prepare($query);
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -24,12 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
         // Check if disable_status == 0 (disabled)
         if ($user['disable_status'] == 0) { 
-            $_SESSION['login_error'] = 'Your account has been disabled due to many reports. 
-            <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#recoverModal">Recover</button>';
+            $_SESSION['login_error'] = 'Your account has been disabled. Please <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#recoverModal">Recover</button>';
             header("Location: ../../web/api/login.php"); 
             exit();
         }
-        
 
         // Verify password
         if (password_verify($password, $hashedPassword)) {
@@ -68,5 +65,4 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 }
-
 ?>

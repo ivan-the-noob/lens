@@ -22,6 +22,41 @@ if ($role != 'guest' && !empty($email)) {
 
 }
 
+if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
+    $uploaderEmail = htmlspecialchars($_POST['uploader_email']);
+    
+    echo '<script>
+        // Store the uploaderEmail in localStorage so it persists across pages
+        localStorage.setItem("uploader_email", "' . $uploaderEmail . '");
+    </script>';
+} else {
+  
+    echo '<script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var storedEmail = localStorage.getItem("uploader_email");
+            if (storedEmail) {
+                // Resubmit the form with the email from localStorage
+                var form = document.createElement("form");
+                form.method = "POST";
+                form.action = window.location.href;
+
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = "uploader_email";
+                input.value = storedEmail;
+
+                form.appendChild(input);
+                document.body.appendChild(form);
+
+                form.submit();
+            } else {
+                alert("No uploader email found.");
+            }
+        });
+    </script>';
+    exit; 
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -31,7 +66,7 @@ if ($role != 'guest' && !empty($email)) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="../../css/supplier-profile.css">
+    <link rel="stylesheet" href="../../css/chat.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     
     
@@ -40,12 +75,7 @@ if ($role != 'guest' && !empty($email)) {
 </head>
 
 <body>
-    <div id="preloader">
-        <div class="line"></div>
-        <div class="left"></div>
-        <div class="right"></div>
-    </div>
-
+  
     <nav class="navbar navbar-expand-lg">
     <div class="container">
         <a class="navbar-brand d-none d-md-block logo" href="#">
@@ -114,83 +144,131 @@ if ($role != 'guest' && !empty($email)) {
                 </li>
             </ul>
         </div>
+        
 
         <div class="messenger-container">
-    <!-- Conversation area -->
-    <div class="message received">
-        <img src="https://via.placeholder.com/40" alt="Supplier" class="profile-pic">
-        <div class="message-text">
-            Hey, how are you doing?
-        </div>
-    </div>
-    <div class="message sent">
-        <div class="message-text">
-            I'm good, thanks! How about you?
-        </div>
-    </div>
-    <div class="message received">
-        <img src="https://via.placeholder.com/40" alt="Supplier" class="profile-pic">
-        <div class="message-text">
-            I'm great too, thanks for asking.
-        </div>
-    </div>
+    <?php
+    require '../../../../db/db.php';
+    $session_email = $_SESSION['email'];
+    $stmt = $conn->prepare("
+        SELECT email, text 
+        FROM chat 
+        WHERE uploader_email = ? 
+        GROUP BY email 
+        ORDER BY MAX(id) DESC
+    ");
+    $stmt->bind_param("s", $session_email);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    <!-- Input field -->
-    <div class="input-container">
-        <input type="text" placeholder="Type a message...">
-        <button type="button">Send</button>
+    // Check if there are any messages
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $email = htmlspecialchars($row['email']);
+            $text = htmlspecialchars($row['text']);
+            echo '
+                <div class="messenger-item" data-email="' . $email . '" onclick="document.getElementById(\'click-email\').value = this.getAttribute(\'data-email\'); console.log(this.getAttribute(\'data-email\')); showMessengerContainer(); loadChat(\'' . $email . '\')">
+                <img src="https://via.placeholder.com/40" alt="User">
+                <div class="details">
+                    <div class="name">' . $email . '</div>
+                    <div class="message">' . $text . '</div>
+                </div>
+            </div>';
+        }
+    } else {
+        echo '<p>No messages found.</p>';
+    }
+
+    $stmt->close();
+    $conn->close();
+    ?>
+</div>
+
+
+
+
+<div class="messenger-containers" style="display: none;">
+    <div class="messenger-containerss" style="height: 50vh; overflow-y: auto;">
+        <!-- Messages will be appended here -->
+    </div>
+    <div class="input-container w-100">
+    <form method="POST" action="../../function/php/submit_chat.php">
+        <input type="hidden" name="email" id="email">
+        <input type="hidden" name="uploader_email" id="uploader_email">
+        <input type="hidden" name="click_email" id="click-email">
+        <div class="d-flex gap-1">
+            <input type="text" name="text" placeholder="Type a message..." required>
+            <button type="submit">Send</button>
+        </div>
+    </form>
     </div>
 </div>
 
-      
-     
-    <div class="wave">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 250" style="margin-bottom: -5px;">
-          <path fill="#FAF7F2" fill-opacity="1"
-            d="M0,128L60,138.7C120,149,240,171,360,170.7C480,171,600,149,720,133.3C840,117,960,107,1080,112C1200,117,1320,139,1380,149.3L1440,160L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z">
-          </path>
-        </svg>
-      </div>
+<!-- Input field -->
 
 
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <!-- About Section -->
-                <div class="col-md-4">
-                    <h5>About Photography News</h5>
-                    <p>Stay updated with the latest news, trends, and innovations in the world of photography. Whether you're a professional or an enthusiast, our articles are designed to inspire and inform.</p>
-                </div>
+
+            <script>
+               function showMessengerContainer() {
+                    // Hide the initial container
+                    document.querySelector('.messenger-container').style.display = 'none';
+                    
+                    // Show the chat messages container
+                    document.querySelector('.messenger-containers').style.display = 'block';
+                }
+            </script>
+
+<script>
+    function loadChat(email, event) {
+    // Correctly getting the data-email from the clicked element
+    const clickedEmail = event.target.getAttribute('data-email');
     
-                <!-- Quick Links -->
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Latest News</a></li>
-                        <li><a href="#">Photography Tips</a></li>
-                        <li><a href="#">Camera Reviews</a></li>
-                    </ul>
-                </div>
-    
-                <!-- Contact Section -->
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <p>Email: info@photographynews.com</p>
-                    <p>Phone: +123 456 7890</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
+    // Set the click email to the hidden input
+    document.getElementById('click-email').value = clickedEmail;
+
+    const messengerContainers = document.querySelector('.messenger-containerss');
+    messengerContainers.style.display = 'block';
+
+    // Clear existing messages, keeping the input-container untouched
+    messengerContainers.querySelectorAll('.message').forEach(el => el.remove());
+
+    // Fetch chat details using AJAX
+    fetch('../../function/php/fetch_chat.php?email=' + email)
+        .then(response => response.json())
+        .then(data => {
+            if (data.length > 0) {
+                // Create a document fragment to append messages
+                const fragment = document.createDocumentFragment();
+                data.forEach(message => {
+                    const messageDiv = document.createElement('div');
+                    messageDiv.classList.add('message', message.type); // Assuming 'received' or 'sent' based on message type
+                    messageDiv.innerHTML = `
+                        <div class="message-text">
+                            ${message.text}
+                        </div>
+                    `;
+                    fragment.appendChild(messageDiv);
+                });
+
+                // Append messages to the container
+                messengerContainers.appendChild(fragment);
+            } else {
+                messengerContainers.innerHTML = '<p>No messages found.</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching chat:', error);
+        });
+}
+
+
+
+</script>
+
+
+
+
+   
 
     <script src="../function/script/slider-img.js"></script>
     <script src="../../function/script/pre-loadall.js"></script>
@@ -198,20 +276,17 @@ if ($role != 'guest' && !empty($email)) {
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 
-<!-- FullCalendar JS -->
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-      var calendarEl = document.getElementById('calendar');
-      var calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-       
-        selectable: true,
-        selectHelper: true
-      });
-      calendar.render();
-    });
-  </script>
+
+  <script>
+    // Retrieve uploader_email from localStorage
+    const uploaderEmail = localStorage.getItem("uploader_email");
+    if (uploaderEmail) {
+        document.getElementById('uploader_email').value = uploaderEmail;
+    }
+
+    // Set session email using PHP
+    document.getElementById('email').value = '<?php echo htmlspecialchars($_SESSION["email"]); ?>';
+</script>
 
 </body>
 </html>
