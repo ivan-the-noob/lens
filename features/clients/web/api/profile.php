@@ -75,7 +75,7 @@ $conn->close();
                         <a class="nav-link" href="../.././../../index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                    <a class="nav-link" href="../../../index/web/api/about-us.php">About</a>
+                    <a class="nav-link" href="about-us.php">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="snapfeed.php">Snapfeed</a>

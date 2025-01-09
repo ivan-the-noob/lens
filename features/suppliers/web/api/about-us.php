@@ -1,4 +1,27 @@
 
+<?php
+    session_start();
+    if (!isset($_SESSION['email'])) {
+        header("Location: authentication/web/api/login.php");
+        exit();
+    }
+    $email = $_SESSION['email'];
+    $role = $_SESSION['role'];
+
+    require '../../../../db/db.php';
+    $sql = "SELECT profile_img FROM users WHERE email = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $email);
+    $stmt->execute();
+    $stmt->bind_result($profileImg);
+    $stmt->fetch();
+    $stmt->close();
+    $conn->close();
+
+    $profileImg = $profileImg ?: 'default.png';
+
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,57 +42,59 @@
         <div class="right"></div>
     </div>
 
-    <nav class="navbar navbar-expand-lg ">
-        <div class="container">
-            <a class="navbar-brand d-none d-md-block logo" href="#">
-                LENSFOLIOHUB
-            </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
-                    style="stroke: black; fill: none;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
-                </svg>
-            </button>
+    <nav class="navbar navbar-expand-lg">
+    <div class="container">
+        <a class="navbar-brand d-none d-md-block logo" href="#">
+            LENSFOLIOHUB
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                style="stroke: black; fill: none;">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+        </button>
 
-            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav d-flex">
-                    <li class="nav-item">
-                        <a class="nav-link" href="../../../../index.php">Home</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="about-us.php">About</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="snapfeed.php">Snapfeed</a>
-                    </li>
-                    <?php 
-                        if (isset($_SESSION['role'])) {
-                            $role = $_SESSION['role'];
-                            
-                            if ($role == 'customer') {
-                                echo '<li class="nav-item">
-                                        <a class="nav-link" href="../../../clients/web/api/snapfeed.php">Snapfeed</a>
-                                    </li>';
-                            } elseif ($role == 'supplier') {
-                                echo '<li class="nav-item">
-                                        <a class="nav-link" href="../../../suppliers/web/api/snapfeed.php">Snapfeed</a>
-                                    </li>';
-                            }
-                        }
-                    ?>
-                    <li class="nav-item">
-                        <a class="nav-link" href="supplier.php">Supplier</a>
-                    </li>
-                    
-                </ul>
-                <div class="d-flex ml-auto">
-                   
-                        <a href="../../../../authentication/web/api/login.php" class="btn-theme" type="button">Login</a>
-                </div>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <!-- Links (left) -->
+            <ul class="navbar-nav me-auto d-flex justify-content-end w-100">
+                <li class="nav-item">
+                    <a class="nav-link" href="../../../../index.php">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="snapfeed.php">Snapfeed</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="supplier.php">Supplier</a>
+                </li>
+            </ul>
+
+            <!-- Profile dropdown (right) -->
+            <div class="d-flex ms-auto">
+                <?php if ($role != 'guest') { ?>
+                    <div class="dropdown">
+                        <button class="btn btn-theme dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="profile.php">Main Profile</a></li>
+                                    <li><a class="dropdown-item" href="status.php">Booking Status</a></li>
+                                    <li><a class="dropdown-item" href="history.php">History</a></li>
+                                    <li><a class="dropdown-item" href="notifications.php">Notifications</a></li>
+                            <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
+                        </ul>
+                    </div>
+                <?php } else { ?>
+                    <!-- User is not logged in, display a login link -->
+                    <a href="authentication/web/api/login.php" class="btn btn-theme" type="button">Login</a>
+                <?php } ?>
             </div>
         </div>
-    </nav>
+    </div>
+</nav>
 
     <section class="about_us mt-5">
         <div class="head">

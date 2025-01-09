@@ -63,9 +63,29 @@ if ($role != 'guest' && !empty($email)) {
                     <li class="nav-item">
                         <a class="nav-link" href="#">Home</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="features/index/web/api/about-us.php">About</a>
-                    </li>
+
+                    <?php if ($role == 'supplier'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="features/suppliers/web/api/about-us.php">About</a>
+                        </li>
+                    <?php elseif ($role == 'customer'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="features/clients/web/api/about-us.php">About</a>
+                        </li>
+                    <?php endif; ?>
+
+                    <?php if (empty($email)) { ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="features/index/web/api/about-us.php.php">About</a>
+                        </li>
+                    <?php } ?>
+                   
+
+                    <?php if (empty($email)) { ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="features/index/web/api/snapfeed.php">Snapfeed</a>
+                        </li>
+                    <?php } ?>
 
                     <!-- Dynamically show based on user role -->
                     <?php if ($role == 'supplier'): ?>
@@ -76,18 +96,23 @@ if ($role != 'guest' && !empty($email)) {
                         <li class="nav-item">
                             <a class="nav-link" href="features/clients/web/api/snapfeed.php">Snapfeed</a>
                         </li>
+                    <?php endif; ?>
+
+                    <?php if (empty($email)) { ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="features/index/web/api/supplier.php">Supplier</a>
+                        </li>
+                    <?php } ?>
+
+                    <?php if ($role == 'supplier'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="features/suppliers/web/api/supplier.php">Supplier</a>
+                        </li>
+                    <?php elseif ($role == 'customer'): ?>
                         <li class="nav-item">
                             <a class="nav-link" href="features/clients/web/api/supplier.php">Supplier</a>
                         </li>
-                    <?php else: // For guests ?>
-                        <li class="nav-item">
-                            <a class="nav-link" href="features/index/web/api/snapfeed.php">Snapfeed</a>
-                        </li>
                     <?php endif; ?>
-                    <li class="nav-item">
-                            <a class="nav-link" href="features/index/web/api/supplier.php">Supplier</a>
-                        </li>
-                    
 
 
                     
