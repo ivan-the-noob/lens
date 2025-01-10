@@ -277,6 +277,99 @@ body.loaded #preloader {
     margin-top: 0.5rem;
 }
 
+.like-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    font-size: 30px;
+}
+
+.like-btn.active i {
+    color: red; 
+}
+
+.comments input{
+    border: 2px solid #7A3015;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+
+
+.comments input:focus{
+    border: 2px solid #7A3015;
+    border-radius: 5px;
+    margin-right: 5px;
+}
+
+.send{
+    border: none;
+    background-color: #7A3015;
+    color: #fff;
+    height: 100%;
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.send:hover{
+    border: none;
+    background-color: #7A3015;
+    color: #fff;
+    height: 100%;
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+
+/*Search*/
+
+.search-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Styling for the search input */
+.search-input {
+    width: 100%;
+    padding: 10px 40px 10px 15px; /* Add padding to the right for the button */
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 25px;
+    outline: none;
+}
+
+/* Styling for the search button */
+.search-button {
+    position: absolute;
+    top: 68%;
+    right: 10px; /* Align button to the right inside the input */
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #555; /* Icon color */
+    font-size: 18px;
+    outline: none;
+}
+
+/* Styling for the search icon */
+.search-button i {
+    pointer-events: none;
+}
+
+/* Optional: Hover effect */
+.search-button:hover {
+    color: #000;
+}
+
+/*Search End*/
+
+
+
+
 
 
 
@@ -408,6 +501,49 @@ textarea{
     height: 100% !important
 }
 
+.profile-click{
+    border-left: 5px solid #7A3015;
+    padding-left: 10px;
+    border-radius: 5px 10px 10px 5px;
+}
+
+.name-href{
+    text-decoration: none;
+    color: #7A3015;
+    font-family: "Inter", sans-serif;
+    font-optical-sizing: auto;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+
+.comments-box{
+    height: 50vh;
+    border: 1px solid #808080;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.heart-btn {
+    background: transparent;
+    border: none;
+    color: #ccc;
+    font-size: 2rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.heart-btn.active {
+    color: red;
+}
+
+.heart-count {
+    font-size: 1.5rem;
+    margin-left: 10px;
+}
 
 
 
