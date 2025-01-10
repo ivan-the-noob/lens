@@ -226,7 +226,7 @@ $conn->close();
                 // Render the card
                 echo '<div class="col-md-3">
                         <div class="box">
-                            <img src="' . $profile_img . '" alt="Profile Image">
+                            <img src="../../../../assets/img/profile/' . $profile_img . '" alt="Profile Image">
                             <div class="highlight" style="backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 80%; padding: 10px; border-radius: 10px;">
                                 <p class="fw-bold"> ' . htmlspecialchars($name) . '</p>
                                 <p>Rating: ' . htmlspecialchars($total_rating) . '<i class="fas fa-star" style="color: #FFD700; font-size: 16px;"></i></p>
