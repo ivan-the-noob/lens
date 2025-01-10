@@ -12,6 +12,8 @@ $sql_suppliers = "SELECT * FROM reports WHERE role = 'supplier'";
 $result_suppliers = $conn->query($sql_suppliers);
 
 
+
+
 ?>
 
 <!DOCTYPE html>
@@ -114,7 +116,7 @@ $result_suppliers = $conn->query($sql_suppliers);
                                                 <td>" . htmlspecialchars($row['reporter_email']) . "</td>
                                                 <td>" . htmlspecialchars($row['reported_name']) . "</td>
                                                 <td>" . htmlspecialchars($row['reported_email']) . "</td>
-                                                <td>" . htmlspecialchars($row['report_reason']) . "</td>
+                                                <td>" . htmlspecialchars($row['reason']) . "</td>
                                                 <td>";
                                         if ($disable_status == 0) {
                                             echo 'Disabled';
@@ -198,7 +200,7 @@ $result_suppliers = $conn->query($sql_suppliers);
                                                 <td>" . htmlspecialchars($row['reporter_email']) . "</td>
                                                 <td>" . htmlspecialchars($row['reported_name']) . "</td>
                                                 <td>" . htmlspecialchars($row['reported_email']) . "</td>
-                                                <td>" . htmlspecialchars($row['report_reason']) . "</td>
+                                                <td>" . htmlspecialchars($row['reason']) . "</td>
                                                 
                                                 <td>";
                                         if ($disable_status == 0) {

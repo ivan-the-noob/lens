@@ -23,9 +23,6 @@ if ($role != 'guest' && !empty($email)) {
     $profileImg = '../../../../assets/img/profile/' . $profileImg;
 }
 
-
-
-
 ?>
 
 <!DOCTYPE html>

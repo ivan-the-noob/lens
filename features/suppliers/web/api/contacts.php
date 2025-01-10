@@ -99,7 +99,7 @@ if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
                     <a class="nav-link" href="about-us.php">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Snapfeed</a>
+                        <a class="nav-link" href="snapfeed.php">Snapfeed</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="about-me.php">Profile</a>

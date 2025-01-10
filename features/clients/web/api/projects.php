@@ -230,7 +230,7 @@ $conn->close();
                 if (!empty($snapfeedImages)) {
                     foreach ($snapfeedImages as $image) {
                         echo '<div class="col-md-3 mb-3">';
-                        echo '<img src="' . htmlspecialchars($image) . '" class="img-fluid img-wh" alt="Image">';
+                        echo '<img src="../../../../assets/img/snapfeed/' . htmlspecialchars($image) . '" class="img-fluid img-wh" alt="Image">';
                         echo '</div>';
                     }
                 } else {
@@ -245,7 +245,7 @@ $conn->close();
                 <?php
                 if (!empty($snapfeedImages)) {
                     foreach ($snapfeedImages as $index => $image) {
-                        echo '<img id="img' . $index . '" src="' . htmlspecialchars($image) . '" alt="Image" class="carousel-img">';
+                        echo '<img id="img' . $index . '" src="../../../../assets/img/snapfeed/' . htmlspecialchars($image) . '" alt="Image" class="carousel-img">';
                     }
                 } else {
                     echo '<p>No images found for this user.</p>';

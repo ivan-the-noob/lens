@@ -4,8 +4,29 @@
         header("Location: authentication/web/api/login.php");
         exit();
     }
+    require '../../../../db/db.php';
     $email = $_SESSION['email'];
     $role = $_SESSION['role']; 
+    // Fetch reporter details from the session
+    $reporterEmail = $_SESSION['email'];
+    $reporterRole = $_SESSION['role'];
+
+    // Fetch reporter name from the database
+    $query = "SELECT name FROM users WHERE email = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $reporterEmail);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $reporterName = $result->fetch_assoc()['name'];
+
+    // Fetch reported user details
+    $uploaderEmail = htmlspecialchars($_POST['uploader_email']);
+    $query = "SELECT name FROM users WHERE email = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $uploaderEmail);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $reportedName = $result->fetch_assoc()['name'];
 
     $profileImg = ''; 
 
@@ -20,7 +41,7 @@ if ($role != 'guest' && !empty($email)) {
     $stmt->close();
     $conn->close();
 
-    $profileImg = '../../../../assets/img/profile/' . $profileImg;
+    $profileImg = '' . $profileImg;
 }
 
 ?>
@@ -167,7 +188,7 @@ if (!empty($uploaderEmail)) {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
         $name = $user['name'];
-        $profileImg = $user['profile_img'] ? '../../../../assets/img/profile/' . $user['profile_img'] : $profileImg;
+        $profileImg = $user['profile_img'] ?  $user['profile_img'] : $profileImg;
         $about_me = $user['about_me'];
         $profession = $user['profession'];
         $latitude = $user['latitude'];
@@ -238,10 +259,40 @@ $conn->close();
   <div class="card text-center text-white h-100 about-me-container position-relative">
     <div class="card-body d-flex flex-column">
       <div id="slide-1" class="slider-content active">
-        <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-imgs mx-auto">
-        <h5 class="text-center"><?php echo htmlspecialchars($name); ?></h5> 
-        <p class="text-start context"><?php echo nl2br(htmlspecialchars($about_me)); ?></p>
-        <a href="#" class="btn mt-3 about-me-button">Hire me</a>
+         <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>>" alt="Profile" class="profile-imgs mx-auto">
+        <h5 class="text-center"><?php echo htmlspecialchars($name); ?></h5>
+        <div class="about_mee" style="min-height: 42vh; overflow-y: auto;">
+          <p class="text-start context"><?php echo nl2br(htmlspecialchars($about_me)); ?></p>
+        </div> 
+        <a href="#" class="btn  about-me-button">Hire me</a>
+        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
+        <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <form action="../../function/php/submit_report.php" method="post">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="reportModalLabel">Report User</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="reportReason" class="form-label text-black fw-bold">Reason for Reporting</label>
+                                <textarea class="form-control" id="reportReason" name="reason" rows="4" required></textarea>
+                            </div>
+                            <input type="hidden" name="reporter_name" value="<?php echo htmlspecialchars($reporterName); ?>">
+                            <input type="hidden" name="reporter_email" value="<?php echo htmlspecialchars($reporterEmail); ?>">
+                            <input type="hidden" name="reported_name" value="<?php echo htmlspecialchars($reportedName); ?>">
+                            <input type="hidden" name="reported_email" value="<?php echo htmlspecialchars($uploaderEmail); ?>">
+                            <input type="hidden" name="role" value="<?php echo htmlspecialchars($reporterRole); ?>">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Submit Report</button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
       </div>
 
       <div id="slide-2" class="slider-content">
