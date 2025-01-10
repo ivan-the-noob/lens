@@ -22,13 +22,7 @@ if ($role != 'guest' && !empty($email)) {
 
     $profileImg = '../../../../assets/img/profile/' . $profileImg;
 }
-
-
-
-
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -40,9 +34,6 @@ if ($role != 'guest' && !empty($email)) {
     integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../../css/snapfeed.css">
-
-
-
 </head>
 
 
@@ -109,10 +100,7 @@ if ($role != 'guest' && !empty($email)) {
     <div class="text-box">
         POWER TO THE CREATORS
         
-    </div>
-    
-
-    
+    </div> 
         <!-- Image Section -->
         <section class="gallery-img mt-5">
             <div class="row disp_img">
@@ -194,15 +182,10 @@ if ($role != 'guest' && !empty($email)) {
                 </div>
             </div>
             <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
+                <p class="mb-0">&copy; 2024 Photography News. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
-
-   
-
-    
-
     
     <script src="../../function/script/pre-loadall.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

@@ -11,15 +11,17 @@ $email = $_SESSION['email'];
 
 // Check if form is submitted
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $name = $_POST['name'];
     $profession = isset($_POST['profession']) ? implode(',', $_POST['profession']) : '';
     $about_me = $_POST['about_me'];
     $age = $_POST['age'];
     $latitude = $_POST['latitude'];
     $longitude = $_POST['longitude'];
     $location_text = $_POST['location_text'];
-    $price = $_POST['price'];  // Add price to the POST data
+    $price = $_POST['price'];
 
     // Handle file upload
+    $profileImg = ''; // Initialize variable
     if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == UPLOAD_ERR_OK) {
         $fileTmpPath = $_FILES['profile_image']['tmp_name'];
         $fileName = $_FILES['profile_image']['name'];
@@ -30,39 +32,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $allowedExts = array('jpg', 'jpeg', 'png');
         
         if (in_array($fileExtension, $allowedExts)) {
-            // Define the path to upload the file
-            $uploadFileDir = '../../../../assets/img/profile/';
-            $dest_path = $uploadFileDir . basename($fileName);
+            // Define the absolute path to upload the file
+            $uploadFileDir = $_SERVER['DOCUMENT_ROOT'] . '/lens/assets/img/profile/';
+            $dest_path = $uploadFileDir . 'profile.png'; // Only save as profile.png
 
             if (move_uploaded_file($fileTmpPath, $dest_path)) {
-                $profileImg = $dest_path;
+                $profileImg = 'profile.png'; // Only store the filename in database
             } else {
                 die('Error moving uploaded file');
             }
         } else {
             die('Unsupported file type');
         }
-    } else {
-        // Set a default image if none uploaded
-        $profileImg = 'default_image.jpg';
     }
 
     // Check if an entry with the given email already exists
-    $stmt = $conn->prepare("SELECT COUNT(*) FROM about_me WHERE email = ?");
+    $stmt = $conn->prepare("SELECT profile_image FROM about_me WHERE email = ?");
     $stmt->bind_param('s', $email);
     $stmt->execute();
-    $stmt->bind_result($count);
+    $stmt->bind_result($currentProfileImg);
     $stmt->fetch();
     $stmt->close();
 
-    if ($count > 0) {
+    // Use the existing profile image if no new image is uploaded
+    if (empty($profileImg)) {
+        $profileImg = $currentProfileImg;
+    }
+
+    if ($currentProfileImg) {
         // Update existing record
-        $stmt = $conn->prepare("UPDATE about_me SET profile_image = ?, profession = ?, about_me = ?, age = ?, latitude = ?, longitude = ?, location_text = ?, price = ? WHERE email = ?");
-        $stmt->bind_param('ssssdssss', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
+        $stmt = $conn->prepare("UPDATE about_me SET name = ?, profile_image = ?, profession = ?, about_me = ?, age = ?, latitude = ?, longitude = ?, location_text = ?, price = ? WHERE email = ?");
+        $stmt->bind_param('sssssdssss', $name, $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
     } else {
         // Insert new record
-        $stmt = $conn->prepare("INSERT INTO about_me (profile_image, profession, about_me, age, latitude, longitude, location_text, price, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('ssssdssss', $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
+        $stmt = $conn->prepare("INSERT INTO about_me (name, profile_image, profession, about_me, age, latitude, longitude, location_text, price, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('sssssdssss', $name, $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
     }
 
     // Execute the query

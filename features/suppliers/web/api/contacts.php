@@ -102,7 +102,7 @@ if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
                         <a class="nav-link" href="snapfeed.php">Snapfeed</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about-me.php">Profile</a>
+                        <a class="nav-link" href="supplier.php">Supplier</a>
                     </li>
                 </ul>
 
@@ -111,9 +111,10 @@ if (isset($_POST['uploader_email']) && !empty($_POST['uploader_email'])) {
                 <?php if ($role != 'guest') { ?>
                     <div class="dropdown">
                         <button class="btn btn-theme dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
+                            <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="about-me.php">Main Profile</a></li>
                             <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
                         </ul>
                     </div>

@@ -63,7 +63,7 @@ if ($role != 'guest' && !empty($email)) {
             </button>
 
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                <ul class="navbar-nav">
+            <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="../.././../../index.php">Home</a>
                     </li>
@@ -71,10 +71,10 @@ if ($role != 'guest' && !empty($email)) {
                     <a class="nav-link" href="about-us.php">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Snapfeed</a>
+                        <a class="nav-link" href="snapfeed.php">Snapfeed</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about-me.php">Profile</a>
+                        <a class="nav-link" href="supplier.php">Supplier</a>
                     </li>
                 </ul>
                 <div class="d-flex ml-auto">
@@ -84,8 +84,9 @@ if ($role != 'guest' && !empty($email)) {
                             <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
-                            </ul>
+                        <li><a class="dropdown-item" href="about-me.php">Main Profile</a></li>
+                            <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
+                        </ul>
                             </div>
                         <?php } else { ?>
                         <!-- User is not logged in, display a login link -->
@@ -205,7 +206,7 @@ function previewCardImage(event) {
                 </div>
             </div>
             <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
+                <p class="mb-0">&copy; 2024 Photography News. All Rights Reserved.</p>
             </div>
         </div>
     </footer>

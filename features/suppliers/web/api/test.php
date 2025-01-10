@@ -76,22 +76,8 @@
             </div>
             <div class="time">6m</div>
         </div>
-        <div class="messenger-item">
-            <img src="https://via.placeholder.com/40" alt="User">
-            <div class="details">
-                <div class="name">Pawfect System</div>
-                <div class="message">Racel: Kulang pa po yan...</div>
-            </div>
-            <div class="time">4h</div>
-        </div>
-        <div class="messenger-item">
-            <img src="https://via.placeholder.com/40" alt="User">
-            <div class="details">
-                <div class="name">System (events place)</div>
-                <div class="message">Frances reacted ❤️ to...</div>
-            </div>
-            <div class="time">6h</div>
-        </div>
+       
+       
         <div class="messenger-item">
             <img src="https://via.placeholder.com/40" alt="User">
             <div class="details">
@@ -100,14 +86,7 @@
             </div>
             <div class="time">7h</div>
         </div>
-        <div class="messenger-item">
-            <img src="https://via.placeholder.com/40" alt="User">
-            <div class="details">
-                <div class="name">Miles Briones</div>
-                <div class="message">You: sige sige</div>
-            </div>
-            <div class="time">7h</div>
-        </div>
+       
     </div>
 </body>
 </html>

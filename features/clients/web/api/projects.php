@@ -358,7 +358,7 @@ showSlides(slideIndex);
                 </div>
             </div>
             <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
+                <p class="mb-0">&copy; 2024 Photography News. All Rights Reserved.</p>
             </div>
         </div>
     </footer>

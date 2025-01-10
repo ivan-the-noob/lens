@@ -98,7 +98,7 @@
                         <p class="who-text text-justify indent">
                             We are I.T students from CvSU - CCAT, driven by our passion for innovation and creativity in the digital world. At <b>LENSFOLIOHUB</b>, our mission is to bridge the gap between photographers and clients, offering a platform where talented professionals can connect with those in need of high-quality photography.
                         </p>
-                        <a href="#" class="btn btn-primary btn-get-started">GET STARTED</a>
+                        <a href="../../../../authentication/web/api/login.php" class="btn btn-primary btn-get-started">GET STARTED</a>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="placeholder-image">
@@ -227,7 +227,7 @@
                 </div>
             </div>
             <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
+                <p class="mb-0">&copy; 2024 Photography News. All Rights Reserved.</p>
             </div>
         </div>
     </footer>

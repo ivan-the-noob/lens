@@ -17,7 +17,7 @@ if ($role != 'guest' && !empty($email)) {
     $stmt->close();
     $conn->close();
 
-    $profileImg = 'assets/img/profile/' . $profileImg;
+  
 }
 ?>
 
@@ -76,7 +76,7 @@ if ($role != 'guest' && !empty($email)) {
 
                     <?php if (empty($email)) { ?>
                         <li class="nav-item">
-                            <a class="nav-link" href="features/index/web/api/about-us.php.php">About</a>
+                            <a class="nav-link" href="features/index/web/api/about-us.php">About</a>
                         </li>
                     <?php } ?>
                    
@@ -122,7 +122,7 @@ if ($role != 'guest' && !empty($email)) {
                     <?php if ($role != 'guest') { ?>
                         <div class="dropdown">
                             <button class="btn btn-theme dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
+                                <img src="assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                 <?php if ($role === 'customer') { ?>
@@ -173,7 +173,7 @@ if ($result->num_rows > 0) {
     echo "</div>";
     echo "<div class='col-lg-6 col-md-12 mt-5'>";
     echo "<h3>" . $row['heading'] . "</h3>";
-    echo "<h5>News by | " . $row['uploader'] . " | " . $formatted_date . "</h5>";
+    echo  "<h5>" . $formatted_date . "</h5>";
     echo "<p>" . $row['context'] . "</p>";
     if (!isset($_SESSION['email']) || empty($_SESSION['email'])) {
         echo "<a href='authentication/web/api/login.php'>Get Started</a>";
@@ -190,7 +190,7 @@ $conn->close();
     </div>
 </section>
 
-<section class="top-feautered">
+<section class="top-featured">
     <div class="col-md-11 d-flex flex-column mx-auto">
     <div class="cards">
     <h1 class="text-center" style="position: relative; top: 20px;">Top Supplier</h1>
@@ -220,13 +220,13 @@ $conn->close();
 
                 $name = $user_data['name'] ?? 'Unknown';
                 $profile_img = $user_data['profile_img'] 
-                    ? 'assets/img/profile/' . htmlspecialchars($user_data['profile_img']) 
-                    : 'assets/img/profile/profile.jpg';
+                    ? htmlspecialchars($user_data['profile_img']) 
+                    : 'profile.png';
 
                 // Render the card
                 echo '<div class="col-md-3">
                         <div class="box">
-                            <img src="../../../../assets/img/profile/' . $profile_img . '" alt="Profile Image">
+                            <img src="assets/img/profile/' . $profile_img . '" alt="Profile Image">
                             <div class="highlight" style="backdrop-filter: blur(10px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); width: 80%; padding: 10px; border-radius: 10px;">
                                 <p class="fw-bold"> ' . htmlspecialchars($name) . '</p>
                                 <p>Rating: ' . htmlspecialchars($total_rating) . '<i class="fas fa-star" style="color: #FFD700; font-size: 16px;"></i></p>
@@ -244,83 +244,6 @@ $conn->close();
 </section>
 
 
-
-    <section class="top-supplier">
-      <div class="container top3 mt-5">
-          <div class="row text-center">
-          <?php
-require 'db/db.php';
-
-// Query to get the top 3 suppliers with the highest total rating
-$sql = "SELECT a.supplier_email, SUM(a.rating) AS total_rating, COUNT(a.rating) AS rating_count
-        FROM ratings a
-        GROUP BY a.supplier_email
-        ORDER BY total_rating DESC
-        LIMIT 3";
-
-$result = $conn->query($sql);
-
-if ($result->num_rows > 0) {
-    $data = [];
-
-    while ($row = $result->fetch_assoc()) {
-        $supplier_email = $row['supplier_email'];
-        $total_rating = $row['total_rating'];
-        $rating_count = $row['rating_count'];
-
-        // Get the latest image from the snapfeed table
-        $snapfeed_sql = "SELECT card_img 
-                        FROM snapfeed 
-                        WHERE email = '$supplier_email' 
-                        ORDER BY created_at DESC 
-                        LIMIT 1";
-        $snapfeed_result = $conn->query($snapfeed_sql);
-        $image = $snapfeed_result->num_rows > 0 ? $snapfeed_result->fetch_assoc()['card_img'] : 'No Image';
-
-        // Get the supplier's name from the users table
-        $users_sql = "SELECT name FROM users WHERE email = '$supplier_email'";
-        $users_result = $conn->query($users_sql);
-        $name = $users_result->num_rows > 0 ? $users_result->fetch_assoc()['name'] : 'Unknown';
-
-        $data[] = [
-            'email' => $supplier_email,
-            'name' => $name,
-            'total_rating' => $total_rating,
-            'rating_count' => $rating_count,
-            'image' => $image
-        ];
-    }
-}
-?>
-
-
-<section class="row text-center">
-    <?php
-    if (!empty($data)) {
-        foreach ($data as $index => $row) {
-            echo "<div class='col-md-4 photo-card'>";
-            echo "<div class='photo-wrap'>";
-            echo "<img src='assets/img/snapfeed/" . $row['image'] . "' alt='Photo " . ($index + 1) . "' class='img-fluid'>";
-            echo "<button class='zoom-icon btn' data-bs-toggle='modal' data-bs-target='#imageModal' data-img-src='assets/img/snapfeed/" . $row['image'] . "'><i class='fa-solid fa-up-right-and-down-left-from-center'></i></button>";
-            echo "<div class='photographer-info'>";
-            echo "<a href=''><img src='assets/img/profile/profile.jpg' alt='Photographer " . ($index + 1) . "' class='profile-pic'>";
-            echo "<p class='photographer-name'>" . $row['name'] . "</p></a>";
-            echo "</div>";
-            echo "</div>";
-            echo "</div>";
-        }
-    } else {
-        echo "<p>No top photographers found</p>";
-    }
-    ?>
-</section>
-
-
-<?php $conn->close(); ?>
-
-          </div>
-      </div>
-  </section>
   
   <!-- Modal for zoom -->
   <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
@@ -515,7 +438,7 @@ $result = $conn->query($sql);
                 </div>
             </div>
             <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
+                <p class="mb-0">&copy; 2024 Photography News. All Rights Reserved.</p>
             </div>
         </div>
     </footer>

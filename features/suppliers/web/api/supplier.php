@@ -63,16 +63,14 @@ if ($role != 'guest' && !empty($email)) {
                         <a class="nav-link" href="../.././../../index.php">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about-us.php">About</a>
+                    <a class="nav-link" href="about-us.php">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="snapfeed.php">Snapfeed</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Supplier</a>
+                        <a class="nav-link" href="supplier.php">Supplier</a>
                     </li>
-
-                  
                 </ul>
                 <div class="d-flex ml-auto">
                     <?php if ($role != 'guest') { ?>
@@ -81,10 +79,7 @@ if ($role != 'guest' && !empty($email)) {
                             <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img" style="width: 30px; height: 30px; border-radius: 50%; border: 1px solid #000;" >
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                    <li><a class="dropdown-item" href="profile.php">Main Profile</a></li>
-                                    <li><a class="dropdown-item" href="status.php">Booking Status</a></li>
-                                    <li><a class="dropdown-item" href="history.php">History</a></li>
-                                    <li><a class="dropdown-item" href="notification.php">Notifications</a></li>
+                            <li><a class="dropdown-item" href="about-me.php">Main Profile</a></li>
                                 <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
                             </ul>
                             </div>

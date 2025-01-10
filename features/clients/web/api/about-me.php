@@ -264,8 +264,8 @@ $conn->close();
         <div class="about_mee" style="min-height: 42vh; overflow-y: auto;">
           <p class="text-start context"><?php echo nl2br(htmlspecialchars($about_me)); ?></p>
         </div> 
-        <a href="#" class="btn  about-me-button">Hire me</a>
-        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#reportModal">Report</button>
+        <a href="#" class="btn about-me-button">Hire me</a>
+        <button class="btn fw-bold" data-bs-toggle="modal" data-bs-target="#reportModal">...</button>
         <div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
@@ -464,7 +464,7 @@ $conn->close();
                 </div>
             </div>
             <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
+                <p class="mb-0">&copy; 2024 Photography News. All Rights Reserved.</p>
             </div>
         </div>
     </footer>

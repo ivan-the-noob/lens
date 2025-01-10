@@ -7,7 +7,6 @@
     $email = $_SESSION['email'];
     $role = $_SESSION['role']; 
 
-    $profileImg = ''; 
 
 if ($role != 'guest' && !empty($email)) {
     require '../../../../db/db.php';
@@ -35,6 +34,9 @@ if ($role != 'guest' && !empty($email)) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 </head>
 <body>
     <div id="preloader">
@@ -58,7 +60,7 @@ if ($role != 'guest' && !empty($email)) {
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <!-- Links (left) -->
-            <ul class="navbar-nav">
+                <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="../.././../../index.php">Home</a>
                     </li>
@@ -69,7 +71,7 @@ if ($role != 'guest' && !empty($email)) {
                         <a class="nav-link" href="snapfeed.php">Snapfeed</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about-me.php">Profile</a>
+                        <a class="nav-link" href="supplier.php">Supplier</a>
                     </li>
                 </ul>
 
@@ -78,9 +80,10 @@ if ($role != 'guest' && !empty($email)) {
                 <?php if ($role != 'guest') { ?>
                     <div class="dropdown">
                         <button class="btn btn-theme dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
+                            <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="about-me.php">Main Profile</a></li>
                             <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
                         </ul>
                     </div>
@@ -113,57 +116,57 @@ if ($role != 'guest' && !empty($email)) {
         </div>
 
         <?php
-        include '../../../../db/db.php';
-        if (!isset($_SESSION['email'])) {
-            die('Email not found in session.');
-        }
+            include '../../../../db/db.php';
+            if (!isset($_SESSION['email'])) {
+                die('Email not found in session.');
+            }
 
-        $email = $_SESSION['email'];
-        
-        // Initialize variables to hold form data
-        $profileImg = ''; // Default image
-        $profession = '';
-        $about_me = '';
-        $age = '';
-        $latitude = '';
-        $longitude = '';
-        $price = '';
-        
-        // Prepare and execute SQL statement to retrieve existing data
-        $stmt = $conn->prepare("SELECT profile_image, profession, about_me, age, latitude, longitude, price FROM about_me WHERE email = ?");
-        if ($stmt === false) {
-            die('Prepare failed: ' . $conn->error);
-        }
-        
-        $stmt->bind_param('s', $email);
-        
-        if (!$stmt->execute()) {
-            die('Execute failed: ' . $stmt->error);
-        }
-        
-        $stmt->bind_result($profileImg, $profession, $about_me, $age, $latitude, $longitude, $price);
-        if (!$stmt->fetch()) {
-            // Handle the case where no data is found
-            $profileImg = 'default_image.jpg'; // Default image
+            $email = $_SESSION['email'];
+
+            $profileImg = ''; 
             $profession = '';
             $about_me = '';
             $age = '';
             $latitude = '';
             $longitude = '';
             $price = '';
-        }
-        
-        $stmt->close();
-        $conn->close();
+            $name = ''; 
+
+            $stmt = $conn->prepare("SELECT profile_image, name, profession, about_me, age, latitude, longitude, price FROM about_me WHERE email = ?");
+            if ($stmt === false) {
+                die('Prepare failed: ' . $conn->error);
+            }
+
+            $stmt->bind_param('s', $email);
+
+            if (!$stmt->execute()) {
+                die('Execute failed: ' . $stmt->error);
+            }
+
+            $stmt->bind_result($profileImg, $name, $profession, $about_me, $age, $latitude, $longitude, $price);
+            if (!$stmt->fetch()) {
+                $profileImg = 'profile.jpg'; 
+                $name = ''; 
+                $profession = '';
+                $about_me = '';
+                $age = '';
+                $latitude = '';
+                $longitude = '';
+                $price = '';
+            }
+
+            $stmt->close();
+            $conn->close();
         ?>
 
 <div class="about-me-section">
     <div class="container mt-5 about-section">
-        <div class="col-md-6 d-flex flex-column justify-content-center">
+        <div class="col-md-6 d-flex flex-column justify-content-center card-about">
             <form enctype="multipart/form-data" method="POST" action="../../function/php/about-me.php" class="about-mes">
                 <div class="mb-3">
-                    <div class="d-flex justify-content-center mx-auto">
-                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-imgs">                    
+                    <div class="d-flex flex-column mx-auto align-items-center">
+                            <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-imgs"> 
+                            <h5><?php echo htmlspecialchars($name); ?></h5>                   
                     </div>
                     <div class="mb-3 d-flex justify-content-center">
                         <div class="form-check m-1 custom-checkbox">
@@ -180,11 +183,14 @@ if ($role != 'guest' && !empty($email)) {
 
                     <input class="form-control" type="file" name="profile_image" id="imageUpload" accept="image/*">
                 </div>
+                <div class="mb-3">
+                    <input type="text" class="form-control" name="name" placeholder="Enter your Name..." value="<?php echo htmlspecialchars($name); ?>">
+                </div>
 
                 <div class="mb-3">
                     <textarea class="form-control" name="about_me" placeholder="About me"><?php echo htmlspecialchars($about_me); ?></textarea>
-                </div>
 
+                </div>
                 <div class="mb-3">
                     <label for="location">Pin Your Location</label>
                     <input id="location" name="location_text" class="form-control" type="text" placeholder="Search location">
@@ -203,7 +209,33 @@ if ($role != 'guest' && !empty($email)) {
 
                 <button type="submit" class="btn about-me-button">Save</button>
             </form>
-        </div>
+            <hr>
+            <button type="button" class="btn btn-danger d-flex w-50 mt-2 d-flex justify-content-center mx-auto" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                Delete Account
+            </button>
+
+            <!-- Modal -->
+            <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Account Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete this account? You won't recover and all your images will be deleted.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form method="POST" action="../../function/php/delete.php">
+                                <input type="hidden" name="delete_account" value="1">
+                                <button type="submit" class="btn btn-danger">Confirm</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
     </div>
 </div>
          
@@ -223,9 +255,6 @@ if ($role != 'guest' && !empty($email)) {
     <script src="../../function/script/pre-loadall.js"></script>
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
     
-
-
-
     <script
   src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDmgygVeipMUsrtGeZPZ9UzXRmcVdheIqw&libraries=places&callback=initMap" async defer>
 </script>

@@ -257,13 +257,7 @@ document.getElementById('resetCodeForm').addEventListener('submit', function(e) 
 						<label for="social_link">Enter your fb/ig link</label>
 					</div>
 
-					<!-- Customer-specific fields -->
-					<div id="customerFields" class="roleFields" style="display:none;">
-						<div class="input-field">
-							<input type="text" name="username" required>
-							<label for="username">Enter your username</label>
-						</div>
-					</div>
+
 
 					<!-- Supplier-specific fields -->
 					<div id="supplierFields" class="roleFields" style="display:none;">
@@ -277,11 +271,7 @@ document.getElementById('resetCodeForm').addEventListener('submit', function(e) 
 							<label for="years_in_profession">Years in Profession</label>
 						</div>
 
-						<div class="input-field">
-							<input type="text" name="username">
-							<label for="username">Enter your username</label>
-						</div>
-					</div>
+					</div>	
 					<div class="d-flex gap-2">
 						<div class="input-field">
 							<input type="password" name="password" id="password" required pattern=".{8,}" title="Password must be at least 8 characters long and contain at least one special character">

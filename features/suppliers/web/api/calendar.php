@@ -1,13 +1,13 @@
 <?php
-    session_start();
-    if (!isset($_SESSION['email'])) {
-        header("Location: authentication/web/api/login.php");
-        exit();
-    }
-    $email = $_SESSION['email'];
-    $role = $_SESSION['role']; 
+session_start();
+if (!isset($_SESSION['email'])) {
+    header("Location: authentication/web/api/login.php");
+    exit();
+}
+$email = $_SESSION['email'];
+$role = $_SESSION['role'];
 
-    $profileImg = ''; 
+$profileImg = ''; 
 
 if ($role != 'guest' && !empty($email)) {
     require '../../../../db/db.php';
@@ -15,14 +15,20 @@ if ($role != 'guest' && !empty($email)) {
     $stmt = $conn->prepare("SELECT profile_image FROM about_me WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
-    $stmt->bind_result($profileImg);
-    $stmt->fetch();
+    $result = $stmt->get_result();
+
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $profileImg = $row['profile_image'];
+    } else {
+        $profileImg = 'default.jpg';
+    }
+
     $stmt->close();
     $conn->close();
-
-
+} else {
+    $profileImg = 'default.jpg'; 
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,7 +78,7 @@ if ($role != 'guest' && !empty($email)) {
                         <a class="nav-link" href="snapfeed.php">Snapfeed</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="about-me.php">Profile</a>
+                        <a class="nav-link" href="supplier.php">Supplier</a>
                     </li>
                 </ul>
 
@@ -81,9 +87,10 @@ if ($role != 'guest' && !empty($email)) {
                 <?php if ($role != 'guest') { ?>
                     <div class="dropdown">
                         <button class="btn btn-theme dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
+                            <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                         </button>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="about-me.php">Main Profile</a></li>
                             <li><a class="dropdown-item" href="../../../index/function/php/logout.php">Logout</a></li>
                         </ul>
                     </div>
@@ -336,7 +343,7 @@ $result = $conn->query($query);
                 </div>
             </div>
             <div class="text-center mt-4">
-                <p>&copy; 2024 Photography News. All Rights Reserved.</p>
+                <p class="mb-0">&copy; 2024 Photography News. All Rights Reserved.</p>
             </div>
         </div>
     </footer>
