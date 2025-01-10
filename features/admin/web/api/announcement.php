@@ -141,7 +141,7 @@ $results = $conn->query($sql);
                             echo "<div class='card-body'>";
                             
 
-                            echo "<p class='card-text'>News by | " . $row['uploader'] . " | " . $formatted_date . "</p>";
+                            echo "<p class='card-text'>" . $formatted_date . "</p>";
                             
                             echo "<h5 class='card-title'>" . $row['heading'] . "</h5>";
                             echo "<p>" . $row['context'] . "</p>";
@@ -169,65 +169,50 @@ $results = $conn->query($sql);
                                 </thead>
                                 <tbody>
                                 <?php
-                                    require '../../../../db/db.php';
+                                    include '../../../../db/db.php';
 
-                                    // Step 1: Get the top 3 emails with the highest counts from the `appointment` table
-                                    $sql = "SELECT email_uploader, COUNT(email_uploader) AS email_count
-                                            FROM appointment
-                                            GROUP BY email_uploader
-                                            ORDER BY email_count DESC
-                                            LIMIT 3";
+                                    $sql = "
+                                        SELECT supplier_email, name, AVG(CASE WHEN rating <= 5 THEN rating ELSE 5 END) AS average_rating
+                                        FROM ratings
+                                        GROUP BY supplier_email
+                                        ORDER BY average_rating DESC
+                                        LIMIT 3
+                                    ";
+
                                     $result = $conn->query($sql);
 
                                     if ($result->num_rows > 0) {
-                                        $data = [];
+                                      
 
-                                        // Step 2: For each email, check for additional data in `snapfeed` and `users`
+                                        $rank = 1; 
                                         while ($row = $result->fetch_assoc()) {
-                                            $email = $row['email_uploader'];
-                                            $count = $row['email_count'];
+                                            $supplier_email = $row['supplier_email'];
+                                            $name = $row['name'];
+                                            $average_rating = $row['average_rating'];
 
-                                            // Get the latest card_img from snapfeed
-                                            $snapfeed_sql = "SELECT card_img 
-                                                            FROM snapfeed 
-                                                            WHERE email = '$email' 
-                                                            ORDER BY created_at DESC 
-                                                            LIMIT 1";
-                                            $snapfeed_result = $conn->query($snapfeed_sql);
-                                            $image = $snapfeed_result->num_rows > 0 ? $snapfeed_result->fetch_assoc()['card_img'] : 'No Image';
-
-                                            // Get the name from users
-                                            $users_sql = "SELECT name FROM users WHERE email = '$email'";
+                                            // Fetch profile image from the `users` table
+                                            $users_sql = "SELECT profile_img FROM users WHERE email = '$supplier_email'";
                                             $users_result = $conn->query($users_sql);
-                                            $name = $users_result->num_rows > 0 ? $users_result->fetch_assoc()['name'] : 'Unknown';
+                                            $image = $users_result->num_rows > 0 ? $users_result->fetch_assoc()['profile_img'] : 'No Image';
 
-                                            $data[] = [
-                                                'email' => $email,
-                                                'count' => $count,
-                                                'image' => $image,
-                                                'name' => $name
-                                            ];
-                                        }
-                                    }
+                                            echo '<tr>';
+                                            echo '<td>' . $average_rating . '</td>';
+                                            echo '<td>' . htmlspecialchars($name) . '</td>';
+                                            echo '<td>' . htmlspecialchars($supplier_email) . '</td>';
+                                            echo '<td><img src="../../../../assets/img/profile/' . $image . '" alt="Image" style="width: 50px; height: 50px;"></td>';
+                                            echo '</tr>';
 
-                                    // Display data in the table
-                                    echo "<tbody>";
-                                    if (!empty($data)) {
-                                        foreach ($data as $row) {
-                                            echo "<tr>";
-                                            echo "<td>" . $row['count'] . "</td>";
-                                            echo "<td>" . $row['name'] . "</td>";
-                                            echo "<td>" . $row['email'] . "</td>";
-                                            echo "<td><img src='" . $row['image'] . "' alt='Image' style='width: 50px; height: 50px;'></td>";
-                                            echo "</tr>";
+                                            $rank++; 
                                         }
+
+                                        echo '</tbody>';
+                                        echo '</table>';
                                     } else {
-                                        echo "<tr><td colspan='4'>No records found</td></tr>";
+                                        echo '<p>No ratings available.</p>';
                                     }
-                                    echo "</tbody>";
-
-                                    $conn->close();
                                     ?>
+
+
                                     
                                 </tbody>
                         </table>
@@ -282,7 +267,7 @@ $results = $conn->query($sql);
         </div>
 
         <div class="modal fade" id="addNewsModal" tabindex="-1" aria-labelledby="addNewsModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="addNewsModalLabel">Add News</h5>
@@ -297,10 +282,6 @@ $results = $conn->query($sql);
                     <div class="mb-3">
                         <label for="context" class="form-label">Context</label>
                         <textarea class="form-control" id="context" name="context" rows="3" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="uploader" class="form-label">Uploader</label>
-                        <input type="text" class="form-control" id="uploader" name="uploader" required>
                     </div>
                     <div class="mb-3">
                         <label for="date" class="form-label">Date</label>
@@ -318,7 +299,7 @@ $results = $conn->query($sql);
             </div>
 
             <div class="modal fade" id="addSubNewsModal" tabindex="-1" aria-labelledby="addSubNewsModalLabel" aria-hidden="true">
-                <div class="modal-dialog">
+                <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="addSubNewsModalLabel">Add Sub News</h5>

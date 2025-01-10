@@ -87,7 +87,8 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
                             <th>#</th>
                             <th>Name</th>
                             <th>Email</th>
-                            <th>Last Login</th> 
+                            <th>Last Login</th>
+                            <th>Status</th>
                             <th>Actions</th>
                             
                         </tr>
@@ -106,13 +107,18 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
                                         ?>
                                     </td>
                                     <td>
+                                        <?php 
+                                            echo ($user['disable_status'] == 0) ? 'disabled' : 'active'; 
+                                        ?>
+                                    </td>
+                                    <td>
                                         <!-- Delete Button -->
-                                        <button class="btn btn-danger btn-sm delete-btn" 
+                                        <button class="btn btn-warning text-white btn-sm delete-btn" 
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#confirmDeleteModal" 
                                                 data-id="<?php echo $user['id']; ?>"
                                                 onclick="event.stopPropagation();">
-                                            Delete
+                                           Disable
                                         </button>
                                     </td>
                                 </tr>
@@ -165,17 +171,17 @@ $email = isset($_SESSION['email']) ? $_SESSION['email'] : '';
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="confirmDeleteLabel">Confirm Delete</h5>
+                        <h5 class="modal-title" id="confirmDeleteLabel">Disable Supplier</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        Are you sure you want to delete this supplier?
+                        Are you sure you want to disable this supplier?
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <form id="deleteForm" method="POST" action="../../function/php/delete-supplier.php">
                             <input type="hidden" name="id" id="deleteId">
-                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="submit" class="btn btn-warning">Disable</button>
                         </form>
                     </div>
                 </div>

@@ -22,9 +22,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Handle file upload
     $profileImg = ''; // Initialize variable
-    if (isset($_FILES['profile_image']) && $_FILES['profile_image']['error'] == UPLOAD_ERR_OK) {
-        $fileTmpPath = $_FILES['profile_image']['tmp_name'];
-        $fileName = $_FILES['profile_image']['name'];
+    if (isset($_FILES['profile_img']) && $_FILES['profile_img']['error'] == UPLOAD_ERR_OK) {
+        $fileTmpPath = $_FILES['profile_img']['tmp_name'];
+        $fileName = $_FILES['profile_img']['name'];
         $fileNameCmps = explode(".", $fileName);
         $fileExtension = strtolower(end($fileNameCmps));
 
@@ -38,6 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             if (move_uploaded_file($fileTmpPath, $dest_path)) {
                 $profileImg = 'profile.png'; // Only store the filename in database
+
+                // Update the profile_img in the users table
+                $stmt = $conn->prepare("UPDATE users SET profile_img = ? WHERE email = ?");
+                $stmt->bind_param('ss', $profileImg, $email);
+                $stmt->execute();
+                $stmt->close();
             } else {
                 die('Error moving uploaded file');
             }
@@ -46,27 +52,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         }
     }
 
-    // Check if an entry with the given email already exists
-    $stmt = $conn->prepare("SELECT profile_image FROM about_me WHERE email = ?");
+    // Fetch the profile image from the users table
+    $stmt = $conn->prepare("SELECT profile_img FROM users WHERE email = ?");
     $stmt->bind_param('s', $email);
     $stmt->execute();
-    $stmt->bind_result($currentProfileImg);
+    $stmt->bind_result($userProfileImg);
     $stmt->fetch();
     $stmt->close();
 
-    // Use the existing profile image if no new image is uploaded
-    if (empty($profileImg)) {
-        $profileImg = $currentProfileImg;
+    // Use the fetched profile image if no new image is uploaded
+    if (empty($profileImg) && !empty($userProfileImg)) {
+        $profileImg = $userProfileImg;
     }
 
-    if ($currentProfileImg) {
-        // Update existing record
-        $stmt = $conn->prepare("UPDATE about_me SET name = ?, profile_image = ?, profession = ?, about_me = ?, age = ?, latitude = ?, longitude = ?, location_text = ?, price = ? WHERE email = ?");
-        $stmt->bind_param('sssssdssss', $name, $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
+    // Check if an entry exists in the about_me table
+    $stmt = $conn->prepare("SELECT email FROM about_me WHERE email = ?");
+    $stmt->bind_param('s', $email);
+    $stmt->execute();
+    $stmt->store_result();
+    $exists = $stmt->num_rows > 0;
+    $stmt->close();
+
+    if ($exists) {
+        // Update existing record in about_me (without profile_img)
+        $stmt = $conn->prepare("UPDATE about_me SET name = ?, profession = ?, about_me = ?, age = ?, latitude = ?, longitude = ?, location_text = ?, price = ? WHERE email = ?");
+        $stmt->bind_param('sssssdsss', $name, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
     } else {
-        // Insert new record
-        $stmt = $conn->prepare("INSERT INTO about_me (name, profile_image, profession, about_me, age, latitude, longitude, location_text, price, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->bind_param('sssssdssss', $name, $profileImg, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
+        // Insert new record into about_me (without profile_img)
+        $stmt = $conn->prepare("INSERT INTO about_me (name, profession, about_me, age, latitude, longitude, location_text, price, email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param('sssssdsss', $name, $profession, $about_me, $age, $latitude, $longitude, $location_text, $price, $email);
     }
 
     // Execute the query

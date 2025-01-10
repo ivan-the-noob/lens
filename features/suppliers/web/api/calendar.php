@@ -125,6 +125,64 @@ if ($role != 'guest' && !empty($email)) {
   <div class="row mt-5">
     <!-- Calendar Section -->
     <div class="col-md-5">
+        <div class="d-flex justify-content-end">
+        <button class="btn btn-primary mb-1" data-bs-toggle="modal" data-bs-target="#workingHoursModal">Update Working Hours</button>
+        <div class="modal fade" id="workingHoursModal" tabindex="-1" aria-labelledby="workingHoursModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+            <form action="../../function/php/update_working_hours.php" method="POST">
+                <div class="modal-header">
+                <h5 class="modal-title" id="workingHoursModalLabel">Update Working Hours</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <!-- Buttons to Select All or 24 hrs -->
+                <div class="mb-3">
+                    <button type="button" class="btn btn-secondary" id="selectAll">All hrs</button>
+                    <button type="button" class="btn btn-secondary" id="select24">24 hrs</button>
+                </div>
+
+                <!-- Hour Buttons -->
+                <div class="d-flex flex-wrap">
+                    <?php
+                    // Fetch existing hours from the database
+                    include '../../../../db/db.php';
+                    if (!isset($_SESSION['email'])) {
+                        die('Email not found in session.');
+                    }
+                    $email = $_SESSION['email'];
+
+                    $stmt = $conn->prepare("SELECT avail_hrs FROM about_me WHERE email = ?");
+                    $stmt->bind_param('s', $email);
+                    $stmt->execute();
+                    $stmt->bind_result($availHrs);
+                    $stmt->fetch();
+                    $stmt->close();
+
+                    $selectedHours = !empty($availHrs) ? explode(',', $availHrs) : [];
+
+                    for ($i = 0; $i < 24; $i++):
+                    $hour = $i % 12 === 0 ? 12 : $i % 12;
+                    $period = $i < 12 ? 'AM' : 'PM';
+                    ?>
+                    <button type="button" class="btn m-1 hour-btn <?= in_array($i, $selectedHours) ? 'btn-primary' : 'btn-outline-primary' ?>" data-hour="<?= $i; ?>">
+                        <?= sprintf("%02d:00 %s", $hour, $period); ?>
+                    </button>
+                    <?php endfor; ?>
+                </div>
+
+                <!-- Hidden Input to Store Selected Hours -->
+                <input type="hidden" name="avail_hrs" id="availHrsInput">
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+            </div>
+        </div>
+        </div>
+            </div>
       <div id="calendar"></div>
     </div>
 
@@ -476,6 +534,62 @@ $result = $conn->query($query);
         xhr.send('appointmentId=' + appointmentId + '&status=' + status);
     }
 </script>
+
+
+
+<script>
+  // JavaScript to Handle Hour Selection
+  document.addEventListener("DOMContentLoaded", function () {
+    const hourButtons = document.querySelectorAll(".hour-btn");
+    const availHrsInput = document.getElementById("availHrsInput");
+    const selectAllButton = document.getElementById("selectAll");
+    const select24Button = document.getElementById("select24");
+    let selectedHours = [];
+
+    // Function to update hidden input
+    const updateInput = () => {
+      availHrsInput.value = selectedHours.join(",");
+    };
+
+    // Hour button click event
+    hourButtons.forEach((button) => {
+      button.addEventListener("click", function () {
+        const hour = this.getAttribute("data-hour");
+        if (selectedHours.includes(hour)) {
+          selectedHours = selectedHours.filter((h) => h !== hour);
+          this.classList.remove("btn-primary");
+          this.classList.add("btn-outline-primary");
+        } else {
+          selectedHours.push(hour);
+          this.classList.remove("btn-outline-primary");
+          this.classList.add("btn-primary");
+        }
+        updateInput();
+      });
+    });
+
+    // Select all hours
+    selectAllButton.addEventListener("click", function () {
+      selectedHours = Array.from({ length: 24 }, (_, i) => i.toString());
+      hourButtons.forEach((button) => {
+        button.classList.remove("btn-outline-primary");
+        button.classList.add("btn-primary");
+      });
+      updateInput();
+    });
+
+    // Select 24 hrs
+    select24Button.addEventListener("click", function () {
+      selectedHours = ["0", "24"];
+      hourButtons.forEach((button) => {
+        button.classList.remove("btn-primary");
+        button.classList.add("btn-outline-primary");
+      });
+      updateInput();
+    });
+  });
+</script>
+
 
 </body>
 </html>

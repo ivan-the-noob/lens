@@ -117,40 +117,67 @@ $conn->close();
 <div class="about-me-section">
     <div class="container mt-5 about-section">
         <div class="col-md-6 d-flex flex-column justify-content-center">
-            <form enctype="multipart/form-data" method="POST" action="../../function/php/profile.php" class="about-mes">
-                <div class="mb-3 text-center">
-                    <!-- Display profile image -->
-                    <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-imgs">
-                    <input class="form-control mt-3" type="file" name="profile_img" accept="image/*">
+            <div class="cardss">
+                <form enctype="multipart/form-data" method="POST" action="../../function/php/profile.php" class="about-mes">
+                    <div class="mb-3 text-center">
+                        <!-- Display profile image -->
+                        <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-imgs">
+                        <h5><?php echo htmlspecialchars($name); ?></h5>
+                        <input class="form-control mt-3" type="file" name="profile_img" accept="image/*">
+                    </div>
+                    <div class="mb-3">
+                        <!-- Name input -->
+                        <input type="text" class="form-control" name="name" placeholder="Name" value="<?php echo htmlspecialchars($name); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <!-- Address input -->
+                        <input type="text" class="form-control" name="address" placeholder="Address" value="<?php echo htmlspecialchars($address); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <!-- Birthday input -->
+                        <input type="date" class="form-control" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>">
+                    </div>
+                    <div class="mb-3">
+                        <!-- New password input -->
+                        <input type="password" class="form-control" name="password" placeholder="New Password">
+                    </div>
+                    <div class="mb-3">
+                        <!-- Confirm password input -->
+                        <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password">
+                    </div>
+                    <!-- Submit button -->
+                    <button type="submit" class="btn about-me-button d-flex justify-content-center mx-auto">Save</button>
+                </form>
+                <hr>
+                <button type="button" class="btn btn-danger d-flex w-50 mt-2 d-flex justify-content-center mx-auto" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                    Delete Account
+                </button>
+
+                <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Confirm Account Deletion</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Are you sure you want to delete this account? You won't recover and all your images will be deleted.
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <form method="POST" action="../../function/php/delete.php">
+                                <input type="hidden" name="delete_account" value="1">
+                                <button type="submit" class="btn btn-danger">Confirm</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
-                <div class="mb-3">
-                    <!-- Name input -->
-                    <input type="text" class="form-control" name="name" placeholder="Name" value="<?php echo htmlspecialchars($name); ?>">
-                </div>
-                <div class="mb-3">
-                    <!-- Address input -->
-                    <input type="text" class="form-control" name="address" placeholder="Address" value="<?php echo htmlspecialchars($address); ?>">
-                </div>
-                <div class="mb-3">
-                    <!-- Birthday input -->
-                    <input type="date" class="form-control" name="birthday" value="<?php echo htmlspecialchars($birthday); ?>">
-                </div>
-                <div class="mb-3">
-                    <!-- Social link input -->
-                    <input type="url" class="form-control" name="social_link" placeholder="Facebook/Instagram Link" value="<?php echo htmlspecialchars($social_link); ?>">
-                </div>
-                <div class="mb-3">
-                    <!-- New password input -->
-                    <input type="password" class="form-control" name="password" placeholder="New Password">
-                </div>
-                <div class="mb-3">
-                    <!-- Confirm password input -->
-                    <input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password">
-                </div>
-                <!-- Submit button -->
-                <button type="submit" class="btn about-me-button d-flex justify-content-center mx-auto">Save</button>
-            </form>
+            </div>
+
+            </div>
+            
         </div>
+
     </div>
 </div>
 

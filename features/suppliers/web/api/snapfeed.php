@@ -20,7 +20,7 @@ if ($role != 'guest' && !empty($email)) {
     $stmt->close();
     $conn->close();
 
-    $profileImg = '../../../../assets/img/profile/' . $profileImg;
+   
 }
 
 ?>
@@ -81,7 +81,7 @@ if ($role != 'guest' && !empty($email)) {
                     <?php if ($role != 'guest') { ?>
                         <div class="dropdown">
                             <button class="btn btn-theme dropdown-toggle" type=" button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
-                            <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
+                            <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img">
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                         <li><a class="dropdown-item" href="about-me.php">Main Profile</a></li>
@@ -105,6 +105,7 @@ if ($role != 'guest' && !empty($email)) {
         <div class="row">
             <div class="col-md-8 mb-3 justify-content-center align-items-center mx-auto">
             <form action="../../function/php/snapfeed.php" method="POST" enctype="multipart/form-data">
+    <div class="d-flex gap-4 align-items-cente">
     <div class="card">
         <div class="row no-gutters">
             <!-- Left Section: Image -->
@@ -117,7 +118,7 @@ if ($role != 'guest' && !empty($email)) {
                 <div class="card-body">
                     <div class="d-flex align-items-center gap-2 section-name">
                         <!-- Image for profile picture -->
-                        <img src="<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img rounded-circle">
+                        <img src="../../../../assets/img/profile/<?php echo htmlspecialchars($profileImg); ?>" alt="Profile" class="profile-img rounded-circle">
                         
                         <!-- Use the session variable for the card title -->
                         <h5 class="card-title mb-0">
@@ -135,6 +136,9 @@ if ($role != 'guest' && !empty($email)) {
             </div>
         </div>
     </div>
+
+    <a href="snapfeeds.php" class="text-decoration-none d-flex align-items-center btn btn-success" style="height: 10vh;">Go to feeds</a>
+</div>
 </form>
 
 <!-- JavaScript for Image Preview -->
@@ -172,44 +176,7 @@ function previewCardImage(event) {
           </path>
         </svg>
       </div>
-<footer class="footer mb-0">
-        <div class="container">
-            <div class="row">
-                <!-- About Section -->
-                <div class="col-md-4">
-                    <h5>About Photography News</h5>
-                    <p>Stay updated with the latest news, trends, and innovations in the world of photography. Whether you're a professional or an enthusiast, our articles are designed to inspire and inform.</p>
-                </div>
-    
-                <!-- Quick Links -->
-                <div class="col-md-4">
-                    <h5>Quick Links</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Latest News</a></li>
-                        <li><a href="#">Photography Tips</a></li>
-                        <li><a href="#">Camera Reviews</a></li>
-                    </ul>
-                </div>
-    
-                <!-- Contact Section -->
-                <div class="col-md-4">
-                    <h5>Contact Us</h5>
-                    <p>Email: info@photographynews.com</p>
-                    <p>Phone: +123 456 7890</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-linkedin"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center mt-4">
-                <p class="mb-0">&copy; 2024 Photography News. All Rights Reserved.</p>
-            </div>
-        </div>
-    </footer>
+
 
 
     

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 10, 2025 at 03:54 AM
+-- Generation Time: Jan 10, 2025 at 10:02 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.1.25
 
@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `about_me` (
   `id` int(11) NOT NULL,
   `profile_image` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `profession` varchar(255) DEFAULT NULL,
   `about_me` text DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
@@ -39,19 +40,19 @@ CREATE TABLE `about_me` (
   `email` varchar(255) NOT NULL,
   `location_text` varchar(255) DEFAULT NULL,
   `view_type` enum('grid','carousel') NOT NULL DEFAULT 'grid',
-  `price` decimal(10,2) NOT NULL DEFAULT 0.00
+  `price` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `avail_hrs` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `about_me`
 --
 
-INSERT INTO `about_me` (`id`, `profile_image`, `profession`, `about_me`, `age`, `latitude`, `longitude`, `created_at`, `email`, `location_text`, `view_type`, `price`) VALUES
-(1, '../../../../assets/img/profile/gallery-6.jpg', 'photographer', 'dasasdsa', 12, 14.2838325, 120.8668772, '2024-09-17 08:36:54', '', NULL, 'grid', 0.00),
-(2, '../../../../assets/img/profile/gallery-6.jpg', 'photographer,videographer', 'dasasdsa', 12, 14.2838325, 120.8668772, '2024-09-17 08:37:24', '', NULL, 'grid', 0.00),
-(3, 'default_image.jpg', 'photographer', 'hello real', 13, 14.2813281, 120.8703823, '2024-09-17 08:40:36', '1@gmail.com', 'Trece Martires City Hall, Governor\'s Drive, Trece Martires, Cavite, Philippines', 'carousel', 0.00),
-(4, 'default_image.jpg', 'photographer,videographer', 'Hey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good hehe', 12, 14.2838325, 120.8668772, '2024-09-26 20:22:51', 'test@gmail.com', '', 'carousel', 10.00),
-(5, '../../../../assets/img/profile/Rectangle 6.png', 'photographer,videographer', 'Hello Diana', 12, 14.3274718, 120.9505047, '2024-10-23 00:57:47', 'supplier@gmail.com', '', 'grid', 0.00);
+INSERT INTO `about_me` (`id`, `profile_image`, `name`, `profession`, `about_me`, `age`, `latitude`, `longitude`, `created_at`, `email`, `location_text`, `view_type`, `price`, `avail_hrs`) VALUES
+(1, '../../../../assets/img/profile/gallery-6.jpg', NULL, 'photographer', 'dasasdsa', 12, 14.2838325, 120.8668772, '2024-09-17 08:36:54', '', NULL, 'grid', 0.00, NULL),
+(2, '../../../../assets/img/profile/gallery-6.jpg', NULL, 'photographer,videographer', 'dasasdsa', 12, 14.2838325, 120.8668772, '2024-09-17 08:37:24', '', NULL, 'grid', 0.00, NULL),
+(3, 'default_image.jpg', NULL, 'photographer', 'hello real', 13, 14.2813281, 120.8703823, '2024-09-17 08:40:36', '1@gmail.com', 'Trece Martires City Hall, Governor\'s Drive, Trece Martires, Cavite, Philippines', 'carousel', 0.00, NULL),
+(4, 'default_image.jpg', NULL, 'photographer,videographer', 'Hey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good heheHey Please hire me, I\'m good hehe', 12, 14.2838325, 120.8668772, '2024-09-26 20:22:51', 'test@gmail.com', '', 'carousel', 10.00, NULL);
 
 -- --------------------------------------------------------
 
@@ -82,7 +83,8 @@ INSERT INTO `appointment` (`id`, `name`, `latitude`, `longitude`, `event`, `time
 (8, 'Diana', 14.283833, 120.866877, 'photography', '01:43:00', '2024-11-02', 'supplier@gmail.com', 'clients@gmail.com', 'Accepted', NULL),
 (9, 'Diana', 14.283833, 120.866877, 'videography', '11:54:00', '2024-11-02', 'kate@gmail.com', 'clients@gmail.com', 'Completed', NULL),
 (10, 'Diana', 14.283833, 120.866877, 'photography', '22:52:00', '2025-01-11', 'supplier@gmail.com', 'client@gmail.com', 'Accepted', 'help'),
-(11, 'Diana', 14.283833, 120.866877, 'photography', '22:52:00', '2025-01-11', 'supplier@gmail.com', 'client@gmail.com', 'Accepted', 'dasdas');
+(11, 'Diana', 14.283833, 120.866877, 'photography', '22:52:00', '2025-01-11', 'supplier@gmail.com', 'client@gmail.com', 'Accepted', 'dasdas'),
+(12, 'Diana', 14.342933, 120.850314, 'photography', '11:55:00', '2025-01-01', 'supplier@gmail.com', 'client@gmail.com', 'Completed', NULL);
 
 -- --------------------------------------------------------
 
@@ -165,11 +167,9 @@ CREATE TABLE `news` (
 --
 
 INSERT INTO `news` (`id`, `image`, `uploader`, `date`, `heading`, `context`, `date_to_show`) VALUES
-(1, 'news.jpg', 'John Doe', '2024-11-29', 'Breaking News: Something Big Happened', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus lacinia.', '2024-12-01'),
-(2, 'image2.jpg', 'Jane Smith', '2024-11-29', 'New Developments in Tech', 'Phasellus imperdiet, nulla et dictum interdum, nisi lorem egestas odio, vitae scelerisque enim ligula venenatis dolor.', '2024-12-02'),
-(3, 'image3.jpg', 'Alice Johnson', '2024-11-28', 'Health Update: Tips for Staying Fit', 'Vestibulum auctor dapibus neque. Vivamus sit amet semper lacus, in mollis libero.', '2024-12-03'),
-(4, 'image4.jpg', 'Bob Brown', '2024-11-27', 'New Policy Changes Announced', 'Sed sed orci sit amet lectus hendrerit consectetur et in magna. Cras sed nulla ac urna venenatis.', '2024-12-04'),
-(5, 'sneaker.jpg', 'DIANA', '2024-11-30', 'Breaking News: Something Big Happened', 'LOREM IPSUM LOREM IPSUMLOREM IPSUM', NULL);
+(11, 'up1.jpg', NULL, '2025-01-23', ' ', ' BRING YOUR JOY TO THE FULLEST CAPTURE THE FUN WITH US HERE IN LENSFOLIOHUB', NULL),
+(12, 'up2.jpg', NULL, '2025-01-10', 'WEDDING SHOOT?', 'looking for a photograoher for your wedding? we might help you with that.', NULL),
+(13, 'up3.jpg', NULL, '2025-01-24', 'looking for photographers?', 'in todays marketplace, people, events and businesses need photos and videos more than ever before so Lensfoliohub displays your work to everyone.', NULL);
 
 -- --------------------------------------------------------
 
@@ -198,7 +198,8 @@ INSERT INTO `notification` (`id`, `email`, `email_uploader`, `message`, `status`
 (7, 'client@gmail.com', 'supplier@gmail.com', 'Appointment has been cancelled.', 'cancelled', '2025-01-08 03:28:09'),
 (14, 'client@gmail.com', 'supplier@gmail.com', 'Your appointment has been accepted.', 'Accepted', '2025-01-08 04:12:40'),
 (15, 'client@gmail.com', 'supplier@gmail.com', 'Your appointment has been accepted.', 'Accepted', '2025-01-08 05:02:07'),
-(16, 'client@gmail.com', '', 'Profile has been updated.', 'update', '2025-01-10 01:17:46');
+(16, 'client@gmail.com', '', 'Profile has been updated.', 'update', '2025-01-10 01:17:46'),
+(17, 'client@gmail.com', 'supplier@gmail.com', 'Your appointment is pending approval.', 'pending', '2025-01-10 03:53:52');
 
 -- --------------------------------------------------------
 
@@ -231,7 +232,8 @@ INSERT INTO `ratings` (`id`, `user_email`, `supplier_email`, `rating`, `review`,
 (12, 'client7@gmail.com', 'supplier7@gmail.com', 3, 'Average quality, could improve.', '2025-01-06 20:30:00', 'Client 7'),
 (13, 'client8@gmail.com', 'test@gmail.com', 4, 'Good customer service.', '2025-01-06 20:35:00', 'Client 8'),
 (14, 'client9@gmail.com', 'supplier8@gmail.com', 2, 'Not satisfied with the product.', '2025-01-06 20:40:00', 'Client 9'),
-(15, 'client10@gmail.com', 'supplier10@gmail.com', 5, 'Highly recommend! Excellent service.', '2025-01-06 20:45:00', 'Client 10');
+(15, 'client10@gmail.com', 'supplier10@gmail.com', 5, 'Highly recommend! Excellent service.', '2025-01-06 20:45:00', 'Client 10'),
+(16, 'client@gmail.com', 'supplier@gmail.com', 5, 'dasdasdsa', '2025-01-10 03:55:24', 'Diana Client');
 
 -- --------------------------------------------------------
 
@@ -313,22 +315,19 @@ CREATE TABLE `snapfeed` (
 --
 
 INSERT INTO `snapfeed` (`id`, `card_img`, `card_text`, `created_at`, `img_title`, `email`, `hearts_count`, `comments`) VALUES
-(15, 'gallery-2.jpg', '121321', '2024-09-16 01:08:05', 'BABAE NA PICTURE', '1@gmail.com', 0, NULL),
-(16, 'gallery-4.jpg', 'dasdsa', '2024-09-16 01:08:12', 'dsadsa', '1@gmail.com', 0, NULL),
-(17, 'gallery-3.jpg', 'dasdsa', '2024-09-16 01:11:59', 'dsadsa', '1@gmail.com', 0, NULL),
-(18, 'gallery-1.jpg', '123', '2024-09-16 01:14:21', '123', '1@gmail.com', 0, NULL),
-(19, 'gallery-5.jpg', '1', '2024-09-16 01:14:39', '1', '1@gmail.com', 0, NULL),
-(20, 'gallery-6.jpg', '1', '2024-09-16 01:14:46', '1', '1@gmail.com', 0, NULL),
-(21, 'gallery-7.jpg', '1', '2024-09-16 01:14:52', '1', '1@gmail.com', 0, NULL),
-(25, 'gallery-12.jpg', '1', '2024-09-16 01:15:25', '1', '1@gmail.com', 0, NULL),
-(26, 'gallery-2.jpg', 'ganda', '2024-09-16 01:47:22', 'Hey', '1@gmail.com', 0, NULL),
-(27, 'gallery-14.jpg', 'test', '2024-09-24 03:51:58', 'test', '1@gmail.com', 0, NULL),
-(29, 'gallery-16.jpg', 'test1', '2024-09-24 05:45:50', 'test1', 'test@gmail.com', 0, '\"TEST 1\", \"TEST2\", \"DASDSA\", \"hey\"'),
-(30, 'camera.png', 'TEST', '2024-10-31 07:29:19', 'TEST', 'supplier@gmail.com', 0, '\"dasdas\"'),
-(32, 'MSI_MEG_ACE.jpg', 'test lorem ipsum', '2024-12-01 04:52:49', 'try', 'kate@gmail.com', 0, NULL),
-(33, 'silver.png', 'dasdas', '2025-01-07 10:27:54', 'dasdas', 'test@gmail.com', 0, NULL),
-(35, 'Rectangle 53.png', '321312', '2025-01-07 10:36:07', 'dasdasda', 'test@gmail.com', 2, NULL),
-(36, 'Rectangle 53.png', 'Hello', '2025-01-08 02:42:02', 'Resort', 'supplier@gmail.com', 15, '\"wonderful!\"');
+(38, 'u1.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier1@gmail.com', 0, NULL),
+(39, 'u2.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier1@gmail.com', 0, NULL),
+(40, 'u3.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier1@gmail.com', 0, NULL),
+(41, 'u4.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier1@gmail.com', 0, NULL),
+(42, 'u5.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier1@gmail.com', 0, NULL),
+(43, 'u6.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier2@gmail.com', 0, NULL),
+(44, 'u7.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier2@gmail.com', 0, NULL),
+(45, 'u8.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier2@gmail.com', 0, NULL),
+(46, 'u9.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier2@gmail.com', 0, NULL),
+(47, 'u10.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier3@gmail.com', 0, NULL),
+(48, 'u11.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier3@gmail.com', 0, NULL),
+(49, 'u12.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier3@gmail.com', 0, NULL),
+(50, 'u13.jpg', 'Hello HI', '2025-01-10 20:44:38', 'Diana', 'supplier3@gmail.com', 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -352,6 +351,30 @@ INSERT INTO `sub_news` (`id`, `img`, `title`, `date`) VALUES
 (2, 'news2.jpg', 'Breaking Sub-News 2', '2024-11-15'),
 (3, 'news3.jfif', 'Breaking Sub-News 3', '2024-11-29'),
 (4, 'MSI_MPG.jpg', 'msi woa', '2024-11-30');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `template1`
+--
+
+CREATE TABLE `template1` (
+  `id` int(11) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `profile_image` varchar(255) NOT NULL,
+  `template` varchar(255) NOT NULL DEFAULT 'grid'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `template1`
+--
+
+INSERT INTO `template1` (`id`, `email`, `profile_image`, `template`) VALUES
+(1, 'supplier@gmail.com', 'profile.png', 'grid'),
+(2, 'supplier@gmail.com', 'profile.png', 'slide'),
+(3, 'supplier@gmail.com', 'profile.png', 'grid'),
+(4, 'supplier@gmail.com', 'profile.png', 'grid'),
+(5, 'supplier@gmail.com', 'profile.png', 'grid');
 
 -- --------------------------------------------------------
 
@@ -381,21 +404,21 @@ CREATE TABLE `users` (
   `social_link` varchar(255) NOT NULL,
   `years_in_profession` int(11) DEFAULT NULL,
   `username` varchar(255) NOT NULL,
-  `test_password` varchar(255) NOT NULL
+  `test_password` varchar(255) NOT NULL,
+  `verification_code` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `role`, `name`, `email`, `password`, `created_at`, `updated_at`, `profile_img`, `about_me`, `profession`, `location`, `age`, `day_available`, `is_active`, `last_login`, `disable_status`, `address`, `birthday`, `social_link`, `years_in_profession`, `username`, `test_password`) VALUES
-(16, 'supplier', 'Kate', '1@gmail.com', '$2y$10$SXsGg/5MaeD3S.fdoldfgu5YYTZ/RpGLwEMocNmhwA/Pnq8909uHG', '2024-09-15 10:14:40', '2025-01-09 18:49:45', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-09,2024-11-08,2024-11-07', 1, '2025-01-09 18:49:45', 1, '', NULL, '', NULL, '', ''),
-(17, 'supplier', 'Diana Supplier', 'supplier@gmail.com', '$2y$10$Nbgr8CZoIfG.DwKmzHQWn.53PiFMxsA1f0wGZgXDkTqMRRJokoZIK', '2024-09-15 10:57:46', '2025-01-10 01:19:29', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-11-02,2024-11-01,2024-11-08,2024-11-09,2024-11-16,2024-11-15,2025-01-04,2025-01-03,2025-01-02,2025-01-01,2025-01-05,2025-01-06,2025-01-08,2025-01-09,2025-01-10,2025-01-07,2025-01-11', 0, '2025-01-10 01:19:29', 1, '', NULL, '', NULL, '', ''),
-(20, 'supplier', 'racels', 'test@gmail.com', '$2y$10$hlBfashINKF7BGvZ2f/0SendLQMe/UYOUvGEgEv26wd.YGKsasp1G', '2024-09-15 19:53:50', '2025-01-10 02:53:20', 'silver.png', NULL, NULL, NULL, NULL, NULL, 1, '2025-01-10 02:53:20', 1, '', NULL, '', NULL, '', ''),
-(22, 'customer', 'Diana Client', 'client@gmail.com', '$2y$10$pvkJfihudzcDOvsyD3BquO.2PBPdTW.jqp40LRdN4Moxp58w.CNcG', '2024-09-24 02:57:18', '2025-01-10 01:29:09', 'profile_6780753aed6f28.89438446.png', NULL, NULL, 'Blk 4 Lot 23', 5, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-10 01:29:09', 1, 'Blk 4 Lot 23', '2025-01-16', 'https://www.facebook.com/', NULL, '', ''),
-(23, 'supplier', 'Test Updated', 'ejivancablanida@gmail.com', 'ivan', '2024-09-24 03:48:59', '2025-01-09 18:49:51', 'profile.jpg', NULL, NULL, NULL, NULL, ',2024-10-03,2024-10-05,2024-10-12', 0, '2025-01-09 18:49:51', 1, '', NULL, '', NULL, '', 'ivan'),
-(26, 'admin', 'admin', 'admin@gmail.com', '$2y$10$opUH24g9VfMnpi1qYe634u2OSYi7auE9AP2kFb1maZVZrx8ex5gMy', '2024-11-30 21:26:12', '2025-01-10 01:41:09', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-10 01:41:09', 1, '', NULL, '', NULL, '', ''),
-(30, 'customer', 'Ivan ablanida', 'ejivan23@gmail.com', '$2y$10$BtgegI4nre0M//3df3se.ett/.WAiuQbWfb0fyWuXvLR0AnTx6nJq', '2025-01-09 10:18:50', '2025-01-09 18:49:49', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-09 18:49:49', 1, 'dsadas', '2025-01-01', 'https://www.facebook.com/', NULL, '', '');
+INSERT INTO `users` (`id`, `role`, `name`, `email`, `password`, `created_at`, `updated_at`, `profile_img`, `about_me`, `profession`, `location`, `age`, `day_available`, `is_active`, `last_login`, `disable_status`, `address`, `birthday`, `social_link`, `years_in_profession`, `username`, `test_password`, `verification_code`) VALUES
+(26, 'admin', 'admin', 'admin@gmail.com', '$2y$10$opUH24g9VfMnpi1qYe634u2OSYi7auE9AP2kFb1maZVZrx8ex5gMy', '2024-11-30 21:26:12', '2025-01-10 20:31:49', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-10 20:31:49', 1, '', NULL, '', NULL, '', '', NULL),
+(43, 'customer', 'Diana', 'supplier2@gmail.com', '$2y$10$ukuDQsbZE9gpY0jE2By6QerTYRvEfN13bdMU.wuX05CM52ibtIZKO', '2025-01-10 20:29:00', '2025-01-10 20:29:00', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-10 20:29:00', 1, 'Blk 4 Lot 23', '2025-01-31', 'https://www.facebook.com/', NULL, '', '', NULL),
+(44, 'customer', 'Diana', 'client23@gmail.com', '$2y$10$ChUGOzI2WdLdqmGqPKsVGun0rm.49yQeT.qOmWwSqWUChx.VZGA32', '2025-01-10 20:30:22', '2025-01-10 20:30:45', 'profile.jpg', NULL, NULL, NULL, NULL, NULL, 0, '2025-01-10 20:30:45', 1, 'blk 4 lot 23', '2025-01-10', 'https://www.facebook.com/', NULL, '', '', NULL),
+(46, 'supplier', 'Diana ', 'supplier1@gmail.com', '$2y$10$BnhaCY2V29URzceO2M3Sve6JMUcTVYX893N5trZR7KjYKV2bE3IQ2', '2025-01-10 20:43:11', '2025-01-10 20:43:49', 'profile.jpg', NULL, 'videographer', NULL, NULL, NULL, 0, '2025-01-10 20:43:49', 1, 'blk 4 lot 23', '2025-01-10', 'https://www.facebook.com', 2024, '', '', NULL),
+(48, 'supplier', 'Diana ', 'supplier3@gmail.com', '$2y$10$BnhaCY2V29URzceO2M3Sve6JMUcTVYX893N5trZR7KjYKV2bE3IQ2', '2025-01-10 20:43:11', '2025-01-10 20:43:49', 'profile.jpg', NULL, 'videographer', NULL, NULL, NULL, 0, '2025-01-10 20:43:49', 1, 'blk 4 lot 23', '2025-01-10', 'https://www.facebook.com', 2024, '', '', NULL),
+(49, 'supplier', 'Diana ', 'supplier4@gmail.com', '$2y$10$BnhaCY2V29URzceO2M3Sve6JMUcTVYX893N5trZR7KjYKV2bE3IQ2', '2025-01-10 20:43:11', '2025-01-10 20:43:49', 'profile.jpg', NULL, 'videographer', NULL, NULL, NULL, 0, '2025-01-10 20:43:49', 1, 'blk 4 lot 23', '2025-01-10', 'https://www.facebook.com', 2024, '', '', NULL);
 
 --
 -- Indexes for dumped tables
@@ -468,6 +491,12 @@ ALTER TABLE `sub_news`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `template1`
+--
+ALTER TABLE `template1`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -482,13 +511,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `about_me`
 --
 ALTER TABLE `about_me`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `appointment`
 --
 ALTER TABLE `appointment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `chat`
@@ -506,19 +535,19 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `notification`
 --
 ALTER TABLE `notification`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `ratings`
 --
 ALTER TABLE `ratings`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `recovery_requests`
@@ -536,7 +565,7 @@ ALTER TABLE `reports`
 -- AUTO_INCREMENT for table `snapfeed`
 --
 ALTER TABLE `snapfeed`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `sub_news`
@@ -545,10 +574,16 @@ ALTER TABLE `sub_news`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
+-- AUTO_INCREMENT for table `template1`
+--
+ALTER TABLE `template1`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

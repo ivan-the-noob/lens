@@ -311,14 +311,13 @@ $conn->close();
                         </div>
                         <div class="row d-flex justify-content-center mt-4">
                         <?php
-
                             include '../../../../db/db.php';
 
                             $sql = "
-                                SELECT supplier_email, name, SUM(rating) AS total_rating
+                                SELECT supplier_email, name, AVG(CASE WHEN rating <= 5 THEN rating ELSE 5 END) AS average_rating
                                 FROM ratings
                                 GROUP BY supplier_email
-                                ORDER BY total_rating DESC
+                                ORDER BY average_rating DESC
                                 LIMIT 5
                             ";
 
@@ -328,8 +327,7 @@ $conn->close();
                                 echo '<div class="col-md-6">';
                                 echo '<div class="card total-users">';
                                 echo '<div class="card-body">';
-                                echo '<p class="text-center text-black">Top 5 Highest Rated Suppliers</p>';
-
+                                echo '<p class="text-center text-black">Top 5 Suppliers with Highest Average Ratings</p>';
                                 echo '<hr class="mt-2">';
                                 echo '<ul class="list-group list-group-flush">';
 
@@ -337,7 +335,7 @@ $conn->close();
                                 while ($row = $result->fetch_assoc()) {
                                     $supplier_email = $row['supplier_email'];
                                     $name = $row['name'];
-                                    $total_rating = $row['total_rating']; 
+                                    $average_rating = $row['average_rating']; 
 
                                     $medal = '';
                                     if ($rank == 1) {
@@ -356,7 +354,7 @@ $conn->close();
                                     echo '<p class="mb-0">' . htmlspecialchars($name) . '</p>';
                                     echo '<p>' . htmlspecialchars($supplier_email) . '</p>';
                                     echo '</div>';
-                                    echo '<p class="mb-0 mt-3">' . htmlspecialchars($total_rating) . ' <i class="fas fa-star" style="color: yellow;"></i></p>';
+                                    echo '<p class="mb-0 mt-3">' . htmlspecialchars(number_format($average_rating, 1)) . ' <i class="fas fa-star" style="color: yellow;"></i></p>'; // Formatting to 1 decimal place
                                     echo '</div>';
                                     echo '</div>';
                                     echo '</li>';
@@ -374,59 +372,60 @@ $conn->close();
                             ?>
 
 
-                    <?php
 
-                    include '../../../../db/db.php';
+                            <?php
+                            include '../../../../db/db.php';
 
-                    // Query to fetch the 5 lowest-rated suppliers
-                    $sql = "
-                        SELECT supplier_email, name, SUM(rating) AS total_rating
-                        FROM ratings
-                        GROUP BY supplier_email
-                        ORDER BY total_rating ASC
-                        LIMIT 5
-                    ";
+                            // Query to fetch the 5 lowest-rated suppliers based on average rating
+                            $sql = "
+                                SELECT supplier_email, name, AVG(rating) AS average_rating
+                                FROM ratings
+                                GROUP BY supplier_email
+                                ORDER BY average_rating ASC
+                                LIMIT 5
+                            ";
 
-                    $result = $conn->query($sql);
+                            $result = $conn->query($sql);
 
-                    if ($result->num_rows > 0) {
-                        echo '<div class="col-md-6">';
-                        echo '<div class="card total-users">';
-                        echo '<div class="card-body">';
-                        echo '<p class="text-center text-black">Top 5 Lowest Rated Suppliers</p>';
-                        echo '<hr class="mt-2">';
-                        echo '<ul class="list-group list-group-flush">';
+                            if ($result->num_rows > 0) {
+                                echo '<div class="col-md-6">';
+                                echo '<div class="card total-users">';
+                                echo '<div class="card-body">';
+                                echo '<p class="text-center text-black">Top 5 Lowest Rated Suppliers</p>';
+                                echo '<hr class="mt-2">';
+                                echo '<ul class="list-group list-group-flush">';
 
-                        $rank = 1; 
-                        while ($row = $result->fetch_assoc()) {
-                            $supplier_email = $row['supplier_email'];
-                            $name = $row['name'];
-                            $total_rating = $row['total_rating'];
+                                $rank = 1; 
+                                while ($row = $result->fetch_assoc()) {
+                                    $supplier_email = $row['supplier_email'];
+                                    $name = $row['name'];
+                                    $average_rating = min(5, $row['average_rating']);  // Ensures no rating exceeds 5
 
-                            echo '<li class="list-group-item">';
-                            echo '<div class="d-flex justify-content-between align-items-center">'; 
-                            echo '<div>' . $medal . '</div>'; 
-                            echo '<div class="d-flex justify-content-between w-100">'; 
-                            echo '<div class="">';
-                            echo '<p class="mb-0">' . htmlspecialchars($name) . '</p>';
-                            echo '<p>' . htmlspecialchars($supplier_email) . '</p>';
-                            echo '</div>';
-                            echo '<p class="mb-0 mt-3">' . htmlspecialchars($total_rating) . ' <i class="fas fa-star" style="color: yellow;"></i></p>';
-                            echo '</div>';
-                            echo '</div>';
-                            echo '</li>';
+                                    echo '<li class="list-group-item">';
+                                    echo '<div class="d-flex justify-content-between align-items-center">'; 
+                                    echo '<div>' . $medal . '</div>'; 
+                                    echo '<div class="d-flex justify-content-between w-100">'; 
+                                    echo '<div class="">';
+                                    echo '<p class="mb-0">' . htmlspecialchars($name) . '</p>';
+                                    echo '<p>' . htmlspecialchars($supplier_email) . '</p>';
+                                    echo '</div>';
+                                    echo '<p class="mb-0 mt-3">' . htmlspecialchars(number_format($average_rating, 1)) . ' <i class="fas fa-star" style="color: yellow;"></i></p>'; // Format to 1 decimal place and capping at 5
+                                    echo '</div>';
+                                    echo '</div>';
+                                    echo '</li>';
 
-                            $rank++;
-                        }
+                                    $rank++;
+                                }
 
-                        echo '</ul>';
-                        echo '</div>';
-                        echo '</div>';
-                        echo '</div>';
-                    } else {
-                        echo '<p>No ratings available.</p>';
-                    }
-                    ?>
+                                echo '</ul>';
+                                echo '</div>';
+                                echo '</div>';
+                                echo '</div>';
+                            } else {
+                                echo '<p>No ratings available.</p>';
+                            }
+                            ?>
+
 
                         </div>
                     </div>

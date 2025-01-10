@@ -4,7 +4,6 @@ require '../../../../db/db.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $heading = $_POST['heading'];
     $context = $_POST['context'];
-    $uploader = $_POST['uploader'];
     $date = $_POST['date'];
     $image = $_FILES['image']['name'];
 
@@ -16,11 +15,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $image_path = NULL;
     }
 
-    $sql = "INSERT INTO news (heading, context, uploader, date, image) 
-            VALUES ('$heading', '$context', '$uploader', '$date', '$image_path')";
+    $sql = "INSERT INTO news (heading, context, date, image) 
+            VALUES ('$heading', '$context', '$date', '$image_path')";
 
     if ($conn->query($sql) === TRUE) {
-        header("../../web/api/announcement.php");
+        header("Location:../../web/api/announcement.php");
+        exit();
     } else {
         echo "Error: " . $conn->error;
     }

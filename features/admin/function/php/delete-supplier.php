@@ -5,14 +5,14 @@ require '../../../../db/db.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['id'])) {
     $id = intval($_POST['id']);
 
-    $query = "DELETE FROM users WHERE id = ?";
-    $stmt = $conn->prepare($query);
+    $update_query = "UPDATE users SET disable_status = 0 WHERE id = ?";
+    $stmt = $conn->prepare($update_query);
     $stmt->bind_param("i", $id);
 
     if ($stmt->execute()) {
-        $_SESSION['success'] = "Supplier deleted successfully!";
+        $_SESSION['success'] = "Client status enabled successfully!";
     } else {
-        $_SESSION['error'] = "Failed to delete the supplier. Please try again.";
+        $_SESSION['error'] = "Failed to enable the client status. Please try again.";
     }
 
     header("Location: ../../web/api/registered-supplier.php");

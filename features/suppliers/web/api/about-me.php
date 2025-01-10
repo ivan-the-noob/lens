@@ -11,7 +11,7 @@
 if ($role != 'guest' && !empty($email)) {
     require '../../../../db/db.php';
 
-    $stmt = $conn->prepare("SELECT profile_image FROM about_me WHERE email = ?");
+    $stmt = $conn->prepare("SELECT profile_img FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->bind_result($profileImg);
@@ -116,48 +116,74 @@ if ($role != 'guest' && !empty($email)) {
         </div>
 
         <?php
-            include '../../../../db/db.php';
-            if (!isset($_SESSION['email'])) {
-                die('Email not found in session.');
-            }
+include '../../../../db/db.php';
 
-            $email = $_SESSION['email'];
+if (!isset($_SESSION['email'])) {
+    die('Email not found in session.');
+}
 
-            $profileImg = ''; 
-            $profession = '';
-            $about_me = '';
-            $age = '';
-            $latitude = '';
-            $longitude = '';
-            $price = '';
-            $name = ''; 
+$email = $_SESSION['email'];
 
-            $stmt = $conn->prepare("SELECT profile_image, name, profession, about_me, age, latitude, longitude, price FROM about_me WHERE email = ?");
-            if ($stmt === false) {
-                die('Prepare failed: ' . $conn->error);
-            }
+$profile_img = ''; 
+$profession = '';
+$about_me = '';
+$age = '';
+$latitude = '';
+$longitude = '';
+$price = '';
+$name = ''; 
 
-            $stmt->bind_param('s', $email);
+// Fetch profile_img from users and other details from about_me
+$stmt = $conn->prepare("SELECT profile_img FROM users WHERE email = ?");
+if ($stmt === false) {
+    die('Prepare failed: ' . $conn->error);
+}
 
-            if (!$stmt->execute()) {
-                die('Execute failed: ' . $stmt->error);
-            }
+$stmt->bind_param('s', $email);
 
-            $stmt->bind_result($profileImg, $name, $profession, $about_me, $age, $latitude, $longitude, $price);
-            if (!$stmt->fetch()) {
-                $profileImg = 'profile.jpg'; 
-                $name = ''; 
-                $profession = '';
-                $about_me = '';
-                $age = '';
-                $latitude = '';
-                $longitude = '';
-                $price = '';
-            }
+if (!$stmt->execute()) {
+    die('Execute failed: ' . $stmt->error);
+}
 
-            $stmt->close();
-            $conn->close();
-        ?>
+$stmt->bind_result($profile_img);
+$stmt->fetch();
+$stmt->close();
+
+// Fetch remaining details from about_me
+$stmt = $conn->prepare("SELECT name, profession, about_me, age, latitude, longitude, price FROM about_me WHERE email = ?");
+if ($stmt === false) {
+    die('Prepare failed: ' . $conn->error);
+}
+
+$stmt->bind_param('s', $email);
+
+if (!$stmt->execute()) {
+    die('Execute failed: ' . $stmt->error);
+}
+
+$stmt->bind_result($name, $profession, $about_me, $age, $latitude, $longitude, $price);
+
+if (!$stmt->fetch()) {
+    // Set defaults if no record is found in about_me
+    $name = ''; 
+    $profession = '';
+    $about_me = '';
+    $age = '';
+    $latitude = '';
+    $longitude = '';
+    $price = '';
+}
+
+// Close the statement and connection
+$stmt->close();
+$conn->close();
+
+// Set default profile_img if not found
+if (empty($profile_img)) {
+    $profile_img = 'profile.jpg'; 
+}
+?>
+
 
 <div class="about-me-section">
     <div class="container mt-5 about-section">
@@ -181,7 +207,7 @@ if ($role != 'guest' && !empty($email)) {
                         </div>
                     </div>
 
-                    <input class="form-control" type="file" name="profile_image" id="imageUpload" accept="image/*">
+                    <input class="form-control" type="file" name="profile_img" id="imageUpload" accept="image/*">
                 </div>
                 <div class="mb-3">
                     <input type="text" class="form-control" name="name" placeholder="Enter your Name..." value="<?php echo htmlspecialchars($name); ?>">

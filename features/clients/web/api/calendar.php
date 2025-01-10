@@ -1,31 +1,24 @@
 <?php
-    session_start();
-    if (!isset($_SESSION['email'])) {
-        header("Location: authentication/web/api/login.php");
-        exit();
-    }
-    $email = $_SESSION['email'];
-    $role = $_SESSION['role']; 
-    $uploaderEmail = ''; 
-    $profileImg = ''; 
+session_start();
 
-if ($role != 'guest' && !empty($email)) {
-    require '../../../../db/db.php';
-
-    $stmt = $conn->prepare("SELECT profile_img FROM users WHERE email = ?");
-    $stmt->bind_param("s", $email);
-    $stmt->execute();
-    $stmt->bind_result($profileImg);
-    $stmt->fetch();
-    $stmt->close();
-    $conn->close();
-
-    $profileImg = '../../../../assets/img/profile/' . $profileImg;
+if (!isset($_SESSION['email'])) {
+    header("Location: authentication/web/api/login.php");
+    exit();
 }
 
+$email = $_SESSION['email'];
+$role = $_SESSION['role'];
 
-
+// Accessing the hidden input value from POST
+if (isset($_POST['email_uploader'])) {
+    $emailUploader = htmlspecialchars($_POST['email_uploader']);
+    echo "Email Uploader: " . $emailUploader;
+} else {
+    echo "Email Uploader: Not submitted yet.";
+}
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -330,10 +323,11 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Uploader Email:', uploaderEmail);
 
     if (uploaderEmail) {
-            document.getElementById('email_uploader').value = uploaderEmail;
-        } else {
-            console.error("Uploader email not found in localStorage");
-        }
+        document.getElementById('email_uploader').value = uploaderEmail;
+        console.log('Hidden Input Value:', document.getElementById('email_uploader').value); // Debug line
+    } else {
+        console.error("Uploader email not found in localStorage");
+    }
 
     
 
